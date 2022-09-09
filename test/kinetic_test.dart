@@ -4,13 +4,15 @@ import 'package:kinetic/kinetic.dart';
 import 'package:kinetic/models.dart';
 import 'package:kinetic/commitment.dart' as commitment;
 import 'package:kinetic/tools.dart';
+import 'package:logger/logger.dart';
 import 'package:solana/solana.dart';
 
 void main() async {
 
   test('Get App Config', () async {
     final kinetic = KineticSdk();
-    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
+    Logger logger = Logger();
+    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
     bool ok = await kinetic.setup(sdkConfig: config);
     if (ok) {
       safePrint(kinetic.appConfig.toString());
@@ -20,7 +22,8 @@ void main() async {
 
   test('Get Balance', () async {
     final kinetic = KineticSdk();
-    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
+    Logger logger = Logger();
+    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
     bool ok = await kinetic.setup(sdkConfig: config);
     if (ok) {
 
@@ -33,7 +36,10 @@ void main() async {
 
   test('Get History', () async {
     final kinetic = KineticSdk();
-    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
+
+    Logger logger = Logger();
+    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
+
     bool ok = await kinetic.setup(sdkConfig: config);
     if (ok) {
       GetHistoryOptions historyOptions = GetHistoryOptions(account: kinetic.keypair.publicKeyFromString("DUXaDD5FZDa9yFf83tP8Abb6z66ECiawRShejSXRMN5F"), mint: kinetic.keypair.publicKeyFromString("KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX"));
@@ -45,7 +51,8 @@ void main() async {
 
   test('Get Token Accounts', () async {
     final kinetic = KineticSdk();
-    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
+    Logger logger = Logger();
+    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
     bool ok = await kinetic.setup(sdkConfig: config);
     if (ok) {
       GetTokenAccountsOptions accountOptions = GetTokenAccountsOptions(account: kinetic.keypair.publicKeyFromString("DUXaDD5FZDa9yFf83tP8Abb6z66ECiawRShejSXRMN5F"), mint: kinetic.keypair.publicKeyFromString("KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX"));
@@ -57,7 +64,8 @@ void main() async {
 
   test('Request Airdrop', () async {
     final kinetic = KineticSdk();
-    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
+    Logger logger = Logger();
+    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
     bool ok = await kinetic.setup(sdkConfig: config);
     if (ok) {
       RequestAirdropOptions airdropOptions = RequestAirdropOptions(account: kinetic.keypair.publicKeyFromString("DUXaDD5FZDa9yFf83tP8Abb6z66ECiawRShejSXRMN5F"), mint: kinetic.keypair.publicKeyFromString("KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX"), amount: "10", commitment: commitment.Commitment.Finalized);
@@ -69,7 +77,8 @@ void main() async {
 
   test('makeTransfer', () async {
     final kinetic = KineticSdk();
-    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
+    Logger logger = Logger();
+    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
     bool ok = await kinetic.setup(sdkConfig: config);
     if (ok) {
       final from = await Ed25519HDKeyPair.fromPrivateKeyBytes(
