@@ -1,0 +1,1240 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/account/info/{environment}/{index}/{accountId}": {
+      "get": {
+        "operationId": "getAccountInfo",
+        "summary": "",
+        "parameters": [
+          {
+            "name": "environment",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "index",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "accountId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["account"]
+      }
+    },
+    "/api/account/create": {
+      "post": {
+        "operationId": "createAccount",
+        "summary": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAccountRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppTransaction"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["account"]
+      }
+    },
+    "/api/account/balance/{environment}/{index}/{accountId}": {
+      "get": {
+        "operationId": "getBalance",
+        "summary": "",
+        "parameters": [
+          {
+            "name": "environment",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "index",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "accountId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BalanceResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["account"]
+      }
+    },
+    "/api/account/history/{environment}/{index}/{accountId}/{mint}": {
+      "get": {
+        "operationId": "getHistory",
+        "summary": "",
+        "parameters": [
+          {
+            "name": "environment",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "index",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "accountId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "mint",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HistoryResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["account"]
+      }
+    },
+    "/api/account/token-accounts/{environment}/{index}/{accountId}/{mint}": {
+      "get": {
+        "operationId": "getTokenAccounts",
+        "summary": "",
+        "parameters": [
+          {
+            "name": "environment",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "index",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "accountId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "mint",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["account"]
+      }
+    },
+    "/api/airdrop": {
+      "post": {
+        "operationId": "requestAirdrop",
+        "summary": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestAirdropRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestAirdropResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["airdrop"]
+      }
+    },
+    "/api/airdrop/stats": {
+      "get": {
+        "operationId": "airdropStats",
+        "summary": "",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AirdropStats"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["airdrop"]
+      }
+    },
+    "/api/app/{environment}/{index}/config": {
+      "get": {
+        "operationId": "getAppConfig",
+        "summary": "",
+        "parameters": [
+          {
+            "name": "environment",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "index",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppConfig"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["app"]
+      }
+    },
+    "/api/app/{environment}/{index}/health": {
+      "get": {
+        "operationId": "getAppHealth",
+        "summary": "",
+        "parameters": [
+          {
+            "name": "environment",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "index",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppHealth"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["app"]
+      }
+    },
+    "/api/transaction/latest-blockhash/{environment}/{index}": {
+      "get": {
+        "operationId": "getLatestBlockhash",
+        "summary": "",
+        "parameters": [
+          {
+            "name": "environment",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "index",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LatestBlockhashResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["transaction"]
+      }
+    },
+    "/api/transaction/minimum-rent-exemption-balance/{environment}/{index}": {
+      "get": {
+        "operationId": "getMinimumRentExemptionBalance",
+        "summary": "",
+        "parameters": [
+          {
+            "name": "environment",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "index",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "dataLength",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MinimumRentExemptionBalanceResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["transaction"]
+      }
+    },
+    "/api/transaction/make-transfer": {
+      "post": {
+        "operationId": "makeTransfer",
+        "summary": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MakeTransferRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppTransaction"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["transaction"]
+      }
+    },
+    "/api/transaction/transaction/{environment}/{index}/{signature}": {
+      "get": {
+        "operationId": "getTransaction",
+        "summary": "",
+        "parameters": [
+          {
+            "name": "environment",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "index",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "signature",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTransactionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["transaction"]
+      }
+    }
+  },
+  "info": {
+    "title": "Kinetic",
+    "description": "The OpenAPI definition of the Kinetic API",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "kinetic",
+      "description": ""
+    }
+  ],
+  "servers": [
+    {
+      "url": "https://devnet.kinetic.kin.org"
+    },
+    {
+      "url": "https://mainnet.kinetic.kin.org"
+    },
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "CreateAccountRequest": {
+        "type": "object",
+        "properties": {
+          "environment": {
+            "type": "string"
+          },
+          "index": {
+            "type": "integer"
+          },
+          "mint": {
+            "type": "string"
+          },
+          "tx": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "required": ["environment", "index", "mint", "tx"]
+      },
+      "AppTransactionError": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "logs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["BadNonce", "InvalidAccount", "SomeError", "Timeout", "Unknown", "WebhookFailed"]
+          },
+          "instruction": {
+            "type": "integer"
+          }
+        },
+        "required": ["id", "logs", "message", "type", "instruction"]
+      },
+      "AppTransaction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "string",
+            "nullable": true
+          },
+          "decimals": {
+            "type": "number",
+            "nullable": true
+          },
+          "destination": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AppTransactionError"
+            }
+          },
+          "explorerUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "feePayer": {
+            "type": "string",
+            "nullable": true
+          },
+          "ip": {
+            "type": "string",
+            "nullable": true
+          },
+          "mint": {
+            "type": "string",
+            "nullable": true
+          },
+          "processingDuration": {
+            "type": "number",
+            "nullable": true
+          },
+          "referenceId": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "signature": {
+            "type": "string",
+            "nullable": true
+          },
+          "solanaCommitted": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "solanaCommittedDuration": {
+            "type": "number",
+            "nullable": true
+          },
+          "solanaFinalized": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "solanaFinalizedDuration": {
+            "type": "number",
+            "nullable": true
+          },
+          "solanaStart": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "solanaTransaction": {
+            "type": "object",
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true,
+            "enum": ["Committed", "Confirmed", "Failed", "Finalized", "Processing"]
+          },
+          "totalDuration": {
+            "type": "number",
+            "nullable": true
+          },
+          "ua": {
+            "type": "string",
+            "nullable": true
+          },
+          "webhookEventStart": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "webhookEventEnd": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "webhookEventDuration": {
+            "type": "number",
+            "nullable": true
+          },
+          "webhookVerifyStart": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "webhookVerifyEnd": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "webhookVerifyDuration": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "amount",
+          "decimals",
+          "destination",
+          "errors",
+          "explorerUrl",
+          "feePayer",
+          "ip",
+          "mint",
+          "processingDuration",
+          "referenceId",
+          "referenceType",
+          "signature",
+          "solanaCommitted",
+          "solanaCommittedDuration",
+          "solanaFinalized",
+          "solanaFinalizedDuration",
+          "solanaStart",
+          "solanaTransaction",
+          "source",
+          "status",
+          "totalDuration",
+          "ua",
+          "webhookEventStart",
+          "webhookEventEnd",
+          "webhookEventDuration",
+          "webhookVerifyStart",
+          "webhookVerifyEnd",
+          "webhookVerifyDuration"
+        ]
+      },
+      "BalanceToken": {
+        "type": "object",
+        "properties": {
+          "account": {
+            "type": "string"
+          },
+          "balance": {
+            "type": "string"
+          },
+          "mint": {
+            "type": "string"
+          }
+        },
+        "required": ["account", "balance", "mint"]
+      },
+      "BalanceResponse": {
+        "type": "object",
+        "properties": {
+          "balance": {
+            "type": "string"
+          },
+          "mints": {
+            "type": "object"
+          },
+          "tokens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BalanceToken"
+            }
+          }
+        },
+        "required": ["balance", "mints", "tokens"]
+      },
+      "ConfirmedSignatureInfo": {
+        "type": "object",
+        "properties": {
+          "signature": {
+            "type": "string"
+          },
+          "slot": {
+            "type": "number"
+          },
+          "err": {
+            "type": "string"
+          },
+          "memo": {
+            "type": "string"
+          },
+          "blockTime": {
+            "type": "number"
+          }
+        },
+        "required": ["signature", "slot", "err", "memo", "blockTime"]
+      },
+      "HistoryResponse": {
+        "type": "object",
+        "properties": {
+          "account": {
+            "type": "string"
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConfirmedSignatureInfo"
+            }
+          }
+        },
+        "required": ["account", "history"]
+      },
+      "RequestAirdropRequest": {
+        "type": "object",
+        "properties": {
+          "account": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "string"
+          },
+          "commitment": {
+            "type": "string",
+            "enum": ["Confirmed", "Finalized", "Processed"]
+          },
+          "environment": {
+            "type": "string"
+          },
+          "index": {
+            "type": "integer"
+          },
+          "mint": {
+            "type": "string"
+          }
+        },
+        "required": ["account", "commitment", "environment", "index", "mint"]
+      },
+      "RequestAirdropResponse": {
+        "type": "object",
+        "properties": {
+          "signature": {
+            "type": "string"
+          }
+        },
+        "required": ["signature"]
+      },
+      "AirdropStatsCounts": {
+        "type": "object",
+        "properties": {
+          "averageValue": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "totalValue": {
+            "type": "integer"
+          }
+        },
+        "required": ["averageValue", "total", "totalValue"]
+      },
+      "AirdropStatsDate": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "required": ["date", "count"]
+      },
+      "AirdropStats": {
+        "type": "object",
+        "properties": {
+          "counts": {
+            "$ref": "#/components/schemas/AirdropStatsCounts"
+          },
+          "dates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AirdropStatsDate"
+            }
+          }
+        },
+        "required": ["counts", "dates"]
+      },
+      "AppConfigApp": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": ["index", "name"]
+      },
+      "AppConfigApi": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": ["name", "version"]
+      },
+      "AppConfigCluster": {
+        "type": "object",
+        "properties": {
+          "endpoint": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["Custom", "SolanaDevnet", "SolanaMainnet", "SolanaTestnet"]
+          }
+        },
+        "required": ["endpoint", "id", "name", "type"]
+      },
+      "AppConfigEnvironment": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "explorer": {
+            "type": "string"
+          },
+          "cluster": {
+            "$ref": "#/components/schemas/AppConfigCluster"
+          }
+        },
+        "required": ["name", "explorer", "cluster"]
+      },
+      "AppConfigMint": {
+        "type": "object",
+        "properties": {
+          "addMemo": {
+            "type": "boolean"
+          },
+          "airdrop": {
+            "type": "boolean"
+          },
+          "airdropAmount": {
+            "type": "integer"
+          },
+          "airdropMax": {
+            "type": "integer"
+          },
+          "decimals": {
+            "type": "integer"
+          },
+          "feePayer": {
+            "type": "string"
+          },
+          "logoUrl": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "programId": {
+            "type": "string"
+          },
+          "publicKey": {
+            "type": "string"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "addMemo",
+          "airdrop",
+          "decimals",
+          "feePayer",
+          "logoUrl",
+          "name",
+          "programId",
+          "publicKey",
+          "symbol"
+        ]
+      },
+      "AppConfig": {
+        "type": "object",
+        "properties": {
+          "app": {
+            "$ref": "#/components/schemas/AppConfigApp"
+          },
+          "api": {
+            "$ref": "#/components/schemas/AppConfigApi"
+          },
+          "environment": {
+            "$ref": "#/components/schemas/AppConfigEnvironment"
+          },
+          "mint": {
+            "$ref": "#/components/schemas/AppConfigMint"
+          },
+          "mints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AppConfigMint"
+            }
+          }
+        },
+        "required": ["app", "api", "environment", "mint", "mints"]
+      },
+      "AppHealth": {
+        "type": "object",
+        "properties": {
+          "isSolanaOk": {
+            "type": "boolean"
+          },
+          "isKineticOk": {
+            "type": "boolean"
+          },
+          "time": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": ["isSolanaOk", "isKineticOk", "time"]
+      },
+      "LatestBlockhashResponse": {
+        "type": "object",
+        "properties": {
+          "blockhash": {
+            "type": "string"
+          },
+          "lastValidBlockHeight": {
+            "type": "integer"
+          }
+        },
+        "required": ["blockhash", "lastValidBlockHeight"]
+      },
+      "MinimumRentExemptionBalanceResponse": {
+        "type": "object",
+        "properties": {
+          "lamports": {
+            "type": "float"
+          }
+        },
+        "required": ["lamports"]
+      },
+      "MakeTransferRequest": {
+        "type": "object",
+        "properties": {
+          "commitment": {
+            "type": "string",
+            "enum": ["Confirmed", "Finalized", "Processed"]
+          },
+          "environment": {
+            "type": "string"
+          },
+          "index": {
+            "type": "integer"
+          },
+          "mint": {
+            "type": "string"
+          },
+          "lastValidBlockHeight": {
+            "type": "integer"
+          },
+          "referenceId": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "tx": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "required": [
+          "commitment",
+          "environment",
+          "index",
+          "mint",
+          "lastValidBlockHeight",
+          "referenceId",
+          "referenceType",
+          "tx"
+        ]
+      },
+      "SignatureStatus": {
+        "type": "object",
+        "properties": {
+          "slot": {
+            "type": "number"
+          },
+          "confirmations": {
+            "type": "number"
+          },
+          "err": {
+            "type": "object"
+          },
+          "confirmationStatus": {
+            "type": "object"
+          }
+        },
+        "required": ["slot", "confirmations", "err", "confirmationStatus"]
+      },
+      "Message": {
+        "type": "object",
+        "properties": {}
+      },
+      "TransactionData": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "$ref": "#/components/schemas/Message"
+          },
+          "signatures": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": ["message", "signatures"]
+      },
+      "ConfirmedTransactionMeta": {
+        "type": "object",
+        "properties": {
+          "fee": {
+            "type": "number"
+          },
+          "innerInstructions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "preBalances": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "postBalances": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "logMessages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "preTokenBalances": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "postTokenBalances": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "err": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "fee",
+          "innerInstructions",
+          "preBalances",
+          "postBalances",
+          "logMessages",
+          "preTokenBalances",
+          "postTokenBalances",
+          "err"
+        ]
+      },
+      "TransactionResponse": {
+        "type": "object",
+        "properties": {
+          "slot": {
+            "type": "number"
+          },
+          "transaction": {
+            "$ref": "#/components/schemas/TransactionData"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ConfirmedTransactionMeta"
+          },
+          "blockTime": {
+            "type": "number"
+          }
+        },
+        "required": ["slot", "transaction", "meta", "blockTime"]
+      },
+      "GetTransactionResponse": {
+        "type": "object",
+        "properties": {
+          "signature": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/SignatureStatus"
+          },
+          "transaction": {
+            "$ref": "#/components/schemas/TransactionResponse"
+          }
+        },
+        "required": ["signature", "status", "transaction"]
+      }
+    }
+  }
+}

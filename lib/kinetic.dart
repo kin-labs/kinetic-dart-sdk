@@ -11,27 +11,23 @@ import 'package:solana/solana.dart';
 
 import 'constants.dart';
 
-class Kinetic {
+class KineticSdk {
 
-  late int index;
-  late KineticSdkEnvironment environment;
   late KineticSdkConfig sdkConfig;
   late KineticApi _api;
   late SolanaClient solanaClient;
   late Keypair keypair;
 
-  Kinetic._internal();
+  KineticSdk._internal();
 
-  static final Kinetic _kinetic = Kinetic._internal();
+  static final KineticSdk _kinetic = KineticSdk._internal();
 
-  factory Kinetic() {
+  factory KineticSdk() {
     return _kinetic;
   }
 
-  Future<bool> setup({required int index, required KineticSdkEnvironment environment}) async {
-    this.index = index;
-    this.environment = environment;
-    sdkConfig = KineticSdkConfig(index: index, environment: environment);
+  Future<bool> setup({required KineticSdkConfig sdkConfig}) async {
+    this.sdkConfig = sdkConfig;
     _api = KineticApi();
     bool ok = await init();
     return ok;
@@ -43,7 +39,7 @@ class Kinetic {
   Future<bool> init() async {
     var _ap = await getAppConfig();
     safePrint(_ap);
-    if (appConfig["app"]["index"] == index) {
+    if (appConfig["app"]["index"] == sdkConfig.index) {
       solanaClient = SolanaClient(rpcUrl: Uri.parse(sdkConfig.solanaRpcEndpoint), websocketUrl: Uri.parse(sdkConfig.solanaWssEndpoint), timeout: timeoutDuration);
       keypair = Keypair();
       initialized = true;
