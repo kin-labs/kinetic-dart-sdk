@@ -5,10 +5,10 @@ import 'package:kinetic/kinetic_sdk_internal.dart';
 import 'package:kinetic/models.dart';
 import 'package:kinetic/tools.dart';
 import 'package:logger/logger.dart';
-import 'package:openapi/api.dart';
 import 'package:solana/solana.dart';
 
 import 'constants.dart';
+import 'generated/api.dart';
 import 'keypair.dart';
 
 class KineticSdk {

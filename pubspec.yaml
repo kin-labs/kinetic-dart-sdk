@@ -18,9 +18,6 @@ dependencies:
   logger: ^1.1.0
   package_info_plus: ^1.4.3+1
 
-  openapi:
-    path: lib/generated
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

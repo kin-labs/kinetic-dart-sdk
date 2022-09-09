@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kinetic/generated/api.dart';
 
 import 'package:kinetic/kinetic_sdk.dart';
 import 'package:kinetic/models.dart';
 import 'package:kinetic/commitment.dart' as commitment;
 import 'package:kinetic/tools.dart';
 import 'package:logger/logger.dart';
-import 'package:openapi/api.dart';
 import 'package:solana/solana.dart';
 
 void main() async {

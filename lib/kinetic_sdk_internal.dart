@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:kinetic/tools.dart';
-import 'package:openapi/api.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 
+import 'generated/api.dart';
 import 'http.dart';
 import 'models.dart';
 
