@@ -5,7 +5,7 @@
 import 'package:openapi/kinetic_sdk_internal.dart';
 ```
 
-All URIs are relative to *https://devnet.kinetic.kin.org*
+All URIs are relative to *https://sandbox.kinetic.host*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

@@ -54,7 +54,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *https://devnet.kinetic.kin.org*
+All URIs are relative to *https://sandbox.kinetic.host*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------

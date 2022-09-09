@@ -522,7 +522,7 @@
   ],
   "servers": [
     {
-      "url": "https://devnet.kinetic.kin.org"
+      "url": "https://sandbox.kinetic.host"
     },
     {
       "url": "https://mainnet.kinetic.kin.org"
