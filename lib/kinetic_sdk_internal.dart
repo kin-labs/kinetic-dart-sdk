@@ -104,7 +104,6 @@ class KineticSdkInternal {
       instructions = [
         createATAInstruction,
         transferInstruction,
-        // authorityInstruction,
       ];
     } else {
       instructions = [transferInstruction];
