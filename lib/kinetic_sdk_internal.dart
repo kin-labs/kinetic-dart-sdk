@@ -67,7 +67,6 @@ class KineticSdkInternal {
     List<Instruction> instructions;
 
     var createATAInstruction;
-    // var authorityInstruction;
 
     if (associatedRecipientAccount == null) {
       if (senderCreate == false) {
@@ -87,15 +86,6 @@ class KineticSdkInternal {
           owner: makeTransferOptions.destination,
           mint: Ed25519HDPublicKey.fromBase58(makeTransferOptions.mint),
         );
-
-        // authorityInstruction = TokenInstruction.setAuthority(
-        //   mintOrAccount: derivedAddress,
-        //   authorityType: AuthorityType.closeAccount,
-        //
-        //   currentAuthority: to,
-        //   newAuthority: hopSignerPublicKey,
-        //   // signers: signersPublic,
-        // );
 
       }
     } else {
