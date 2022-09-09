@@ -34,13 +34,13 @@ class KineticSdk {
   }
 
   bool initialized = false;
-  Map<String, dynamic> appConfig = {};
+  AppConfig? appConfig;
 
   Future<bool> init() async {
     var _ap = await getAppConfig();
     sdkConfig.logger.log(Level.info, "$name: initializing $name@$version");
     safePrint(_ap);
-    if (appConfig["app"]["index"] == sdkConfig.index) {
+    if (appConfig?.app.index == sdkConfig.index) {
       solanaClient = SolanaClient(rpcUrl: Uri.parse(sdkConfig.solanaRpcEndpoint), websocketUrl: Uri.parse(sdkConfig.solanaWssEndpoint), timeout: timeoutDuration);
       keypair = Keypair();
       initialized = true;
@@ -48,12 +48,10 @@ class KineticSdk {
     return initialized;
   }
 
-  Future<Map<String, dynamic>> getAppConfig() async {
-    Map<String, dynamic> httpResponse = await _internal.getAppConfigImpl(sdkConfig);
-    if (httpResponse["statusCode"] == 200) {
-      appConfig = httpResponse["response"];
-    }
-    return httpResponse;
+  Future<AppConfig?> getAppConfig() async {
+    appConfig = await _internal.getAppConfigImpl(sdkConfig);
+
+    return appConfig;
   }
 
   Future<Map<String, dynamic>> getBalance(GetBalanceOptions balanceOptions) async {
@@ -74,10 +72,10 @@ class KineticSdk {
     return httpResponse;
   }
 
-  Future<String> getExplorerUrl(String path) async {
+  Future<String?> getExplorerUrl(String path) async {
     checkInit();
-    var rUrl = appConfig["environment"]["explorer"].toString();
-    var url = rUrl.replaceAll("{path}", path);
+    var rUrl = appConfig?.environment.explorer;
+    var url = rUrl?.replaceAll("{path}", path);
     return url;
   }
 

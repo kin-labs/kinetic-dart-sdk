@@ -11,11 +11,18 @@ import 'models.dart';
 
 class KineticSdkInternal {
 
-  Future<Map<String, dynamic>> getAppConfigImpl(KineticSdkConfig sdkConfig) async {
+  Future<AppConfig?> getAppConfigImpl(KineticSdkConfig sdkConfig) async {
 
-    String _url = "${sdkConfig.endpoint}/api/app/${sdkConfig.environment.name}/${sdkConfig.index}/config";
-    Map<String, dynamic> httpResponse = await httpGetRequest(_url);
-    return httpResponse;
+    // String _url = "${sdkConfig.endpoint}/api/app/${sdkConfig.environment.name}/${sdkConfig.index}/config";
+    // Map<String, dynamic> httpResponse = await httpGetRequest(_url);
+    // return httpResponse;
+
+
+    final apiInstance = AppApi();
+    AppConfig? config = await apiInstance.getAppConfig(sdkConfig.environment.name, sdkConfig.index);
+
+    return config;
+
   }
 
   Future<Map<String, dynamic>> getBalanceImpl(KineticSdkConfig sdkConfig, String accountId) async {
@@ -36,7 +43,7 @@ class KineticSdkInternal {
     return httpResponse;
   }
 
-  Future<AppTransaction?> makeTransferImpl(Map<String, dynamic> appConfig, KineticSdkConfig sdkConfig, SolanaClient solanaClient, bool senderCreate, MakeTransferOptions makeTransferOptions) async {
+  Future<AppTransaction?> makeTransferImpl(AppConfig? appConfig, KineticSdkConfig sdkConfig, SolanaClient solanaClient, bool senderCreate, MakeTransferOptions makeTransferOptions) async {
 
     checkDestination(appConfig, makeTransferOptions.destination.toBase58());
     String feePayer = getFeePayer(appConfig, makeTransferOptions.mint);
@@ -47,7 +54,7 @@ class KineticSdkInternal {
     return appTransaction;
   }
 
-  Future<Map<String, dynamic>> createAccountImpl(Map<String, dynamic> appConfig, KineticSdkConfig sdkConfig, SolanaClient solanaClient, String mint, Ed25519HDKeyPair from) async {
+  Future<Map<String, dynamic>> createAccountImpl(AppConfig? appConfig, KineticSdkConfig sdkConfig, SolanaClient solanaClient, String mint, Ed25519HDKeyPair from) async {
 
     String feePayer = getFeePayer(appConfig, mint);
 

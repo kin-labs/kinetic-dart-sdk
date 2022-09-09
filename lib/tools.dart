@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import 'generated/api.dart';
 import 'identifiers/app_version.dart';
 import 'identifiers/version.dart';
 import 'models.dart';
@@ -29,28 +30,18 @@ getRawQuantity(double quantity, int decimals) {
   return quantity * pow(10,decimals);
 }
 
-getFeePayer(Map<String, dynamic> appConfig, String mint) {
+getFeePayer(AppConfig? appConfig, String mint) {
   String feePayer = "";
 
-  if (appConfig.containsKey("mint") == false || appConfig.containsKey("mints") == false) {
+  if (appConfig == null) {
     throw KineticMissingMintsException();
   }
 
-  for (var mintObject in appConfig["mints"]) {
-    if (mintObject.containsKey("publicKey") && mintObject["publicKey"] == mint) {
-      feePayer = mintObject["feePayer"];
+  for (var mintObject in appConfig.mints) {
+    if (mintObject.publicKey == mint) {
+      feePayer = mintObject.feePayer;
     }
   }
-
-  // Uncomment below to always default to Kin feePayer default
-  // NOTICE: can be an issue if user purposely chose an quantity based on a different mint
-  // User could end up overpaying due to different mint supply and decimals.
-
-  // if (feePayer.isEmpty) {
-  //   if (appConfig["mint"].containsKey("publicKey")) {
-  //     feePayer = appConfig["mint"]["public"];
-  //   }
-  // }
 
   if (feePayer.isEmpty) {
     throw KineticUnknownFeePayerException;
@@ -60,17 +51,17 @@ getFeePayer(Map<String, dynamic> appConfig, String mint) {
 }
 
 
-getDecimals(Map<String, dynamic> appConfig, String mint) {
+getDecimals(AppConfig? appConfig, String mint) {
 
   int decimals = -1;
 
-  if (appConfig.containsKey("mint") == false || appConfig.containsKey("mints") == false) {
+  if (appConfig == null) {
     throw KineticMissingMintsException();
   }
 
-  for (var mintObject in appConfig["mints"]) {
-    if (mintObject.containsKey("publicKey") && mintObject["publicKey"] == mint) {
-      decimals = mintObject["decimals"];
+  for (var mintObject in appConfig.mints) {
+    if (mintObject.publicKey == mint) {
+      decimals = mintObject.decimals;
     }
   }
 
@@ -81,13 +72,13 @@ getDecimals(Map<String, dynamic> appConfig, String mint) {
   return decimals;
 }
 
-checkDestination(Map<String, dynamic> appConfig, String dest) {
-  if (appConfig.containsKey("mint") == false || appConfig.containsKey("mints") == false) {
+checkDestination(AppConfig? appConfig, String dest) {
+  if (appConfig == null) {
     throw KineticMissingMintsException();
   }
 
-  for (var mintObject in appConfig["mints"]) {
-    if (mintObject.containsKey("publicKey") && mintObject["publicKey"] == dest) {
+  for (var mintObject in appConfig.mints) {
+    if (mintObject.publicKey == dest) {
       throw KineticInvalidDestinationException();
     }
   }
