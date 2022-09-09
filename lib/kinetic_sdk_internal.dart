@@ -7,7 +7,7 @@ import 'package:solana/solana.dart';
 import 'http.dart';
 import 'models.dart';
 
-class KineticApi {
+class KineticSdkInternal {
 
   Future<Map<String, dynamic>> getAppConfigImpl(KineticSdkConfig sdkConfig) async {
     String _url = "${sdkConfig.endpoint}/api/app/${sdkConfig.environment.name}/${sdkConfig.index}/config";

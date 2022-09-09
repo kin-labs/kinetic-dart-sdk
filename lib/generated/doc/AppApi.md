@@ -2,7 +2,7 @@
 
 ## Load the API package
 ```dart
-import 'package:openapi/api.dart';
+import 'package:openapi/kinetic_sdk_internal.dart';
 ```
 
 All URIs are relative to *https://devnet.kinetic.kin.org*
@@ -20,7 +20,7 @@ Method | HTTP request | Description
 
 ### Example
 ```dart
-import 'package:openapi/api.dart';
+import 'package:openapi/kinetic_sdk_internal.dart';
 
 final api_instance = AppApi();
 final environment = environment_example; // String | 
@@ -63,7 +63,7 @@ No authorization required
 
 ### Example
 ```dart
-import 'package:openapi/api.dart';
+import 'package:openapi/kinetic_sdk_internal.dart';
 
 final api_instance = AppApi();
 final environment = environment_example; // String | 

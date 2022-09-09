@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:bs58/bs58.dart';
-import 'package:kinetic/api.dart';
+import 'package:kinetic/kinetic_sdk_internal.dart';
 import 'package:kinetic/models.dart';
 import 'package:kinetic/tools.dart';
 import 'package:solana/solana.dart';
@@ -14,7 +14,7 @@ import 'constants.dart';
 class KineticSdk {
 
   late KineticSdkConfig sdkConfig;
-  late KineticApi _api;
+  late KineticSdkInternal _internal;
   late SolanaClient solanaClient;
   late Keypair keypair;
 
@@ -28,7 +28,7 @@ class KineticSdk {
 
   Future<bool> setup({required KineticSdkConfig sdkConfig}) async {
     this.sdkConfig = sdkConfig;
-    _api = KineticApi();
+    _internal = KineticSdkInternal();
     bool ok = await init();
     return ok;
   }
@@ -48,7 +48,7 @@ class KineticSdk {
   }
 
   Future<Map<String, dynamic>> getAppConfig() async {
-    Map<String, dynamic> httpResponse = await _api.getAppConfigImpl(sdkConfig);
+    Map<String, dynamic> httpResponse = await _internal.getAppConfigImpl(sdkConfig);
     if (httpResponse["statusCode"] == 200) {
       appConfig = httpResponse["response"];
     }
@@ -57,19 +57,19 @@ class KineticSdk {
 
   Future<Map<String, dynamic>> getBalance(GetBalanceOptions balanceOptions) async {
     checkInit();
-    Map<String, dynamic> httpResponse = await _api.getBalanceImpl(sdkConfig, balanceOptions.account.toBase58());
+    Map<String, dynamic> httpResponse = await _internal.getBalanceImpl(sdkConfig, balanceOptions.account.toBase58());
     return httpResponse;
   }
 
   Future<Map<String, dynamic>> getHistory(GetHistoryOptions historyOptions) async {
     checkInit();
-    Map<String, dynamic> httpResponse = await _api.getHistoryImpl(sdkConfig, historyOptions.account.toBase58(), historyOptions.mint.toBase58());
+    Map<String, dynamic> httpResponse = await _internal.getHistoryImpl(sdkConfig, historyOptions.account.toBase58(), historyOptions.mint.toBase58());
     return httpResponse;
   }
 
   Future<Map<String, dynamic>> getTokenAccounts(GetTokenAccountsOptions tokenAccountsOptions) async {
     checkInit();
-    Map<String, dynamic> httpResponse = await _api.getTokenAccountsImpl(sdkConfig, tokenAccountsOptions.account.toBase58(), tokenAccountsOptions.mint.toBase58());
+    Map<String, dynamic> httpResponse = await _internal.getTokenAccountsImpl(sdkConfig, tokenAccountsOptions.account.toBase58(), tokenAccountsOptions.mint.toBase58());
     return httpResponse;
   }
 
@@ -83,7 +83,7 @@ class KineticSdk {
   Future<Map<String, dynamic>> requestAirdrop(RequestAirdropOptions airdropOptions) async {
     checkInit();
 
-    Map<String, dynamic> httpResponse = await _api.postRequestAirdropImpl(sdkConfig, airdropOptions.account.toBase58(), airdropOptions.mint.toBase58(), double.parse(airdropOptions.amount));
+    Map<String, dynamic> httpResponse = await _internal.postRequestAirdropImpl(sdkConfig, airdropOptions.account.toBase58(), airdropOptions.mint.toBase58(), double.parse(airdropOptions.amount));
 
     return httpResponse;
   }
@@ -95,7 +95,7 @@ class KineticSdk {
   Future<Map<String, dynamic>> makeTransfer({required MakeTransferOptions makeTransferOptions, required bool senderCreate}) async {
     checkInit();
 
-    Map<String, dynamic> httpResponse = await _api.makeTransferImpl(appConfig, sdkConfig, solanaClient, senderCreate, makeTransferOptions);
+    Map<String, dynamic> httpResponse = await _internal.makeTransferImpl(appConfig, sdkConfig, solanaClient, senderCreate, makeTransferOptions);
 
     return httpResponse;
   }
@@ -103,7 +103,7 @@ class KineticSdk {
   Future<Map<String, dynamic>> createAccount(CreateAccountOptions accountOptions) async {
     checkInit();
 
-    Map<String, dynamic> httpResponse = await _api.createAccountImpl(appConfig, sdkConfig, solanaClient, accountOptions.mint, accountOptions.owner);
+    Map<String, dynamic> httpResponse = await _internal.createAccountImpl(appConfig, sdkConfig, solanaClient, accountOptions.mint, accountOptions.owner);
 
     return httpResponse;
   }

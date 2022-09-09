@@ -37,7 +37,7 @@ TODO
 Please follow the [installation procedure](#installation--usage) and then run the following:
 
 ```dart
-import 'package:openapi/api.dart';
+import 'package:openapi/kinetic_sdk_internal.dart';
 
 
 final api_instance = AccountApi();

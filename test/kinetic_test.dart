@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:kinetic/kinetic.dart';
+import 'package:kinetic/kinetic_sdk.dart';
 import 'package:kinetic/models.dart';
 import 'package:kinetic/commitment.dart' as commitment;
 import 'package:kinetic/tools.dart';
