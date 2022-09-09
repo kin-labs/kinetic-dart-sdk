@@ -12,6 +12,7 @@ import 'models.dart';
 class KineticSdkInternal {
 
   Future<Map<String, dynamic>> getAppConfigImpl(KineticSdkConfig sdkConfig) async {
+
     String _url = "${sdkConfig.endpoint}/api/app/${sdkConfig.environment.name}/${sdkConfig.index}/config";
     Map<String, dynamic> httpResponse = await httpGetRequest(_url);
     return httpResponse;

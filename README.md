@@ -9,7 +9,8 @@ https://github.com/kin-labs/kinetic/blob/dev/api-swagger.json
 `git clone https://github.com/kin-labs/kinetic-dart.git`
 `cd kinetic-dart`
 `npx @openapitools/openapi-generator-cli generate -i kinetic-open-api.json -g dart -o lib/open-api-generated/`
-`cd lib/open-api-generated && rm -rf test && mv lib ../generated`
+`mv lib/open-api-generated/lib ../generated`
+`rm -rf lib/open-api-generated/`
 
 ## Replace the non-null required args found in the files below:
 `lib/generated/model/confirmed_signature_info.dart`
