@@ -212,6 +212,7 @@ class KineticSdkInternal {
     String _url = "${sdkConfig.endpoint}/api/airdrop/";
 
     Map<String, dynamic> dataMap = {
+      ...sdkConfig.headers,
       "account":accountId,
       "amount":amount.toString(),
       "commitment":"confirmed",
@@ -228,6 +229,7 @@ class KineticSdkInternal {
     String _url = "${sdkConfig.endpoint}/api/account/create/";
 
     Map<String, dynamic> dataMap = {
+      ...sdkConfig.headers,
       "environment":sdkConfig.environment.name,
       "index":sdkConfig.index,
       "mint":mint,
@@ -242,6 +244,7 @@ class KineticSdkInternal {
     String _url = "${sdkConfig.endpoint}/api/transaction/make-transfer/";
 
     Map<String, dynamic> dataMap = {
+      ...sdkConfig.headers,
       "commitment":makeTransferOptions.commitment.name,
       "environment":sdkConfig.environment.name,
       "index":sdkConfig.index,

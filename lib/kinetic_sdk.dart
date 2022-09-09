@@ -1,8 +1,12 @@
 library kinetic;
 
+import 'package:kinetic/identifiers/app_version.dart';
+import 'package:kinetic/identifiers/version.dart';
 import 'package:kinetic/kinetic_sdk_internal.dart';
 import 'package:kinetic/models.dart';
 import 'package:kinetic/tools.dart';
+import 'package:logger/logger.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:solana/solana.dart';
 
 import 'constants.dart';
@@ -34,7 +38,9 @@ class KineticSdk {
   Map<String, dynamic> appConfig = {};
 
   Future<bool> init() async {
+    await _setupIdentifiers();
     var _ap = await getAppConfig();
+    sdkConfig.logger.log(Level.info, "$name: initializing $name@$version");
     safePrint(_ap);
     if (appConfig["app"]["index"] == sdkConfig.index) {
       solanaClient = SolanaClient(rpcUrl: Uri.parse(sdkConfig.solanaRpcEndpoint), websocketUrl: Uri.parse(sdkConfig.solanaWssEndpoint), timeout: timeoutDuration);
@@ -42,6 +48,18 @@ class KineticSdk {
       initialized = true;
     }
     return initialized;
+  }
+
+  _setupIdentifiers() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    // Version
+    name = packageInfo.packageName;
+    version = packageInfo.version;
+
+    // App Version
+    appName = packageInfo.appName;
+    appVersion = packageInfo.buildNumber;
   }
 
   Future<Map<String, dynamic>> getAppConfig() async {

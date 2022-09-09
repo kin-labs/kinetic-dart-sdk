@@ -1,6 +1,6 @@
 import 'package:kinetic/constants.dart';
+import 'package:kinetic/identifiers/version.dart';
 import 'package:logger/logger.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:solana/solana.dart' as solana;
 
 import 'commitment.dart';
@@ -14,22 +14,16 @@ class KineticSdkConfig {
   late Map<String, String> headers;
   late Logger logger;
 
-  KineticSdkConfig({required this.index, required this.environment, required this.logger}){
+  KineticSdkConfig({required this.index, required this.environment, required this.logger}) {
     endpoint = "sandbox.kinetic.host";
     solanaRpcEndpoint = environment == KineticSdkEnvironment.mainnet ? mainnetRpcEndpoint : devnetRpcEndpoint;
     solanaWssEndpoint = environment == KineticSdkEnvironment.mainnet ? mainnetWssEndpoint : devnetWssEndpoint;
 
-    PackageInfo.fromPlatform().then((packageInfo) {
-      String version = packageInfo.version;
-      String code = packageInfo.buildNumber;
-
-      headers = {
-        'kinetic-environment': environment.name,
-        'kinetic-index': environment.index.toString(),
-        'kinetic-user-agent': "DART@$version",
-      };
-
-    });
+    headers = {
+      'kinetic-environment': environment.name,
+      'kinetic-index': environment.index.toString(),
+      'kinetic-user-agent': "DART@$version",
+    };
 
   }
 }
