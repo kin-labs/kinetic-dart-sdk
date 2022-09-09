@@ -10,7 +10,8 @@ void main() async {
 
   test('Get App Config', () async {
     final kinetic = KineticSdk();
-    bool ok = await kinetic.setup(index: 1, environment: KineticSdkEnvironment.devnet);
+    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
+    bool ok = await kinetic.setup(sdkConfig: config);
     if (ok) {
       safePrint(kinetic.appConfig.toString());
     }
@@ -19,7 +20,8 @@ void main() async {
 
   test('Get Balance', () async {
     final kinetic = KineticSdk();
-    bool ok = await kinetic.setup(index: 1, environment: KineticSdkEnvironment.devnet);
+    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
+    bool ok = await kinetic.setup(sdkConfig: config);
     if (ok) {
 
       GetBalanceOptions balanceOptions = GetBalanceOptions(account: kinetic.keypair.publicKeyFromString("DUXaDD5FZDa9yFf83tP8Abb6z66ECiawRShejSXRMN5F"));
@@ -31,7 +33,8 @@ void main() async {
 
   test('Get History', () async {
     final kinetic = KineticSdk();
-    bool ok = await kinetic.setup(index: 1, environment: KineticSdkEnvironment.devnet);
+    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
+    bool ok = await kinetic.setup(sdkConfig: config);
     if (ok) {
       GetHistoryOptions historyOptions = GetHistoryOptions(account: kinetic.keypair.publicKeyFromString("DUXaDD5FZDa9yFf83tP8Abb6z66ECiawRShejSXRMN5F"), mint: kinetic.keypair.publicKeyFromString("KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX"));
       dynamic res = await kinetic.getHistory(historyOptions);
@@ -42,7 +45,8 @@ void main() async {
 
   test('Get Token Accounts', () async {
     final kinetic = KineticSdk();
-    bool ok = await kinetic.setup(index: 1, environment: KineticSdkEnvironment.devnet);
+    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
+    bool ok = await kinetic.setup(sdkConfig: config);
     if (ok) {
       GetTokenAccountsOptions accountOptions = GetTokenAccountsOptions(account: kinetic.keypair.publicKeyFromString("DUXaDD5FZDa9yFf83tP8Abb6z66ECiawRShejSXRMN5F"), mint: kinetic.keypair.publicKeyFromString("KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX"));
       dynamic res = await kinetic.getTokenAccounts(accountOptions);
@@ -53,7 +57,8 @@ void main() async {
 
   test('Request Airdrop', () async {
     final kinetic = KineticSdk();
-    bool ok = await kinetic.setup(index: 1, environment: KineticSdkEnvironment.devnet);
+    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
+    bool ok = await kinetic.setup(sdkConfig: config);
     if (ok) {
       RequestAirdropOptions airdropOptions = RequestAirdropOptions(account: kinetic.keypair.publicKeyFromString("DUXaDD5FZDa9yFf83tP8Abb6z66ECiawRShejSXRMN5F"), mint: kinetic.keypair.publicKeyFromString("KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX"), amount: "10", commitment: commitment.Commitment.Finalized);
       dynamic res = await kinetic.requestAirdrop(airdropOptions);
@@ -64,7 +69,8 @@ void main() async {
 
   test('makeTransfer', () async {
     final kinetic = KineticSdk();
-    bool ok = await kinetic.setup(index: 1, environment: KineticSdkEnvironment.devnet);
+    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
+    bool ok = await kinetic.setup(sdkConfig: config);
     if (ok) {
       final from = await Ed25519HDKeyPair.fromPrivateKeyBytes(
         privateKey: [230, 245, 154, 108, 75, 133, 168, 61, 98, 99, 138, 19, 150, 122, 171, 162, 56, 101, 142, 67, 229, 255, 240, 158, 249, 113, 155, 58, 155, 128, 209, 10],
