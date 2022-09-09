@@ -73,12 +73,12 @@ class ConfirmedSignatureInfo {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "ConfirmedSignatureInfo[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "ConfirmedSignatureInfo[$key]" has a null value in JSON.');
+          // assert(json[key] != null, 'Required key "ConfirmedSignatureInfo[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
-      // Breaks required non-null arg
+      // TODO: check
       // return ConfirmedSignatureInfo(
       //   signature: mapValueOfType<String>(json, r'signature')!,
       //   slot: json[r'slot'] == null

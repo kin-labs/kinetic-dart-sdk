@@ -54,16 +54,16 @@ class KineticSdk {
     return appConfig;
   }
 
-  Future<Map<String, dynamic>> getBalance(GetBalanceOptions balanceOptions) async {
+  Future<BalanceResponse?> getBalance(GetBalanceOptions balanceOptions) async {
     checkInit();
-    Map<String, dynamic> httpResponse = await _internal.getBalanceImpl(sdkConfig, balanceOptions.account.toBase58());
-    return httpResponse;
+    BalanceResponse? res = await _internal.getBalanceImpl(sdkConfig, balanceOptions.account.toBase58());
+    return res;
   }
 
-  Future<Map<String, dynamic>> getHistory(GetHistoryOptions historyOptions) async {
+  Future<List<HistoryResponse>?> getHistory(GetHistoryOptions historyOptions) async {
     checkInit();
-    Map<String, dynamic> httpResponse = await _internal.getHistoryImpl(sdkConfig, historyOptions.account.toBase58(), historyOptions.mint.toBase58());
-    return httpResponse;
+    List<HistoryResponse>? res = await _internal.getHistoryImpl(sdkConfig, historyOptions.account.toBase58(), historyOptions.mint.toBase58());
+    return res;
   }
 
   Future<Map<String, dynamic>> getTokenAccounts(GetTokenAccountsOptions tokenAccountsOptions) async {
@@ -91,6 +91,7 @@ class KineticSdk {
     initialized == false ? throw KineticInitializationException() : null;
   }
 
+  // Named to Transaction
   Future<AppTransaction?> makeTransfer({required MakeTransferOptions makeTransferOptions, required bool senderCreate}) async {
     checkInit();
 

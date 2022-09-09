@@ -10,9 +10,9 @@
 
 part of openapi.api;
 
-class AppTransaction {
-  /// Returns a new [AppTransaction] instance.
-  AppTransaction({
+class Transaction {
+  /// Returns a new [Transaction] instance.
+  Transaction({
     required this.id,
     required this.createdAt,
     required this.updatedAt,
@@ -58,7 +58,7 @@ class AppTransaction {
 
   String? destination;
 
-  List<AppTransactionError>? errors;
+  List<TransactionError>? errors;
 
   String? explorerUrl;
 
@@ -90,7 +90,7 @@ class AppTransaction {
 
   String? source_;
 
-  AppTransactionStatusEnum? status;
+  TransactionStatusEnum? status;
 
   num? totalDuration;
 
@@ -109,7 +109,7 @@ class AppTransaction {
   num? webhookVerifyDuration;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is AppTransaction &&
+  bool operator ==(Object other) => identical(this, other) || other is Transaction &&
      other.id == id &&
      other.createdAt == createdAt &&
      other.updatedAt == updatedAt &&
@@ -178,7 +178,7 @@ class AppTransaction {
     (webhookVerifyDuration == null ? 0 : webhookVerifyDuration!.hashCode);
 
   @override
-  String toString() => 'AppTransaction[id=$id, createdAt=$createdAt, updatedAt=$updatedAt, amount=$amount, decimals=$decimals, destination=$destination, errors=$errors, explorerUrl=$explorerUrl, feePayer=$feePayer, ip=$ip, mint=$mint, processingDuration=$processingDuration, referenceId=$referenceId, referenceType=$referenceType, signature=$signature, solanaCommitted=$solanaCommitted, solanaCommittedDuration=$solanaCommittedDuration, solanaFinalized=$solanaFinalized, solanaFinalizedDuration=$solanaFinalizedDuration, solanaStart=$solanaStart, solanaTransaction=$solanaTransaction, source_=$source_, status=$status, totalDuration=$totalDuration, ua=$ua, webhookEventStart=$webhookEventStart, webhookEventEnd=$webhookEventEnd, webhookEventDuration=$webhookEventDuration, webhookVerifyStart=$webhookVerifyStart, webhookVerifyEnd=$webhookVerifyEnd, webhookVerifyDuration=$webhookVerifyDuration]';
+  String toString() => 'Transaction[id=$id, createdAt=$createdAt, updatedAt=$updatedAt, amount=$amount, decimals=$decimals, destination=$destination, errors=$errors, explorerUrl=$explorerUrl, feePayer=$feePayer, ip=$ip, mint=$mint, processingDuration=$processingDuration, referenceId=$referenceId, referenceType=$referenceType, signature=$signature, solanaCommitted=$solanaCommitted, solanaCommittedDuration=$solanaCommittedDuration, solanaFinalized=$solanaFinalized, solanaFinalizedDuration=$solanaFinalizedDuration, solanaStart=$solanaStart, solanaTransaction=$solanaTransaction, source_=$source_, status=$status, totalDuration=$totalDuration, ua=$ua, webhookEventStart=$webhookEventStart, webhookEventEnd=$webhookEventEnd, webhookEventDuration=$webhookEventDuration, webhookVerifyStart=$webhookVerifyStart, webhookVerifyEnd=$webhookVerifyEnd, webhookVerifyDuration=$webhookVerifyDuration]';
 
   Map<String, dynamic> toJson() {
     final _json = <String, dynamic>{};
@@ -340,10 +340,10 @@ class AppTransaction {
     return _json;
   }
 
-  /// Returns a new [AppTransaction] instance and imports its values from
+  /// Returns a new [Transaction] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static AppTransaction? fromJson(dynamic value) {
+  static Transaction? fromJson(dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -352,13 +352,13 @@ class AppTransaction {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "AppTransaction[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "AppTransaction[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "Transaction[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "Transaction[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
-      return AppTransaction(
+      return Transaction(
         id: mapValueOfType<String>(json, r'id'),
         createdAt: mapDateTime(json, r'createdAt', ''),
         updatedAt: mapDateTime(json, r'updatedAt', ''),
@@ -367,7 +367,7 @@ class AppTransaction {
             ? null
             : num.parse(json[r'decimals'].toString()),
         destination: mapValueOfType<String>(json, r'destination'),
-        errors: AppTransactionError.listFromJson(json[r'errors']),
+        errors: TransactionError.listFromJson(json[r'errors']),
         explorerUrl: mapValueOfType<String>(json, r'explorerUrl'),
         feePayer: mapValueOfType<String>(json, r'feePayer'),
         ip: mapValueOfType<String>(json, r'ip'),
@@ -389,7 +389,7 @@ class AppTransaction {
         solanaStart: mapDateTime(json, r'solanaStart', ''),
         solanaTransaction: mapValueOfType<Object>(json, r'solanaTransaction'),
         source_: mapValueOfType<String>(json, r'source'),
-        status: AppTransactionStatusEnum.fromJson(json[r'status']),
+        status: TransactionStatusEnum.fromJson(json[r'status']),
         totalDuration: json[r'totalDuration'] == null
             ? null
             : num.parse(json[r'totalDuration'].toString()),
@@ -409,11 +409,11 @@ class AppTransaction {
     return null;
   }
 
-  static List<AppTransaction>? listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <AppTransaction>[];
+  static List<Transaction>? listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <Transaction>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = AppTransaction.fromJson(row);
+        final value = Transaction.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -422,12 +422,12 @@ class AppTransaction {
     return result.toList(growable: growable);
   }
 
-  static Map<String, AppTransaction> mapFromJson(dynamic json) {
-    final map = <String, AppTransaction>{};
+  static Map<String, Transaction> mapFromJson(dynamic json) {
+    final map = <String, Transaction>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = AppTransaction.fromJson(entry.value);
+        final value = Transaction.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -436,13 +436,13 @@ class AppTransaction {
     return map;
   }
 
-  // maps a json object with a list of AppTransaction-objects as value to a dart map
-  static Map<String, List<AppTransaction>> mapListFromJson(dynamic json, {bool growable = false,}) {
-    final map = <String, List<AppTransaction>>{};
+  // maps a json object with a list of Transaction-objects as value to a dart map
+  static Map<String, List<Transaction>> mapListFromJson(dynamic json, {bool growable = false,}) {
+    final map = <String, List<Transaction>>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = AppTransaction.listFromJson(entry.value, growable: growable,);
+        final value = Transaction.listFromJson(entry.value, growable: growable,);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -488,9 +488,9 @@ class AppTransaction {
 }
 
 
-class AppTransactionStatusEnum {
+class TransactionStatusEnum {
   /// Instantiate a new enum with the provided [value].
-  const AppTransactionStatusEnum._(this.value);
+  const TransactionStatusEnum._(this.value);
 
   /// The underlying value of this enum member.
   final String value;
@@ -500,14 +500,14 @@ class AppTransactionStatusEnum {
 
   String toJson() => value;
 
-  static const committed = AppTransactionStatusEnum._(r'Committed');
-  static const confirmed = AppTransactionStatusEnum._(r'Confirmed');
-  static const failed = AppTransactionStatusEnum._(r'Failed');
-  static const finalized = AppTransactionStatusEnum._(r'Finalized');
-  static const processing = AppTransactionStatusEnum._(r'Processing');
+  static const committed = TransactionStatusEnum._(r'Committed');
+  static const confirmed = TransactionStatusEnum._(r'Confirmed');
+  static const failed = TransactionStatusEnum._(r'Failed');
+  static const finalized = TransactionStatusEnum._(r'Finalized');
+  static const processing = TransactionStatusEnum._(r'Processing');
 
-  /// List of all possible values in this [enum][AppTransactionStatusEnum].
-  static const values = <AppTransactionStatusEnum>[
+  /// List of all possible values in this [enum][TransactionStatusEnum].
+  static const values = <TransactionStatusEnum>[
     committed,
     confirmed,
     failed,
@@ -515,13 +515,13 @@ class AppTransactionStatusEnum {
     processing,
   ];
 
-  static AppTransactionStatusEnum? fromJson(dynamic value) => AppTransactionStatusEnumTypeTransformer().decode(value);
+  static TransactionStatusEnum? fromJson(dynamic value) => TransactionStatusEnumTypeTransformer().decode(value);
 
-  static List<AppTransactionStatusEnum>? listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <AppTransactionStatusEnum>[];
+  static List<TransactionStatusEnum>? listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <TransactionStatusEnum>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = AppTransactionStatusEnum.fromJson(row);
+        final value = TransactionStatusEnum.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -531,16 +531,16 @@ class AppTransactionStatusEnum {
   }
 }
 
-/// Transformation class that can [encode] an instance of [AppTransactionStatusEnum] to String,
-/// and [decode] dynamic data back to [AppTransactionStatusEnum].
-class AppTransactionStatusEnumTypeTransformer {
-  factory AppTransactionStatusEnumTypeTransformer() => _instance ??= const AppTransactionStatusEnumTypeTransformer._();
+/// Transformation class that can [encode] an instance of [TransactionStatusEnum] to String,
+/// and [decode] dynamic data back to [TransactionStatusEnum].
+class TransactionStatusEnumTypeTransformer {
+  factory TransactionStatusEnumTypeTransformer() => _instance ??= const TransactionStatusEnumTypeTransformer._();
 
-  const AppTransactionStatusEnumTypeTransformer._();
+  const TransactionStatusEnumTypeTransformer._();
 
-  String encode(AppTransactionStatusEnum data) => data.value;
+  String encode(TransactionStatusEnum data) => data.value;
 
-  /// Decodes a [dynamic value][data] to a AppTransactionStatusEnum.
+  /// Decodes a [dynamic value][data] to a TransactionStatusEnum.
   ///
   /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
   /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
@@ -548,14 +548,14 @@ class AppTransactionStatusEnumTypeTransformer {
   ///
   /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
   /// and users are still using an old app with the old code.
-  AppTransactionStatusEnum? decode(dynamic data, {bool allowNull = true}) {
+  TransactionStatusEnum? decode(dynamic data, {bool allowNull = true}) {
     if (data != null) {
       switch (data.toString()) {
-        case r'Committed': return AppTransactionStatusEnum.committed;
-        case r'Confirmed': return AppTransactionStatusEnum.confirmed;
-        case r'Failed': return AppTransactionStatusEnum.failed;
-        case r'Finalized': return AppTransactionStatusEnum.finalized;
-        case r'Processing': return AppTransactionStatusEnum.processing;
+        case r'Committed': return TransactionStatusEnum.committed;
+        case r'Confirmed': return TransactionStatusEnum.confirmed;
+        case r'Failed': return TransactionStatusEnum.failed;
+        case r'Finalized': return TransactionStatusEnum.finalized;
+        case r'Processing': return TransactionStatusEnum.processing;
         default:
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');
@@ -565,8 +565,8 @@ class AppTransactionStatusEnumTypeTransformer {
     return null;
   }
 
-  /// Singleton [AppTransactionStatusEnumTypeTransformer] instance.
-  static AppTransactionStatusEnumTypeTransformer? _instance;
+  /// Singleton [TransactionStatusEnumTypeTransformer] instance.
+  static TransactionStatusEnumTypeTransformer? _instance;
 }
 
 

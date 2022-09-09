@@ -13,19 +13,31 @@ part of openapi.api;
 class TransactionResponse {
   /// Returns a new [TransactionResponse] instance.
   TransactionResponse({
-    required this.slot,
+    this.slot,
     required this.transaction,
     required this.meta,
-    required this.blockTime,
+    this.blockTime,
   });
 
-  num slot;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  num? slot;
 
   TransactionData transaction;
 
   ConfirmedTransactionMeta meta;
 
-  num blockTime;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  num? blockTime;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is TransactionResponse &&
@@ -37,20 +49,28 @@ class TransactionResponse {
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (slot.hashCode) +
+    (slot == null ? 0 : slot!.hashCode) +
     (transaction.hashCode) +
     (meta.hashCode) +
-    (blockTime.hashCode);
+    (blockTime == null ? 0 : blockTime!.hashCode);
 
   @override
   String toString() => 'TransactionResponse[slot=$slot, transaction=$transaction, meta=$meta, blockTime=$blockTime]';
 
   Map<String, dynamic> toJson() {
     final _json = <String, dynamic>{};
+    if (slot != null) {
       _json[r'slot'] = slot;
+    } else {
+      _json[r'slot'] = null;
+    }
       _json[r'transaction'] = transaction;
       _json[r'meta'] = meta;
+    if (blockTime != null) {
       _json[r'blockTime'] = blockTime;
+    } else {
+      _json[r'blockTime'] = null;
+    }
     return _json;
   }
 
@@ -72,23 +92,15 @@ class TransactionResponse {
         return true;
       }());
 
-      // Breaks required non-null arg
-      // return TransactionResponse(
-      //   slot: json[r'slot'] == null
-      //       ? null
-      //       : num.parse(json[r'slot'].toString()),
-      //   transaction: TransactionData.fromJson(json[r'transaction'])!,
-      //   meta: ConfirmedTransactionMeta.fromJson(json[r'meta'])!,
-      //   blockTime: json[r'blockTime'] == null
-      //       ? null
-      //       : num.parse(json[r'blockTime'].toString()),
-      // );
-
       return TransactionResponse(
-        slot: num.parse(json[r'slot'].toString()),
+        slot: json[r'slot'] == null
+            ? null
+            : num.parse(json[r'slot'].toString()),
         transaction: TransactionData.fromJson(json[r'transaction'])!,
         meta: ConfirmedTransactionMeta.fromJson(json[r'meta'])!,
-        blockTime: num.parse(json[r'blockTime'].toString()),
+        blockTime: json[r'blockTime'] == null
+            ? null
+            : num.parse(json[r'blockTime'].toString()),
       );
     }
     return null;
@@ -138,10 +150,8 @@ class TransactionResponse {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
-    'slot',
     'transaction',
     'meta',
-    'blockTime',
   };
 }
 

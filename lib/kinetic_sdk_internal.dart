@@ -12,29 +12,24 @@ import 'models.dart';
 class KineticSdkInternal {
 
   Future<AppConfig?> getAppConfigImpl(KineticSdkConfig sdkConfig) async {
-
-    // String _url = "${sdkConfig.endpoint}/api/app/${sdkConfig.environment.name}/${sdkConfig.index}/config";
-    // Map<String, dynamic> httpResponse = await httpGetRequest(_url);
-    // return httpResponse;
-
-
     final apiInstance = AppApi();
     AppConfig? config = await apiInstance.getAppConfig(sdkConfig.environment.name, sdkConfig.index);
-
     return config;
-
   }
 
-  Future<Map<String, dynamic>> getBalanceImpl(KineticSdkConfig sdkConfig, String accountId) async {
-    String _url = "${sdkConfig.endpoint}/api/account/balance/${sdkConfig.environment.name}/${sdkConfig.index}/$accountId";
-    Map<String, dynamic> httpResponse = await httpGetRequest(_url);
-    return httpResponse;
+  Future<BalanceResponse?> getBalanceImpl(KineticSdkConfig sdkConfig, String accountId) async {
+    final apiInstance = AccountApi();
+    BalanceResponse? res = await apiInstance.getBalance(sdkConfig.environment.name, sdkConfig.index, accountId);
+    return res;
   }
 
-  Future<Map<String, dynamic>> getHistoryImpl(KineticSdkConfig sdkConfig, String accountId, String mint) async {
-    String _url = "${sdkConfig.endpoint}/api/account/history/${sdkConfig.environment.name}/${sdkConfig.index}/$accountId/$mint";
-    Map<String, dynamic> httpResponse = await httpGetRequest(_url);
-    return httpResponse;
+  Future<List<HistoryResponse>?> getHistoryImpl(KineticSdkConfig sdkConfig, String accountId, String mint) async {
+    // String _url = "${sdkConfig.endpoint}/api/account/history/${sdkConfig.environment.name}/${sdkConfig.index}/$accountId/$mint";
+    // Map<String, dynamic> httpResponse = await httpGetRequest(_url);
+    // return httpResponse;
+    final apiInstance = AccountApi();
+    List<HistoryResponse>? res = await apiInstance.getHistory(sdkConfig.environment.name, sdkConfig.index, accountId, mint);
+    return res;
   }
 
   Future<Map<String, dynamic>> getTokenAccountsImpl(KineticSdkConfig sdkConfig, String accountId, String mint) async {

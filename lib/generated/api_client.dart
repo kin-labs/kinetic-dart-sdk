@@ -11,7 +11,7 @@
 part of openapi.api;
 
 class ApiClient {
-  ApiClient({this.basePath = 'https://sandbox.kinetic.host', this.authentication});
+  ApiClient({this.basePath = 'https://devnet.kinetic.kin.org', this.authentication});
 
   final String basePath;
 
@@ -212,10 +212,6 @@ class ApiClient {
           return AppConfigMint.fromJson(value);
         case 'AppHealth':
           return AppHealth.fromJson(value);
-        case 'AppTransaction':
-          return AppTransaction.fromJson(value);
-        case 'AppTransactionError':
-          return AppTransactionError.fromJson(value);
         case 'BalanceResponse':
           return BalanceResponse.fromJson(value);
         case 'BalanceToken':
@@ -242,8 +238,12 @@ class ApiClient {
           return RequestAirdropResponse.fromJson(value);
         case 'SignatureStatus':
           return SignatureStatus.fromJson(value);
+        case 'Transaction':
+          return Transaction.fromJson(value);
         case 'TransactionData':
           return TransactionData.fromJson(value);
+        case 'TransactionError':
+          return TransactionError.fromJson(value);
         case 'TransactionResponse':
           return TransactionResponse.fromJson(value);
         default:

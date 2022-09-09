@@ -7,22 +7,25 @@ import 'package:logger/logger.dart';
 
 void main() async {
 
-  test('Get App Config', () async {
-    final kinetic = KineticSdk();
-    Logger logger = Logger();
-    await setupIdentifiers();
-    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
-    bool ok = await kinetic.setup(sdkConfig: config);
-    if (ok) {
-      safePrint(kinetic.appConfig.toString());
-    }
-    expect(ok, true);
-  });
+  // test('Get App Config', () async {
+  //   final kinetic = KineticSdk();
+  //   Logger logger = Logger();
+  //   await setupIdentifiers();
+  //   KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
+
+  //   bool ok = await kinetic.setup(sdkConfig: config);
+  //   if (ok) {
+  //     safePrint(kinetic.appConfig.toString());
+  //   }
+  //   expect(ok, true);
+  // });
 
   // test('Get Balance', () async {
   //   final kinetic = KineticSdk();
   //   Logger logger = Logger();
+  //   await setupIdentifiers();
   //   KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
+
   //   bool ok = await kinetic.setup(sdkConfig: config);
   //   if (ok) {
   //
@@ -32,22 +35,22 @@ void main() async {
   //   }
   //   expect(ok, true);
   // });
-  //
-  // test('Get History', () async {
-  //   final kinetic = KineticSdk();
-  //
-  //   Logger logger = Logger();
-  //   KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
-  //
-  //   bool ok = await kinetic.setup(sdkConfig: config);
-  //   if (ok) {
-  //     GetHistoryOptions historyOptions = GetHistoryOptions(account: kinetic.keypair.publicKeyFromString("DUXaDD5FZDa9yFf83tP8Abb6z66ECiawRShejSXRMN5F"), mint: kinetic.keypair.publicKeyFromString("KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX"));
-  //     dynamic res = await kinetic.getHistory(historyOptions);
-  //     safePrint(res);
-  //   }
-  //   expect(ok, true);
-  // });
-  //
+
+  test('Get History', () async {
+    final kinetic = KineticSdk();
+    Logger logger = Logger();
+    await setupIdentifiers();
+    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
+
+    bool ok = await kinetic.setup(sdkConfig: config);
+    if (ok) {
+      GetHistoryOptions historyOptions = GetHistoryOptions(account: kinetic.keypair.publicKeyFromString("DUXaDD5FZDa9yFf83tP8Abb6z66ECiawRShejSXRMN5F"), mint: kinetic.keypair.publicKeyFromString("KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX"));
+      dynamic res = await kinetic.getHistory(historyOptions);
+      safePrint(res);
+    }
+    expect(ok, true);
+  });
+
   // test('Get Token Accounts', () async {
   //   final kinetic = KineticSdk();
   //   Logger logger = Logger();

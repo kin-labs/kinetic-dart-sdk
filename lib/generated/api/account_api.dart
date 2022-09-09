@@ -53,7 +53,7 @@ class AccountApi {
   /// Parameters:
   ///
   /// * [CreateAccountRequest] createAccountRequest (required):
-  Future<AppTransaction?> createAccount(CreateAccountRequest createAccountRequest,) async {
+  Future<Transaction?> createAccount(CreateAccountRequest createAccountRequest,) async {
     final response = await createAccountWithHttpInfo(createAccountRequest,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
@@ -62,7 +62,7 @@ class AccountApi {
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'AppTransaction',) as AppTransaction;
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Transaction',) as Transaction;
     
     }
     return null;

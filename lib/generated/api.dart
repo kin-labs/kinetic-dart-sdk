@@ -42,8 +42,6 @@ part 'model/app_config_cluster.dart';
 part 'model/app_config_environment.dart';
 part 'model/app_config_mint.dart';
 part 'model/app_health.dart';
-part 'model/app_transaction.dart';
-part 'model/app_transaction_error.dart';
 part 'model/balance_response.dart';
 part 'model/balance_token.dart';
 part 'model/confirmed_signature_info.dart';
@@ -57,7 +55,9 @@ part 'model/minimum_rent_exemption_balance_response.dart';
 part 'model/request_airdrop_request.dart';
 part 'model/request_airdrop_response.dart';
 part 'model/signature_status.dart';
+part 'model/transaction.dart';
 part 'model/transaction_data.dart';
+part 'model/transaction_error.dart';
 part 'model/transaction_response.dart';
 
 

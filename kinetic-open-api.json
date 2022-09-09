@@ -60,7 +60,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AppTransaction"
+                  "$ref": "#/components/schemas/Transaction"
                 }
               }
             }
@@ -453,7 +453,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AppTransaction"
+                  "$ref": "#/components/schemas/Transaction"
                 }
               }
             }
@@ -522,7 +522,7 @@
   ],
   "servers": [
     {
-      "url": "https://sandbox.kinetic.host"
+      "url": "https://devnet.kinetic.kin.org"
     },
     {
       "url": "https://mainnet.kinetic.kin.org"
@@ -552,7 +552,7 @@
         },
         "required": ["environment", "index", "mint", "tx"]
       },
-      "AppTransactionError": {
+      "TransactionError": {
         "type": "object",
         "properties": {
           "id": {
@@ -577,7 +577,7 @@
         },
         "required": ["id", "logs", "message", "type", "instruction"]
       },
-      "AppTransaction": {
+      "Transaction": {
         "type": "object",
         "properties": {
           "id": {
@@ -610,7 +610,7 @@
             "nullable": true,
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/AppTransactionError"
+              "$ref": "#/components/schemas/TransactionError"
             }
           },
           "explorerUrl": {
@@ -1124,7 +1124,7 @@
             "type": "object"
           }
         },
-        "required": ["slot", "confirmations", "err", "confirmationStatus"]
+        "required": ["err", "confirmationStatus"]
       },
       "Message": {
         "type": "object",
@@ -1191,16 +1191,7 @@
             "type": "object"
           }
         },
-        "required": [
-          "fee",
-          "innerInstructions",
-          "preBalances",
-          "postBalances",
-          "logMessages",
-          "preTokenBalances",
-          "postTokenBalances",
-          "err"
-        ]
+        "required": ["innerInstructions", "preBalances", "postBalances", "preTokenBalances", "postTokenBalances", "err"]
       },
       "TransactionResponse": {
         "type": "object",
@@ -1218,7 +1209,7 @@
             "type": "number"
           }
         },
-        "required": ["slot", "transaction", "meta", "blockTime"]
+        "required": ["transaction", "meta"]
       },
       "GetTransactionResponse": {
         "type": "object",

@@ -13,7 +13,7 @@ part of openapi.api;
 class ConfirmedTransactionMeta {
   /// Returns a new [ConfirmedTransactionMeta] instance.
   ConfirmedTransactionMeta({
-    required this.fee,
+    this.fee,
     this.innerInstructions = const [],
     this.preBalances = const [],
     this.postBalances = const [],
@@ -23,7 +23,13 @@ class ConfirmedTransactionMeta {
     required this.err,
   });
 
-  num fee;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  num? fee;
 
   List<String> innerInstructions;
 
@@ -53,7 +59,7 @@ class ConfirmedTransactionMeta {
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (fee.hashCode) +
+    (fee == null ? 0 : fee!.hashCode) +
     (innerInstructions.hashCode) +
     (preBalances.hashCode) +
     (postBalances.hashCode) +
@@ -67,7 +73,11 @@ class ConfirmedTransactionMeta {
 
   Map<String, dynamic> toJson() {
     final _json = <String, dynamic>{};
+    if (fee != null) {
       _json[r'fee'] = fee;
+    } else {
+      _json[r'fee'] = null;
+    }
       _json[r'innerInstructions'] = innerInstructions;
       _json[r'preBalances'] = preBalances;
       _json[r'postBalances'] = postBalances;
@@ -96,34 +106,10 @@ class ConfirmedTransactionMeta {
         return true;
       }());
 
-      // Breaks required non-null arg
-      // return ConfirmedTransactionMeta(
-      //   fee: json[r'fee'] == null
-      //       ? null
-      //       : num.parse(json[r'fee'].toString()),
-      //   innerInstructions: json[r'innerInstructions'] is List
-      //       ? (json[r'innerInstructions'] as List).cast<String>()
-      //       : const [],
-      //   preBalances: json[r'preBalances'] is List
-      //       ? (json[r'preBalances'] as List).cast<String>()
-      //       : const [],
-      //   postBalances: json[r'postBalances'] is List
-      //       ? (json[r'postBalances'] as List).cast<String>()
-      //       : const [],
-      //   logMessages: json[r'logMessages'] is List
-      //       ? (json[r'logMessages'] as List).cast<String>()
-      //       : const [],
-      //   preTokenBalances: json[r'preTokenBalances'] is List
-      //       ? (json[r'preTokenBalances'] as List).cast<String>()
-      //       : const [],
-      //   postTokenBalances: json[r'postTokenBalances'] is List
-      //       ? (json[r'postTokenBalances'] as List).cast<String>()
-      //       : const [],
-      //   err: mapValueOfType<Object>(json, r'err')!,
-      // );
-
       return ConfirmedTransactionMeta(
-        fee: num.parse(json[r'fee'].toString()),
+        fee: json[r'fee'] == null
+            ? null
+            : num.parse(json[r'fee'].toString()),
         innerInstructions: json[r'innerInstructions'] is List
             ? (json[r'innerInstructions'] as List).cast<String>()
             : const [],
@@ -144,7 +130,6 @@ class ConfirmedTransactionMeta {
             : const [],
         err: mapValueOfType<Object>(json, r'err')!,
       );
-
     }
     return null;
   }
@@ -193,11 +178,9 @@ class ConfirmedTransactionMeta {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
-    'fee',
     'innerInstructions',
     'preBalances',
     'postBalances',
-    'logMessages',
     'preTokenBalances',
     'postTokenBalances',
     'err',

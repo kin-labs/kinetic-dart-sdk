@@ -13,15 +13,27 @@ part of openapi.api;
 class SignatureStatus {
   /// Returns a new [SignatureStatus] instance.
   SignatureStatus({
-    required this.slot,
-    required this.confirmations,
+    this.slot,
+    this.confirmations,
     required this.err,
     required this.confirmationStatus,
   });
 
-  num slot;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  num? slot;
 
-  num confirmations;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  num? confirmations;
 
   Object err;
 
@@ -37,8 +49,8 @@ class SignatureStatus {
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (slot.hashCode) +
-    (confirmations.hashCode) +
+    (slot == null ? 0 : slot!.hashCode) +
+    (confirmations == null ? 0 : confirmations!.hashCode) +
     (err.hashCode) +
     (confirmationStatus.hashCode);
 
@@ -47,8 +59,16 @@ class SignatureStatus {
 
   Map<String, dynamic> toJson() {
     final _json = <String, dynamic>{};
+    if (slot != null) {
       _json[r'slot'] = slot;
+    } else {
+      _json[r'slot'] = null;
+    }
+    if (confirmations != null) {
       _json[r'confirmations'] = confirmations;
+    } else {
+      _json[r'confirmations'] = null;
+    }
       _json[r'err'] = err;
       _json[r'confirmationStatus'] = confirmationStatus;
     return _json;
@@ -72,25 +92,16 @@ class SignatureStatus {
         return true;
       }());
 
-      // Breaks required non-null arg
-      // return SignatureStatus(
-      //   slot: json[r'slot'] == null
-      //       ? null
-      //       : num.parse(json[r'slot'].toString()),
-      //   confirmations: json[r'confirmations'] == null
-      //       ? null
-      //       : num.parse(json[r'confirmations'].toString()),
-      //   err: mapValueOfType<Object>(json, r'err')!,
-      //   confirmationStatus: mapValueOfType<Object>(json, r'confirmationStatus')!,
-      // );
-
       return SignatureStatus(
-        slot: num.parse(json[r'slot'].toString()),
-        confirmations: num.parse(json[r'confirmations'].toString()),
+        slot: json[r'slot'] == null
+            ? null
+            : num.parse(json[r'slot'].toString()),
+        confirmations: json[r'confirmations'] == null
+            ? null
+            : num.parse(json[r'confirmations'].toString()),
         err: mapValueOfType<Object>(json, r'err')!,
         confirmationStatus: mapValueOfType<Object>(json, r'confirmationStatus')!,
       );
-
     }
     return null;
   }
@@ -139,8 +150,6 @@ class SignatureStatus {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
-    'slot',
-    'confirmations',
     'err',
     'confirmationStatus',
   };
