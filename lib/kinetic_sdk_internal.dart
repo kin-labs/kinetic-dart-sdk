@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:kinetic/tools.dart';
+import 'package:openapi/api.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 
@@ -33,7 +34,7 @@ class KineticSdkInternal {
     return httpResponse;
   }
 
-  Future<Map<String, dynamic>> makeTransferImpl(Map<String, dynamic> appConfig, KineticSdkConfig sdkConfig, SolanaClient solanaClient, bool senderCreate, MakeTransferOptions makeTransferOptions, {List fk = const []}) async {
+  Future<AppTransaction?> makeTransferImpl(Map<String, dynamic> appConfig, KineticSdkConfig sdkConfig, SolanaClient solanaClient, bool senderCreate, MakeTransferOptions makeTransferOptions, {List fk = const []}) async {
 
     checkDestination(appConfig, makeTransferOptions.destination.toBase58());
     String feePayer = getFeePayer(appConfig, makeTransferOptions.mint);
@@ -113,8 +114,6 @@ class KineticSdkInternal {
 
     instructions.insert(0, MemoInstruction(signers: [], memo: base64Encode(b)));
 
-    safePrint(instructions.toString());
-
     final message = Message(
       instructions: instructions,
     );
@@ -140,9 +139,9 @@ class KineticSdkInternal {
     safePrint("From: ${makeTransferOptions.owner.publicKey.toBase58()}");
     safePrint("To: ${makeTransferOptions.destination.toBase58()}");
 
-    Map<String, dynamic> httpResponse = await postPartialSignedTransaction(sdkConfig, makeTransferOptions, _txe, makeTransferOptions.mint, blockHeight);
+    AppTransaction? appTransaction = await generateMakeTransferTransaction(sdkConfig, makeTransferOptions, _txe, makeTransferOptions.mint, blockHeight);
 
-    return httpResponse;
+    return appTransaction;
   }
 
   Future<Map<String, dynamic>> createAccountImpl(Map<String, dynamic> appConfig, KineticSdkConfig sdkConfig, SolanaClient solanaClient, String mint, Ed25519HDKeyPair from) async {
@@ -239,23 +238,45 @@ class KineticSdkInternal {
     return httpResponse;
   }
 
-  Future<Map<String, dynamic>> postPartialSignedTransaction(KineticSdkConfig sdkConfig, MakeTransferOptions makeTransferOptions, String _txe, String mint, int lastValidBlockHeight) async {
+  Future<AppTransaction?> generateMakeTransferTransaction(KineticSdkConfig sdkConfig, MakeTransferOptions makeTransferOptions, String _txe, String mint, int lastValidBlockHeight) async {
     String _url = "${sdkConfig.endpoint}/api/transaction/make-transfer/";
 
-    Map<String, dynamic> dataMap = {
-      ...sdkConfig.headers,
-      "commitment":makeTransferOptions.commitment.name,
-      "environment":sdkConfig.environment.name,
-      "index":sdkConfig.index,
-      "mint":makeTransferOptions.mint,
-      "lastValidBlockHeight":lastValidBlockHeight,
-      "referenceId":makeTransferOptions.referenceId,
-      "referenceType":makeTransferOptions.referenceType,
-      "tx":_txe,
-    };
+    final apiInstance = TransactionApi();
+    final makeTransferRequest = MakeTransferRequest(
+      commitment: MakeTransferRequestCommitmentEnum.confirmed,
+      lastValidBlockHeight: lastValidBlockHeight,
+      environment: sdkConfig.environment.name,
+      index: sdkConfig.index,
+      mint: mint,
+      referenceId: makeTransferOptions.referenceId,
+      referenceType: makeTransferOptions.referenceType,
+      tx: _txe,
+    ); // MakeTransferRequest |
 
-    Map<String, dynamic> httpResponse = await httpPostRequest(_url, jsonEncode(dataMap));
-    return httpResponse;
+    AppTransaction? appTransaction;
+    try {
+      appTransaction = await apiInstance.makeTransfer(makeTransferRequest);
+      safePrint(appTransaction);
+    } catch (e) {
+      safePrint('Exception when calling TransactionApi->makeTransfer: $e\n');
+    }
+
+    return appTransaction;
+
+    // Map<String, dynamic> dataMap = {
+    //   ...sdkConfig.headers,
+    //   "commitment":makeTransferOptions.commitment.name,
+    //   "environment":sdkConfig.environment.name,
+    //   "index":sdkConfig.index,
+    //   "mint":makeTransferOptions.mint,
+    //   "lastValidBlockHeight":lastValidBlockHeight,
+    //   "referenceId":makeTransferOptions.referenceId,
+    //   "referenceType":makeTransferOptions.referenceType,
+    //   "tx":_txe,
+    // };
+    //
+    // Map<String, dynamic> httpResponse = await httpPostRequest(_url, jsonEncode(dataMap));
+    // return httpResponse;
   }
 
 }

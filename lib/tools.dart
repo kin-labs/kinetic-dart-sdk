@@ -1,13 +1,28 @@
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
+import 'identifiers/app_version.dart';
+import 'identifiers/version.dart';
 import 'models.dart';
 
 safePrint(dynamic msg) {
   if (kDebugMode) {
     print(msg.toString());
   }
+}
+
+setupIdentifiers() async {
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+  // Version
+  name = packageInfo.packageName;
+  version = packageInfo.version;
+
+  // App Version
+  appName = packageInfo.appName;
+  appVersion = packageInfo.buildNumber;
 }
 
 getRawQuantity(double quantity, int decimals) {

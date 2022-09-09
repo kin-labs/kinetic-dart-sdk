@@ -1,12 +1,11 @@
 library kinetic;
 
-import 'package:kinetic/identifiers/app_version.dart';
 import 'package:kinetic/identifiers/version.dart';
 import 'package:kinetic/kinetic_sdk_internal.dart';
 import 'package:kinetic/models.dart';
 import 'package:kinetic/tools.dart';
 import 'package:logger/logger.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:openapi/api.dart';
 import 'package:solana/solana.dart';
 
 import 'constants.dart';
@@ -38,7 +37,6 @@ class KineticSdk {
   Map<String, dynamic> appConfig = {};
 
   Future<bool> init() async {
-    await _setupIdentifiers();
     var _ap = await getAppConfig();
     sdkConfig.logger.log(Level.info, "$name: initializing $name@$version");
     safePrint(_ap);
@@ -48,18 +46,6 @@ class KineticSdk {
       initialized = true;
     }
     return initialized;
-  }
-
-  _setupIdentifiers() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
-    // Version
-    name = packageInfo.packageName;
-    version = packageInfo.version;
-
-    // App Version
-    appName = packageInfo.appName;
-    appVersion = packageInfo.buildNumber;
   }
 
   Future<Map<String, dynamic>> getAppConfig() async {
@@ -107,12 +93,12 @@ class KineticSdk {
     initialized == false ? throw KineticInitializationException() : null;
   }
 
-  Future<Map<String, dynamic>> makeTransfer({required MakeTransferOptions makeTransferOptions, required bool senderCreate}) async {
+  Future<AppTransaction?> makeTransfer({required MakeTransferOptions makeTransferOptions, required bool senderCreate}) async {
     checkInit();
 
-    Map<String, dynamic> httpResponse = await _internal.makeTransferImpl(appConfig, sdkConfig, solanaClient, senderCreate, makeTransferOptions);
+    AppTransaction? appTransaction = await _internal.makeTransferImpl(appConfig, sdkConfig, solanaClient, senderCreate, makeTransferOptions);
 
-    return httpResponse;
+    return appTransaction;
   }
 
   Future<Map<String, dynamic>> createAccount(CreateAccountOptions accountOptions) async {
