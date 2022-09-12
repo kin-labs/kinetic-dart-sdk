@@ -24,18 +24,35 @@ class KineticSdkInternal {
   }
 
   Future<List<HistoryResponse>?> getHistoryImpl(KineticSdkConfig sdkConfig, String accountId, String mint) async {
-    // String _url = "${sdkConfig.endpoint}/api/account/history/${sdkConfig.environment.name}/${sdkConfig.index}/$accountId/$mint";
-    // Map<String, dynamic> httpResponse = await httpGetRequest(_url);
-    // return httpResponse;
     final apiInstance = AccountApi();
     List<HistoryResponse>? res = await apiInstance.getHistory(sdkConfig.environment.name, sdkConfig.index, accountId, mint);
     return res;
   }
 
-  Future<Map<String, dynamic>> getTokenAccountsImpl(KineticSdkConfig sdkConfig, String accountId, String mint) async {
-    String _url = "${sdkConfig.endpoint}/api/account/token-accounts/${sdkConfig.environment.name}/${sdkConfig.index}/$accountId/$mint";
-    Map<String, dynamic> httpResponse = await httpGetRequest(_url);
-    return httpResponse;
+  Future<List<String>?> getTokenAccountsImpl(KineticSdkConfig sdkConfig, String accountId, String mint) async {
+    final apiInstance = AccountApi();
+    List<String>? res = await apiInstance.getTokenAccounts(sdkConfig.environment.name, sdkConfig.index, accountId, mint);
+    return res;
+  }
+
+  Future<RequestAirdropResponse?> postRequestAirdropImpl(RequestAirdropRequest airdropRequest) async {
+    // String _url = "${sdkConfig.endpoint}/api/airdrop/";
+    //
+    // Map<String, dynamic> dataMap = {
+    //   ...sdkConfig.headers,
+    //   "account":accountId,
+    //   "amount":amount.toString(),
+    //   "commitment":"confirmed",
+    //   "environment":sdkConfig.environment.name,
+    //   "index":sdkConfig.index,
+    //   "mint":mint,
+    // };
+    //
+    // Map<String, dynamic> httpResponse = await httpPostRequest(_url, jsonEncode(dataMap));
+    // return httpResponse;
+    final apiInstance = AirdropApi();
+    RequestAirdropResponse? res = await apiInstance.requestAirdrop(airdropRequest);
+    return res;
   }
 
   Future<Transaction?> makeTransferImpl(AppConfig? appConfig, KineticSdkConfig sdkConfig, SolanaClient solanaClient, bool senderCreate, MakeTransferOptions makeTransferOptions) async {
@@ -108,23 +125,6 @@ class KineticSdkInternal {
     Map<String, dynamic> httpResponse = await postCreateATATransaction(sdkConfig, _txe, mint, blockHeight);
     httpResponse["derivedAddress"] = derivedAddress;
 
-    return httpResponse;
-  }
-
-  Future<Map<String, dynamic>> postRequestAirdropImpl(KineticSdkConfig sdkConfig, String accountId, String mint, double amount) async {
-    String _url = "${sdkConfig.endpoint}/api/airdrop/";
-
-    Map<String, dynamic> dataMap = {
-      ...sdkConfig.headers,
-      "account":accountId,
-      "amount":amount.toString(),
-      "commitment":"confirmed",
-      "environment":sdkConfig.environment.name,
-      "index":sdkConfig.index,
-      "mint":mint,
-    };
-
-    Map<String, dynamic> httpResponse = await httpPostRequest(_url, jsonEncode(dataMap));
     return httpResponse;
   }
 

@@ -39,7 +39,6 @@ class KineticSdk {
   Future<bool> init() async {
     var _ap = await getAppConfig();
     sdkConfig.logger.log(Level.info, "$name: initializing $name@$version");
-    safePrint(_ap);
     if (appConfig?.app.index == sdkConfig.index) {
       solanaClient = SolanaClient(rpcUrl: Uri.parse(sdkConfig.solanaRpcEndpoint), websocketUrl: Uri.parse(sdkConfig.solanaWssEndpoint), timeout: timeoutDuration);
       keypair = Keypair();
@@ -54,6 +53,13 @@ class KineticSdk {
     return appConfig;
   }
 
+  Future<String?> getExplorerUrl(String path) async {
+    checkInit();
+    var rUrl = appConfig?.environment.explorer;
+    var url = rUrl?.replaceAll("{path}", path);
+    return url;
+  }
+
   Future<BalanceResponse?> getBalance(GetBalanceOptions balanceOptions) async {
     checkInit();
     BalanceResponse? res = await _internal.getBalanceImpl(sdkConfig, balanceOptions.account.toBase58());
@@ -66,25 +72,16 @@ class KineticSdk {
     return res;
   }
 
-  Future<Map<String, dynamic>> getTokenAccounts(GetTokenAccountsOptions tokenAccountsOptions) async {
+  Future<List<String>?> getTokenAccounts(GetTokenAccountsOptions tokenAccountsOptions) async {
     checkInit();
-    Map<String, dynamic> httpResponse = await _internal.getTokenAccountsImpl(sdkConfig, tokenAccountsOptions.account.toBase58(), tokenAccountsOptions.mint.toBase58());
-    return httpResponse;
+    List<String>? res = await _internal.getTokenAccountsImpl(sdkConfig, tokenAccountsOptions.account.toBase58(), tokenAccountsOptions.mint.toBase58());
+    return res;
   }
 
-  Future<String?> getExplorerUrl(String path) async {
+  Future<RequestAirdropResponse?> requestAirdrop(RequestAirdropRequest airdropRequest) async {
     checkInit();
-    var rUrl = appConfig?.environment.explorer;
-    var url = rUrl?.replaceAll("{path}", path);
-    return url;
-  }
-
-  Future<Map<String, dynamic>> requestAirdrop(RequestAirdropOptions airdropOptions) async {
-    checkInit();
-
-    Map<String, dynamic> httpResponse = await _internal.postRequestAirdropImpl(sdkConfig, airdropOptions.account.toBase58(), airdropOptions.mint.toBase58(), double.parse(airdropOptions.amount));
-
-    return httpResponse;
+    RequestAirdropResponse? res = await _internal.postRequestAirdropImpl(airdropRequest);
+    return res;
   }
 
   checkInit() {

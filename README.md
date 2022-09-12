@@ -13,10 +13,3 @@ https://raw.githubusercontent.com/kin-labs/kinetic/dart/api-swagger.json
 `rm -rf lib/generated/`
 `npx @openapitools/openapi-generator-cli generate -i https://raw.githubusercontent.com/kin-labs/kinetic/beeman/openapi/api-swagger.json -g dart -o lib/generated/`
 `rm -rf lib/generated/test`
-
-## Replace the non-null required args found in the files below:
-`lib/generated/model/confirmed_signature_info.dart`
-`lib/generated/model/confirmed_transaction_meta.dart`
-`lib/generated/model/signature_status.dart`
-`lib/generated/model/transaction_response.dart`
-
