@@ -108,7 +108,6 @@ Future<Transaction?> generateMakeTransferTransaction(SolanaClient solanaClient, 
   final apiInstance = TransactionApi();
 
   final makeTransferRequest = MakeTransferRequest(
-    // commitment: MakeTransferRequestCommitmentEnum.confirmed,
     commitment: makeTransferOptions.commitment,
     lastValidBlockHeight: blockHeight,
     environment: sdkConfig.environment.name,
@@ -119,13 +118,13 @@ Future<Transaction?> generateMakeTransferTransaction(SolanaClient solanaClient, 
     tx: _txe,
   );
 
-  Transaction? appTransaction;
+  Transaction? transaction;
   try {
-    appTransaction = await apiInstance.makeTransfer(makeTransferRequest);
-    safePrint(appTransaction);
+    transaction = await apiInstance.makeTransfer(makeTransferRequest);
+    safePrint(transaction);
   } catch (e) {
     safePrint('Exception when calling TransactionApi->makeTransfer: $e\n');
   }
 
-  return appTransaction;
+  return transaction;
 }

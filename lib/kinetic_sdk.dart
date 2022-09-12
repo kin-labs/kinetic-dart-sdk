@@ -57,32 +57,32 @@ class KineticSdk {
     return appConfig;
   }
 
-  Future<String?> getExplorerUrl(String path) async {
+  Future<String?> getExplorerUrl({required String path}) async {
     checkInit();
     var rUrl = appConfig?.environment.explorer;
     var url = rUrl?.replaceAll("{path}", path);
     return url;
   }
 
-  Future<BalanceResponse?> getBalance(GetBalanceOptions balanceOptions) async {
+  Future<BalanceResponse?> getBalance({required GetBalanceOptions balanceOptions}) async {
     checkInit();
     BalanceResponse? res = await _internal.getBalanceImpl(sdkConfig, balanceOptions.account.toBase58());
     return res;
   }
 
-  Future<List<HistoryResponse>?> getHistory(GetHistoryOptions historyOptions) async {
+  Future<List<HistoryResponse>?> getHistory({required GetHistoryOptions historyOptions}) async {
     checkInit();
     List<HistoryResponse>? res = await _internal.getHistoryImpl(sdkConfig, historyOptions.account.toBase58(), historyOptions.mint.toBase58());
     return res;
   }
 
-  Future<List<String>?> getTokenAccounts(GetTokenAccountsOptions tokenAccountsOptions) async {
+  Future<List<String>?> getTokenAccounts({required GetTokenAccountsOptions tokenAccountsOptions}) async {
     checkInit();
     List<String>? res = await _internal.getTokenAccountsImpl(sdkConfig, tokenAccountsOptions.account.toBase58(), tokenAccountsOptions.mint.toBase58());
     return res;
   }
 
-  Future<RequestAirdropResponse?> requestAirdrop(RequestAirdropRequest airdropRequest) async {
+  Future<RequestAirdropResponse?> requestAirdrop({required RequestAirdropRequest airdropRequest}) async {
     checkInit();
     RequestAirdropResponse? res = await _internal.postRequestAirdropImpl(airdropRequest);
     return res;
@@ -90,16 +90,14 @@ class KineticSdk {
 
   Future<Transaction?> makeTransfer({required MakeTransferOptions makeTransferOptions, required bool senderCreate}) async {
     checkInit();
-    Transaction? appTransaction = await _internal.makeTransferImpl(appConfig, sdkConfig, solanaClient, senderCreate, makeTransferOptions);
-    return appTransaction;
+    Transaction? transaction = await _internal.makeTransferImpl(appConfig, sdkConfig, solanaClient, senderCreate, makeTransferOptions);
+    return transaction;
   }
 
-  Future<Map<String, dynamic>> createAccount(CreateAccountOptions accountOptions) async {
+  Future<Transaction?> createAccount({required CreateAccountOptions createAccountOptions}) async {
     checkInit();
-
-    Map<String, dynamic> httpResponse = await _internal.createAccountImpl(appConfig, sdkConfig, solanaClient, accountOptions.mint, accountOptions.owner);
-
-    return httpResponse;
+    Transaction? transaction = await _internal.createAccountImpl(appConfig, sdkConfig, solanaClient, createAccountOptions.mint, createAccountOptions.owner);
+    return transaction;
   }
 
 }
