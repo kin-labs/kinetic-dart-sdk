@@ -112,8 +112,8 @@ void main() async {
 
     bool ok = await kinetic.setup(sdkConfig: config);
     if (ok) {
-      kinetic.keypair = Keypair();
-      final from = await kinetic.keypair.random();
+      Keypair keypair = Keypair();
+      final from = await keypair.random();
       CreateAccountOptions createAccountOptions = CreateAccountOptions(owner: from, mint: "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX", commitment: Commitment.Finalized);
       Transaction? transaction = await kinetic.createAccount(createAccountOptions: createAccountOptions);
 

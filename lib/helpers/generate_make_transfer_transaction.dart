@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:kinetic/constants.dart';
 import 'package:kinetic/interfaces/kinetic_sdk_config.dart';
 import 'package:kinetic/interfaces/make_transfer_options.dart';
 import 'package:kinetic/tools.dart';
@@ -8,12 +9,14 @@ import 'package:solana/solana.dart';
 
 import 'package:kinetic/generated/lib/api.dart';
 
-Future<Transaction?> generateMakeTransferTransaction(SolanaClient solanaClient, KineticSdkConfig sdkConfig, MakeTransferOptions makeTransferOptions, String mint, int decimals, String feePayer, bool senderCreate, {List fk = const []}) async {
+Future<Transaction?> generateMakeTransferTransaction(KineticSdkConfig sdkConfig, MakeTransferOptions makeTransferOptions, String mint, int decimals, String feePayer, bool senderCreate, {List fk = const []}) async {
 
   final hopSignerPublicKey = Ed25519HDPublicKey.fromBase58(feePayer);
 
   var asa = "";
   var ara = "";
+
+  SolanaClient solanaClient = SolanaClient(rpcUrl: Uri.parse(sdkConfig.solanaRpcEndpoint), websocketUrl: Uri.parse(sdkConfig.solanaWssEndpoint), timeout: timeoutDuration);
 
   var associatedSenderAccount = await solanaClient.getAssociatedTokenAccount(
     owner: makeTransferOptions.owner.publicKey,

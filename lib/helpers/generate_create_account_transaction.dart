@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:kinetic/constants.dart';
 import 'package:kinetic/generated/lib/api.dart';
 import 'package:kinetic/interfaces/kinetic_sdk_config.dart';
 import 'package:kinetic/interfaces/transaction_type.dart';
@@ -7,7 +8,7 @@ import 'package:kinetic/tools.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 
-Future<Transaction?> generateCreateAccountTransaction(SolanaClient solanaClient, KineticSdkConfig sdkConfig, String mint, Ed25519HDKeyPair from, String feePayer, {List fk = const []}) async {
+Future<Transaction?> generateCreateAccountTransaction(KineticSdkConfig sdkConfig, String mint, Ed25519HDKeyPair from, String feePayer, {List fk = const []}) async {
 
   final hopSignerPublicKey = Ed25519HDPublicKey.fromBase58(feePayer);
 
@@ -43,6 +44,7 @@ Future<Transaction?> generateCreateAccountTransaction(SolanaClient solanaClient,
     ],
   );
 
+  SolanaClient solanaClient = SolanaClient(rpcUrl: Uri.parse(sdkConfig.solanaRpcEndpoint), websocketUrl: Uri.parse(sdkConfig.solanaWssEndpoint), timeout: timeoutDuration);
   var recentBlockHash = await solanaClient.rpcClient.getRecentBlockhash();
   int blockHeight = await solanaClient.rpcClient.getBlockHeight();
 

@@ -42,19 +42,19 @@ class KineticSdkInternal {
     return res;
   }
 
-  Future<Transaction?> makeTransferImpl(AppConfig? appConfig, KineticSdkConfig sdkConfig, SolanaClient solanaClient, bool senderCreate, MakeTransferOptions makeTransferOptions) async {
+  Future<Transaction?> makeTransferImpl(AppConfig? appConfig, KineticSdkConfig sdkConfig, bool senderCreate, MakeTransferOptions makeTransferOptions) async {
     checkDestination(appConfig, makeTransferOptions.destination.toBase58());
     String feePayer = getFeePayer(appConfig, makeTransferOptions.mint);
     int decimals = getDecimals(appConfig, makeTransferOptions.mint);
 
-    Transaction? transaction = await generateMakeTransferTransaction(solanaClient, sdkConfig, makeTransferOptions, makeTransferOptions.mint, decimals, feePayer, senderCreate);
+    Transaction? transaction = await generateMakeTransferTransaction(sdkConfig, makeTransferOptions, makeTransferOptions.mint, decimals, feePayer, senderCreate);
 
     return transaction;
   }
 
-  Future<Transaction?> createAccountImpl(AppConfig? appConfig, KineticSdkConfig sdkConfig, SolanaClient solanaClient, String mint, Ed25519HDKeyPair from) async {
+  Future<Transaction?> createAccountImpl(AppConfig? appConfig, KineticSdkConfig sdkConfig, String mint, Ed25519HDKeyPair from) async {
     String feePayer = getFeePayer(appConfig, mint);
-    Transaction? transaction = await generateCreateAccountTransaction(solanaClient, sdkConfig, mint, from, feePayer);
+    Transaction? transaction = await generateCreateAccountTransaction(sdkConfig, mint, from, feePayer);
     return transaction;
   }
 

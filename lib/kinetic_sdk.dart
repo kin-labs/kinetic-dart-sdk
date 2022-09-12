@@ -3,9 +3,7 @@ library kinetic;
 import 'package:kinetic/identifiers/version.dart';
 import 'package:kinetic/kinetic_sdk_internal.dart';
 import 'package:logger/logger.dart';
-import 'package:solana/solana.dart';
 
-import 'constants.dart';
 import 'exceptions.dart';
 import 'package:kinetic/generated/lib/api.dart';
 import 'interfaces/create_account_options.dart';
@@ -14,14 +12,11 @@ import 'interfaces/get_history_options.dart';
 import 'interfaces/get_token_accounts_options.dart';
 import 'interfaces/kinetic_sdk_config.dart';
 import 'interfaces/make_transfer_options.dart';
-import 'keypair.dart';
 
 class KineticSdk {
 
   late KineticSdkConfig sdkConfig;
   late KineticSdkInternal _internal;
-  late SolanaClient client;
-  late Keypair keypair;
 
   KineticSdk._internal();
 
@@ -45,8 +40,6 @@ class KineticSdk {
     var _ap = await getAppConfig();
     sdkConfig.logger.log(Level.info, "$name: initializing $name@$version");
     if (appConfig?.app.index == sdkConfig.index) {
-      client = SolanaClient(rpcUrl: Uri.parse(sdkConfig.solanaRpcEndpoint), websocketUrl: Uri.parse(sdkConfig.solanaWssEndpoint), timeout: timeoutDuration);
-      // keypair = Keypair();
       initialized = true;
     }
     return initialized;
@@ -95,13 +88,13 @@ class KineticSdk {
 
   Future<Transaction?> makeTransfer({required MakeTransferOptions makeTransferOptions, required bool senderCreate}) async {
     checkInit();
-    Transaction? transaction = await _internal.makeTransferImpl(appConfig, sdkConfig, client, senderCreate, makeTransferOptions);
+    Transaction? transaction = await _internal.makeTransferImpl(appConfig, sdkConfig, senderCreate, makeTransferOptions);
     return transaction;
   }
 
   Future<Transaction?> createAccount({required CreateAccountOptions createAccountOptions}) async {
     checkInit();
-    Transaction? transaction = await _internal.createAccountImpl(appConfig, sdkConfig, client, createAccountOptions.mint, createAccountOptions.owner);
+    Transaction? transaction = await _internal.createAccountImpl(appConfig, sdkConfig, createAccountOptions.mint, createAccountOptions.owner);
     return transaction;
   }
 
