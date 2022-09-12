@@ -3,10 +3,11 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import 'generated/lib/api.dart';
+import 'package:kinetic/generated/lib/api.dart';
+import 'exceptions.dart';
 import 'identifiers/app_version.dart';
 import 'identifiers/version.dart';
-import 'models.dart';
+import 'interfaces/transaction_type.dart';
 
 safePrint(dynamic msg) {
   if (kDebugMode) {

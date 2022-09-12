@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:kinetic/models.dart';
+import 'package:kinetic/interfaces/kinetic_sdk_config.dart';
+import 'package:kinetic/interfaces/make_transfer_options.dart';
 import 'package:kinetic/tools.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';

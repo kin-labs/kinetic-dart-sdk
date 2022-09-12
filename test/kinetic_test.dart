@@ -1,9 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kinetic/commitment.dart';
 import 'package:kinetic/generated/lib/api.dart';
+import 'package:kinetic/interfaces/create_account_options.dart';
+import 'package:kinetic/interfaces/kinetic_sdk_config.dart';
+import 'package:kinetic/interfaces/kinetic_sdk_environment.dart';
 
 import 'package:kinetic/kinetic_sdk.dart';
-import 'package:kinetic/models.dart';
 import 'package:kinetic/tools.dart';
 import 'package:logger/logger.dart';
 

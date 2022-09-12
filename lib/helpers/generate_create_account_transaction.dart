@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:kinetic/generated/lib/api.dart';
-import 'package:kinetic/models.dart';
+import 'package:kinetic/interfaces/kinetic_sdk_config.dart';
+import 'package:kinetic/interfaces/transaction_type.dart';
 import 'package:kinetic/tools.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';

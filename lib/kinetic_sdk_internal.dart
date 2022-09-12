@@ -4,10 +4,11 @@ import 'package:kinetic/helpers/generate_create_account_transaction.dart';
 import 'package:kinetic/tools.dart';
 import 'package:solana/solana.dart';
 
-import 'generated/lib/api.dart';
+import 'package:kinetic/generated/lib/api.dart';
 import 'helpers/generate_make_transfer_transaction.dart';
 import 'http.dart';
-import 'models.dart';
+import 'interfaces/kinetic_sdk_config.dart';
+import 'interfaces/make_transfer_options.dart';
 
 class KineticSdkInternal {
 
