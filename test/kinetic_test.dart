@@ -107,8 +107,7 @@ void main() async {
 
   test('createAccount', () async {
     final kinetic = KineticSdk();
-    Logger logger = Logger();
-    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
+    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
 
     bool ok = await kinetic.setup(sdkConfig: config);
     if (ok) {

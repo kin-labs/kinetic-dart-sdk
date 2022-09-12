@@ -13,7 +13,8 @@ class KineticSdkConfig {
   late Map<String, String> headers;
   late Logger logger;
 
-  KineticSdkConfig({required this.index, required this.environment, required this.logger}) {
+  KineticSdkConfig({required this.index, required this.environment}) {
+    logger = Logger();
     endpoint = "sandbox.kinetic.host";
     solanaRpcEndpoint = environment == KineticSdkEnvironment.mainnet ? mainnetRpcEndpoint : devnetRpcEndpoint;
     solanaWssEndpoint = environment == KineticSdkEnvironment.mainnet ? mainnetWssEndpoint : devnetWssEndpoint;
