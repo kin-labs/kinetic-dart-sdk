@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import 'generated/api.dart';
+import 'generated/lib/api.dart';
 import 'identifiers/app_version.dart';
 import 'identifiers/version.dart';
 import 'models.dart';

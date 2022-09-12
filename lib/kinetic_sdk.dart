@@ -8,7 +8,7 @@ import 'package:logger/logger.dart';
 import 'package:solana/solana.dart';
 
 import 'constants.dart';
-import 'generated/api.dart';
+import 'generated/lib/api.dart';
 import 'keypair.dart';
 
 class KineticSdk {
@@ -92,10 +92,10 @@ class KineticSdk {
   }
 
   // Named to Transaction
-  Future<AppTransaction?> makeTransfer({required MakeTransferOptions makeTransferOptions, required bool senderCreate}) async {
+  Future<Transaction?> makeTransfer({required MakeTransferOptions makeTransferOptions, required bool senderCreate}) async {
     checkInit();
 
-    AppTransaction? appTransaction = await _internal.makeTransferImpl(appConfig, sdkConfig, solanaClient, senderCreate, makeTransferOptions);
+    Transaction? appTransaction = await _internal.makeTransferImpl(appConfig, sdkConfig, solanaClient, senderCreate, makeTransferOptions);
 
     return appTransaction;
   }

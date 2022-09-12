@@ -1,12 +1,13 @@
 import 'dart:convert';
 
-import 'package:kinetic/generated/api.dart';
 import 'package:kinetic/models.dart';
 import 'package:kinetic/tools.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 
-Future<AppTransaction?> generateMakeTransferTransaction(SolanaClient solanaClient, KineticSdkConfig sdkConfig, MakeTransferOptions makeTransferOptions, String mint, int decimals, String feePayer, bool senderCreate, {List fk = const []}) async {
+import 'package:kinetic/generated/lib/api.dart';
+
+Future<Transaction?> generateMakeTransferTransaction(SolanaClient solanaClient, KineticSdkConfig sdkConfig, MakeTransferOptions makeTransferOptions, String mint, int decimals, String feePayer, bool senderCreate, {List fk = const []}) async {
 
   final hopSignerPublicKey = Ed25519HDPublicKey.fromBase58(feePayer);
 
@@ -117,7 +118,7 @@ Future<AppTransaction?> generateMakeTransferTransaction(SolanaClient solanaClien
     tx: _txe,
   );
 
-  AppTransaction? appTransaction;
+  Transaction? appTransaction;
   try {
     appTransaction = await apiInstance.makeTransfer(makeTransferRequest);
     safePrint(appTransaction);

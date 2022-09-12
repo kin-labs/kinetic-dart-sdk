@@ -14,21 +14,45 @@ class ConfirmedSignatureInfo {
   /// Returns a new [ConfirmedSignatureInfo] instance.
   ConfirmedSignatureInfo({
     required this.signature,
-    required this.slot,
-    required this.err,
-    required this.memo,
-    required this.blockTime,
+    this.slot,
+    this.err,
+    this.memo,
+    this.blockTime,
   });
 
   String signature;
 
-  num slot;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  num? slot;
 
-  String err;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? err;
 
-  String memo;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? memo;
 
-  num blockTime;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  num? blockTime;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is ConfirmedSignatureInfo &&
@@ -42,10 +66,10 @@ class ConfirmedSignatureInfo {
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (signature.hashCode) +
-    (slot.hashCode) +
-    (err.hashCode) +
-    (memo.hashCode) +
-    (blockTime.hashCode);
+    (slot == null ? 0 : slot!.hashCode) +
+    (err == null ? 0 : err!.hashCode) +
+    (memo == null ? 0 : memo!.hashCode) +
+    (blockTime == null ? 0 : blockTime!.hashCode);
 
   @override
   String toString() => 'ConfirmedSignatureInfo[signature=$signature, slot=$slot, err=$err, memo=$memo, blockTime=$blockTime]';
@@ -53,10 +77,26 @@ class ConfirmedSignatureInfo {
   Map<String, dynamic> toJson() {
     final _json = <String, dynamic>{};
       _json[r'signature'] = signature;
+    if (slot != null) {
       _json[r'slot'] = slot;
+    } else {
+      _json[r'slot'] = null;
+    }
+    if (err != null) {
       _json[r'err'] = err;
+    } else {
+      _json[r'err'] = null;
+    }
+    if (memo != null) {
       _json[r'memo'] = memo;
+    } else {
+      _json[r'memo'] = null;
+    }
+    if (blockTime != null) {
       _json[r'blockTime'] = blockTime;
+    } else {
+      _json[r'blockTime'] = null;
+    }
     return _json;
   }
 
@@ -73,32 +113,22 @@ class ConfirmedSignatureInfo {
       assert(() {
         requiredKeys.forEach((key) {
           assert(json.containsKey(key), 'Required key "ConfirmedSignatureInfo[$key]" is missing from JSON.');
-          // assert(json[key] != null, 'Required key "ConfirmedSignatureInfo[$key]" has a null value in JSON.');
+          assert(json[key] != null, 'Required key "ConfirmedSignatureInfo[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
-      // TODO: check
-      // return ConfirmedSignatureInfo(
-      //   signature: mapValueOfType<String>(json, r'signature')!,
-      //   slot: json[r'slot'] == null
-      //       ? null
-      //       : num.parse(json[r'slot'].toString()),
-      //   err: mapValueOfType<String>(json, r'err')!,
-      //   memo: mapValueOfType<String>(json, r'memo')!,
-      //   blockTime: json[r'blockTime'] == null
-      //       ? null
-      //       : num.parse(json[r'blockTime'].toString()),
-      // );
-
       return ConfirmedSignatureInfo(
         signature: mapValueOfType<String>(json, r'signature')!,
-        slot: num.parse(json[r'slot'].toString()),
-        err: mapValueOfType<String>(json, r'err')!,
-        memo: mapValueOfType<String>(json, r'memo')!,
-        blockTime: num.parse(json[r'blockTime'].toString()),
+        slot: json[r'slot'] == null
+            ? null
+            : num.parse(json[r'slot'].toString()),
+        err: mapValueOfType<String>(json, r'err'),
+        memo: mapValueOfType<String>(json, r'memo'),
+        blockTime: json[r'blockTime'] == null
+            ? null
+            : num.parse(json[r'blockTime'].toString()),
       );
-
     }
     return null;
   }
@@ -148,10 +178,6 @@ class ConfirmedSignatureInfo {
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
     'signature',
-    'slot',
-    'err',
-    'memo',
-    'blockTime',
   };
 }
 

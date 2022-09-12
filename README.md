@@ -10,10 +10,9 @@ https://raw.githubusercontent.com/kin-labs/kinetic/dart/api-swagger.json
 ## Fetch repo and install OpenAPI Dart client
 `git clone https://github.com/kin-labs/kinetic-dart.git`
 `cd kinetic-dart`
-`npx @openapitools/openapi-generator-cli generate -i kinetic-open-api.json -g dart -o lib/open-api-generated/`
-`rm -rf lib/generated && mkdir lib/generated`
-`mv lib/open-api-generated/lib/* ./lib/generated`
-`rm -rf lib/open-api-generated/`
+`rm -rf lib/generated/`
+`npx @openapitools/openapi-generator-cli generate -i https://raw.githubusercontent.com/kin-labs/kinetic/beeman/openapi/api-swagger.json -g dart -o lib/generated/`
+`rm -rf lib/generated/test`
 
 ## Replace the non-null required args found in the files below:
 `lib/generated/model/confirmed_signature_info.dart`

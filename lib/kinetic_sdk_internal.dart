@@ -4,7 +4,7 @@ import 'package:kinetic/tools.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 
-import 'generated/api.dart';
+import 'generated/lib/api.dart';
 import 'helpers/generate_make_transfer_transaction.dart';
 import 'http.dart';
 import 'models.dart';
@@ -38,13 +38,13 @@ class KineticSdkInternal {
     return httpResponse;
   }
 
-  Future<AppTransaction?> makeTransferImpl(AppConfig? appConfig, KineticSdkConfig sdkConfig, SolanaClient solanaClient, bool senderCreate, MakeTransferOptions makeTransferOptions) async {
+  Future<Transaction?> makeTransferImpl(AppConfig? appConfig, KineticSdkConfig sdkConfig, SolanaClient solanaClient, bool senderCreate, MakeTransferOptions makeTransferOptions) async {
 
     checkDestination(appConfig, makeTransferOptions.destination.toBase58());
     String feePayer = getFeePayer(appConfig, makeTransferOptions.mint);
     int decimals = getDecimals(appConfig, makeTransferOptions.mint);
 
-    AppTransaction? appTransaction = await generateMakeTransferTransaction(solanaClient, sdkConfig, makeTransferOptions, makeTransferOptions.mint, decimals, feePayer, senderCreate);
+    Transaction? appTransaction = await generateMakeTransferTransaction(solanaClient, sdkConfig, makeTransferOptions, makeTransferOptions.mint, decimals, feePayer, senderCreate);
 
     return appTransaction;
   }
