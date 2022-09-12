@@ -1,8 +1,15 @@
+## To get started, install the Flutter SDK on your local machine by visiting the link below:
+`https://docs.flutter.dev/get-started/install`
+
 ## Install OpenAPI Generator (For alternative installs visit: https://openapi-generator.tech)
 In the example below we assume the installation via Node Package Manager
 `npm install @openapitools/openapi-generator-cli -g`
 
-## Fetch repo and install OpenAPI Dart client
+## Fetch repo and go to working directory
 `git clone https://github.com/kin-labs/kinetic-dart.git`
+
+## Install OpenAPI Dart client
 `cd kinetic-dart`
-rm -rf lib/generated/ ; npx @openapitools/openapi-generator-cli generate -i https://raw.githubusercontent.com/kin-labs/kinetic/beeman/openapi/api-swagger.json -g dart -o lib/generated/ ; rm -rf lib/generated/test
+`rm -rf lib/generated/`
+`npx @openapitools/openapi-generator-cli generate -i https://raw.githubusercontent.com/kin-labs/kinetic/beeman/openapi/api-swagger.json -g dart -o lib/generated/`
+`rm -rf lib/generated/test`
