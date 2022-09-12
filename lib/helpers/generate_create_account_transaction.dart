@@ -44,12 +44,19 @@ Future<Transaction?> generateCreateAccountTransaction(KineticSdkConfig sdkConfig
     ],
   );
 
-  SolanaClient solanaClient = SolanaClient(rpcUrl: Uri.parse(sdkConfig.solanaRpcEndpoint), websocketUrl: Uri.parse(sdkConfig.solanaWssEndpoint), timeout: timeoutDuration);
-  var recentBlockHash = await solanaClient.rpcClient.getRecentBlockhash();
-  int blockHeight = await solanaClient.rpcClient.getBlockHeight();
+  TransactionApi _apiInstance = TransactionApi();
+  LatestBlockhashResponse? latestBlockhashResponse = await _apiInstance.getLatestBlockhash(sdkConfig.environment.name, sdkConfig.index);
+
+  if (latestBlockhashResponse == null) {
+    return null;
+  }
+
+  // SolanaClient solanaClient = SolanaClient(rpcUrl: Uri.parse(sdkConfig.solanaRpcEndpoint), websocketUrl: Uri.parse(sdkConfig.solanaWssEndpoint), timeout: timeoutDuration);
+  // var recentBlockHash = await solanaClient.rpcClient.getRecentBlockhash();
+  // int blockHeight = await solanaClient.rpcClient.getBlockHeight();
 
   final CompiledMessage compiledMessage = message.compile(
-    recentBlockhash: recentBlockHash.blockhash,
+    recentBlockhash: latestBlockhashResponse.blockhash,
     feePayer: hopSignerPublicKey,
   );
 

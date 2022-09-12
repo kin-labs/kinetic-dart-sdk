@@ -16,24 +16,28 @@ Future<Transaction?> generateMakeTransferTransaction(KineticSdkConfig sdkConfig,
   var asa = "";
   var ara = "";
 
-  SolanaClient solanaClient = SolanaClient(rpcUrl: Uri.parse(sdkConfig.solanaRpcEndpoint), websocketUrl: Uri.parse(sdkConfig.solanaWssEndpoint), timeout: timeoutDuration);
+  // SolanaClient solanaClient = SolanaClient(rpcUrl: Uri.parse(sdkConfig.solanaRpcEndpoint), websocketUrl: Uri.parse(sdkConfig.solanaWssEndpoint), timeout: timeoutDuration);
 
-  var associatedSenderAccount = await solanaClient.getAssociatedTokenAccount(
-    owner: makeTransferOptions.owner.publicKey,
-    mint: Ed25519HDPublicKey.fromBase58(makeTransferOptions.mint),
-    // commitment: Commitment.confirmed,
-  );
+  AccountApi _apiInstance = AccountApi();
+  List<String>? senderResult = await _apiInstance.getTokenAccounts(sdkConfig.environment.name, sdkConfig.index, makeTransferOptions.owner.publicKey.toBase58(), makeTransferOptions.mint);
+  List<String>? recipientResult = await _apiInstance.getTokenAccounts(sdkConfig.environment.name, sdkConfig.index, makeTransferOptions.destination.toBase58(), makeTransferOptions.mint);
 
-  var associatedRecipientAccount = await solanaClient.getAssociatedTokenAccount(
-    owner: makeTransferOptions.destination,
-    mint: Ed25519HDPublicKey.fromBase58(makeTransferOptions.mint),
-    // commitment: Commitment.confirmed,
-  );
+  // var associatedSenderAccount = await solanaClient.getAssociatedTokenAccount(
+  //   owner: makeTransferOptions.owner.publicKey,
+  //   mint: Ed25519HDPublicKey.fromBase58(makeTransferOptions.mint),
+  //   // commitment: Commitment.confirmed,
+  // );
+  //
+  // var associatedRecipientAccount = await solanaClient.getAssociatedTokenAccount(
+  //   owner: makeTransferOptions.destination,
+  //   mint: Ed25519HDPublicKey.fromBase58(makeTransferOptions.mint),
+  //   // commitment: Commitment.confirmed,
+  // );
 
-  if (associatedSenderAccount == null) {
+  if (senderResult == null || senderResult.isEmpty) {
     throw NoAssociatedTokenAccountException(makeTransferOptions.owner.address, makeTransferOptions.mint);
   } else {
-    asa = associatedSenderAccount.pubkey;
+    asa = senderResult[0];
   }
 
   List<Ed25519HDPublicKey> signersPublic = [makeTransferOptions.owner.publicKey, hopSignerPublicKey];
@@ -42,7 +46,7 @@ Future<Transaction?> generateMakeTransferTransaction(KineticSdkConfig sdkConfig,
 
   var createATAInstruction;
 
-  if (associatedRecipientAccount == null) {
+  if (recipientResult == null || recipientResult.isEmpty) {
     if (senderCreate == false) {
       throw NoAssociatedTokenAccountException(makeTransferOptions.destination.toBase58(), makeTransferOptions.mint,);
     } else {
@@ -63,7 +67,7 @@ Future<Transaction?> generateMakeTransferTransaction(KineticSdkConfig sdkConfig,
 
     }
   } else {
-    ara = associatedRecipientAccount.pubkey;
+    ara = recipientResult[0];
   }
 
   final transferInstruction = TokenInstruction.transfer(
@@ -74,7 +78,7 @@ Future<Transaction?> generateMakeTransferTransaction(KineticSdkConfig sdkConfig,
     signers: signersPublic,
   );
 
-  if (associatedRecipientAccount == null) {
+  if (recipientResult == null || recipientResult.isEmpty) {
     instructions = [
       createATAInstruction,
       transferInstruction,
@@ -91,11 +95,18 @@ Future<Transaction?> generateMakeTransferTransaction(KineticSdkConfig sdkConfig,
     instructions: instructions,
   );
 
-  var recentBlockHash = await solanaClient.rpcClient.getRecentBlockhash();
-  int blockHeight = await solanaClient.rpcClient.getBlockHeight();
+  TransactionApi _tApiInstance = TransactionApi();
+  LatestBlockhashResponse? latestBlockhashResponse = await _tApiInstance.getLatestBlockhash(sdkConfig.environment.name, sdkConfig.index);
+
+  if (latestBlockhashResponse == null) {
+    return null;
+  }
+
+  var recentBlockHash = latestBlockhashResponse.blockhash;
+  int blockHeight = latestBlockhashResponse.lastValidBlockHeight;
 
   final CompiledMessage compiledMessage = message.compile(
-    recentBlockhash: recentBlockHash.blockhash,
+    recentBlockhash: recentBlockHash,
     feePayer: hopSignerPublicKey,
   );
 

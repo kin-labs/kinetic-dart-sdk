@@ -5,6 +5,8 @@ import 'package:kinetic/identifiers/version.dart';
 import 'package:kinetic/interfaces/create_account_options.dart';
 import 'package:kinetic/interfaces/kinetic_sdk_config.dart';
 import 'package:kinetic/interfaces/kinetic_sdk_environment.dart';
+import 'package:kinetic/interfaces/make_transfer_options.dart';
+import 'package:kinetic/interfaces/transaction_type.dart';
 import 'package:kinetic/keypair.dart';
 
 import 'package:kinetic/kinetic_sdk.dart';
@@ -82,43 +84,42 @@ void main() async {
   //   expect(ok, true);
   // });
 
-  // test('makeTransfer', () async {
-  //   final kinetic = KineticSdk();
-  //   Logger logger = Logger();
-  //   KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
-  //
-  //   bool ok = await kinetic.setup(sdkConfig: config);
-  //   if (ok) {
-  //     final from = await kinetic.keypair.fromByteArray([230, 245, 154, 108, 75, 133, 168, 61, 98, 99, 138, 19, 150, 122, 171, 162, 56, 101, 142, 67, 229, 255, 240, 158, 249, 113, 155, 58, 155, 128, 209, 10]);
-  //     // final from = await Ed25519HDKeyPair.fromPrivateKeyBytes(
-  //     //   privateKey: [230, 245, 154, 108, 75, 133, 168, 61, 98, 99, 138, 19, 150, 122, 171, 162, 56, 101, 142, 67, 229, 255, 240, 158, 249, 113, 155, 58, 155, 128, 209, 10],
-  //     // );
-  //
-  //     safePrint("From: ${from.publicKey.toBase58()}");
-  //     safePrint("To: AVGAggsdHmubCZLmJ94dRp98kGJu1ZsFENPTNSe3Nhfw");
-  //
-  //     MakeTransferOptions makeTransferOptions = MakeTransferOptions(amount: "1.0", destination: kinetic.keypair.publicKeyFromString("AVGAggsdHmubCZLmJ94dRp98kGJu1ZsFENPTNSe3Nhfw"), commitment: MakeTransferRequestCommitmentEnum.finalized, mint: "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX", owner: from, referenceId: "p2p", referenceType: "tx", type: TransactionType.p2p);
-  //     Transaction? transaction = await kinetic.makeTransfer(makeTransferOptions: makeTransferOptions, senderCreate: true);
-  //
-  //     safePrint(transaction?.toJson());
-  //   }
-  //   expect(ok, true);
-  // }, timeout: const Timeout(Duration(minutes: 10)), );
-
-  test('createAccount', () async {
+  test('makeTransfer', () async {
     final kinetic = KineticSdk();
     KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
 
     bool ok = await kinetic.setup(sdkConfig: config);
     if (ok) {
-      Keypair keypair = Keypair();
-      final from = await keypair.random();
-      CreateAccountOptions createAccountOptions = CreateAccountOptions(owner: from, mint: "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX", commitment: Commitment.Finalized);
-      Transaction? transaction = await kinetic.createAccount(createAccountOptions: createAccountOptions);
+      final from = await Keypair().fromByteArray([230, 245, 154, 108, 75, 133, 168, 61, 98, 99, 138, 19, 150, 122, 171, 162, 56, 101, 142, 67, 229, 255, 240, 158, 249, 113, 155, 58, 155, 128, 209, 10]);
+      // final from = await Ed25519HDKeyPair.fromPrivateKeyBytes(
+      //   privateKey: [230, 245, 154, 108, 75, 133, 168, 61, 98, 99, 138, 19, 150, 122, 171, 162, 56, 101, 142, 67, 229, 255, 240, 158, 249, 113, 155, 58, 155, 128, 209, 10],
+      // );
+
+      safePrint("From: ${from.publicKey.toBase58()}");
+      safePrint("To: AVGAggsdHmubCZLmJ94dRp98kGJu1ZsFENPTNSe3Nhfw");
+
+      MakeTransferOptions makeTransferOptions = MakeTransferOptions(amount: "1.0", destination: Keypair().publicKeyFromString("AVGAggsdHmubCZLmJ94dRp98kGJu1ZsFENPTNSe3Nhfw"), commitment: MakeTransferRequestCommitmentEnum.finalized, mint: "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX", owner: from, referenceId: "p2p", referenceType: "tx", type: TransactionType.p2p);
+      Transaction? transaction = await kinetic.makeTransfer(makeTransferOptions: makeTransferOptions, senderCreate: true);
 
       safePrint(transaction?.toJson());
     }
     expect(ok, true);
   }, timeout: const Timeout(Duration(minutes: 10)), );
+
+  // test('createAccount', () async {
+  //   final kinetic = KineticSdk();
+  //   KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
+  //
+  //   bool ok = await kinetic.setup(sdkConfig: config);
+  //   if (ok) {
+  //     Keypair keypair = Keypair();
+  //     final from = await keypair.random();
+  //     CreateAccountOptions createAccountOptions = CreateAccountOptions(owner: from, mint: "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX", commitment: Commitment.Finalized);
+  //     Transaction? transaction = await kinetic.createAccount(createAccountOptions: createAccountOptions);
+  //
+  //     safePrint(transaction?.toJson());
+  //   }
+  //   expect(ok, true);
+  // }, timeout: const Timeout(Duration(minutes: 10)), );
 
 }
