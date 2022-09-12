@@ -1,9 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kinetic/commitment.dart';
 import 'package:kinetic/generated/lib/api.dart';
+import 'package:kinetic/identifiers/version.dart';
 import 'package:kinetic/interfaces/create_account_options.dart';
 import 'package:kinetic/interfaces/kinetic_sdk_config.dart';
 import 'package:kinetic/interfaces/kinetic_sdk_environment.dart';
+import 'package:kinetic/keypair.dart';
 
 import 'package:kinetic/kinetic_sdk.dart';
 import 'package:kinetic/tools.dart';
@@ -14,7 +16,6 @@ void main() async {
   // test('Get App Config', () async {
   //   final kinetic = KineticSdk();
   //   Logger logger = Logger();
-  //   await setupIdentifiers();
   //   KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
 
   //   bool ok = await kinetic.setup(sdkConfig: config);
@@ -27,7 +28,6 @@ void main() async {
   // test('Get Balance', () async {
   //   final kinetic = KineticSdk();
   //   Logger logger = Logger();
-  //   await setupIdentifiers();
   //   KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
   //
   //   bool ok = await kinetic.setup(sdkConfig: config);
@@ -43,7 +43,6 @@ void main() async {
   // test('Get History', () async {
   //   final kinetic = KineticSdk();
   //   Logger logger = Logger();
-  //   await setupIdentifiers();
   //   KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
   //
   //   bool ok = await kinetic.setup(sdkConfig: config);
@@ -58,7 +57,6 @@ void main() async {
   // test('Get Token Accounts', () async {
   //     final kinetic = KineticSdk();
   //     Logger logger = Logger();
-  //     await setupIdentifiers();
   //     KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
   //
   //     bool ok = await kinetic.setup(sdkConfig: config);
@@ -73,7 +71,6 @@ void main() async {
   // test('Request Airdrop', () async {
   //   final kinetic = KineticSdk();
   //   Logger logger = Logger();
-  //   await setupIdentifiers();
   //   KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
   //
   //   bool ok = await kinetic.setup(sdkConfig: config);
@@ -88,7 +85,6 @@ void main() async {
   // test('makeTransfer', () async {
   //   final kinetic = KineticSdk();
   //   Logger logger = Logger();
-  //   await setupIdentifiers();
   //   KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
   //
   //   bool ok = await kinetic.setup(sdkConfig: config);
@@ -112,11 +108,11 @@ void main() async {
   test('createAccount', () async {
     final kinetic = KineticSdk();
     Logger logger = Logger();
-    await setupIdentifiers();
     KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet, logger: logger);
 
     bool ok = await kinetic.setup(sdkConfig: config);
     if (ok) {
+      kinetic.keypair = Keypair();
       final from = await kinetic.keypair.random();
       CreateAccountOptions createAccountOptions = CreateAccountOptions(owner: from, mint: "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX", commitment: Commitment.Finalized);
       Transaction? transaction = await kinetic.createAccount(createAccountOptions: createAccountOptions);

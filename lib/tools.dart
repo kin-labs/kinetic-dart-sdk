@@ -1,30 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:kinetic/generated/lib/api.dart';
 import 'exceptions.dart';
-import 'identifiers/app_version.dart';
-import 'identifiers/version.dart';
 import 'interfaces/transaction_type.dart';
 
 safePrint(dynamic msg) {
   if (kDebugMode) {
     print(msg.toString());
   }
-}
-
-setupIdentifiers() async {
-  PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
-  // Version
-  name = packageInfo.packageName;
-  version = packageInfo.version;
-
-  // App Version
-  appName = packageInfo.appName;
-  appVersion = packageInfo.buildNumber;
 }
 
 getRawQuantity(double quantity, int decimals) {
