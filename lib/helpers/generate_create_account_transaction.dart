@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:kinetic/commitment.dart';
 import 'package:kinetic/constants.dart';
 import 'package:kinetic/generated/lib/api.dart';
 import 'package:kinetic/interfaces/kinetic_sdk_config.dart';
@@ -76,7 +77,11 @@ Future<Transaction?> generateCreateAccountTransaction(KineticSdkConfig sdkConfig
     environment: sdkConfig.environment.name,
     index: sdkConfig.index,
     mint: mint,
+    referenceId: "DART",
+    referenceType: "createAccount",
     tx: _txe,
+    commitment: CreateAccountRequestCommitmentEnum.finalized,
+    lastValidBlockHeight: latestBlockhashResponse.lastValidBlockHeight,
   );
 
   Transaction? transaction;
@@ -88,9 +93,4 @@ Future<Transaction?> generateCreateAccountTransaction(KineticSdkConfig sdkConfig
   }
 
   return transaction;
-
-  // Map<String, dynamic> httpResponse = await postCreateATATransaction(sdkConfig, _txe, mint, blockHeight);
-  // httpResponse["derivedAddress"] = derivedAddress;
-  //
-  // return httpResponse;
 }

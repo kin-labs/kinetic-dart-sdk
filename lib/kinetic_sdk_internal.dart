@@ -58,20 +58,5 @@ class KineticSdkInternal {
     return transaction;
   }
 
-  Future<Map<String, dynamic>> postCreateATATransaction(KineticSdkConfig sdkConfig, String _txe, String mint, int lastValidBlockHeight) async {
-    String _url = "${sdkConfig.endpoint}/api/account/create/";
-
-    Map<String, dynamic> dataMap = {
-      ...sdkConfig.headers,
-      "environment":sdkConfig.environment.name,
-      "index":sdkConfig.index,
-      "mint":mint,
-      "tx":_txe,
-    };
-
-    Map<String, dynamic> httpResponse = await httpPostRequest(_url, jsonEncode(dataMap));
-    return httpResponse;
-  }
-
 }
 

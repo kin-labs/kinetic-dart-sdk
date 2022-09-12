@@ -8,37 +8,37 @@ import 'package:openapi/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **String** |  | 
-**createdAt** | [**DateTime**](DateTime.md) |  | 
-**updatedAt** | [**DateTime**](DateTime.md) |  | 
-**amount** | **String** |  | 
-**decimals** | **num** |  | 
-**destination** | **String** |  | 
-**errors** | [**List<TransactionError>**](TransactionError.md) |  | [default to const []]
-**explorerUrl** | **String** |  | 
-**feePayer** | **String** |  | 
-**ip** | **String** |  | 
-**mint** | **String** |  | 
-**processingDuration** | **num** |  | 
-**referenceId** | **String** |  | 
-**referenceType** | **String** |  | 
-**signature** | **String** |  | 
-**solanaCommitted** | [**DateTime**](DateTime.md) |  | 
-**solanaCommittedDuration** | **num** |  | 
-**solanaFinalized** | [**DateTime**](DateTime.md) |  | 
-**solanaFinalizedDuration** | **num** |  | 
-**solanaStart** | [**DateTime**](DateTime.md) |  | 
-**solanaTransaction** | [**Object**](.md) |  | 
-**source_** | **String** |  | 
-**status** | **String** |  | 
-**totalDuration** | **num** |  | 
-**ua** | **String** |  | 
-**webhookEventStart** | [**DateTime**](DateTime.md) |  | 
-**webhookEventEnd** | [**DateTime**](DateTime.md) |  | 
-**webhookEventDuration** | **num** |  | 
-**webhookVerifyStart** | [**DateTime**](DateTime.md) |  | 
-**webhookVerifyEnd** | [**DateTime**](DateTime.md) |  | 
-**webhookVerifyDuration** | **num** |  | 
+**id** | **String** |  | [optional] 
+**createdAt** | [**DateTime**](DateTime.md) |  | [optional] 
+**updatedAt** | [**DateTime**](DateTime.md) |  | [optional] 
+**amount** | **String** |  | [optional] 
+**decimals** | **num** |  | [optional] 
+**destination** | **String** |  | [optional] 
+**errors** | [**List<TransactionError>**](TransactionError.md) |  | [optional] [default to const []]
+**explorerUrl** | **String** |  | [optional] 
+**feePayer** | **String** |  | [optional] 
+**ip** | **String** |  | [optional] 
+**mint** | **String** |  | [optional] 
+**processingDuration** | **num** |  | [optional] 
+**referenceId** | **String** |  | [optional] 
+**referenceType** | **String** |  | [optional] 
+**signature** | **String** |  | [optional] 
+**solanaCommitted** | [**DateTime**](DateTime.md) |  | [optional] 
+**solanaCommittedDuration** | **num** |  | [optional] 
+**solanaFinalized** | [**DateTime**](DateTime.md) |  | [optional] 
+**solanaFinalizedDuration** | **num** |  | [optional] 
+**solanaStart** | [**DateTime**](DateTime.md) |  | [optional] 
+**solanaTransaction** | [**Object**](.md) |  | [optional] 
+**source_** | **String** |  | [optional] 
+**status** | **String** |  | [optional] 
+**totalDuration** | **num** |  | [optional] 
+**ua** | **String** |  | [optional] 
+**webhookEventStart** | [**DateTime**](DateTime.md) |  | [optional] 
+**webhookEventEnd** | [**DateTime**](DateTime.md) |  | [optional] 
+**webhookEventDuration** | **num** |  | [optional] 
+**webhookVerifyStart** | [**DateTime**](DateTime.md) |  | [optional] 
+**webhookVerifyEnd** | [**DateTime**](DateTime.md) |  | [optional] 
+**webhookVerifyDuration** | **num** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
