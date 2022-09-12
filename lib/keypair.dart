@@ -61,8 +61,8 @@ class Keypair {
     return _keypair;
   }
 
-  Future<Ed25519HDKeyPair> fromByteArray(List<int> kb) async {
-    _keypair = await Ed25519HDKeyPair.fromPrivateKeyBytes(privateKey: kb);
+  Future<Ed25519HDKeyPair> fromByteArray(List<int> pkb) async {
+    _keypair = await Ed25519HDKeyPair.fromPrivateKeyBytes(privateKey: pkb);
     return _keypair;
   }
 

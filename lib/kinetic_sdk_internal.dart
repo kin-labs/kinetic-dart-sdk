@@ -36,27 +36,12 @@ class KineticSdkInternal {
   }
 
   Future<RequestAirdropResponse?> postRequestAirdropImpl(RequestAirdropRequest airdropRequest) async {
-    // String _url = "${sdkConfig.endpoint}/api/airdrop/";
-    //
-    // Map<String, dynamic> dataMap = {
-    //   ...sdkConfig.headers,
-    //   "account":accountId,
-    //   "amount":amount.toString(),
-    //   "commitment":"confirmed",
-    //   "environment":sdkConfig.environment.name,
-    //   "index":sdkConfig.index,
-    //   "mint":mint,
-    // };
-    //
-    // Map<String, dynamic> httpResponse = await httpPostRequest(_url, jsonEncode(dataMap));
-    // return httpResponse;
     final apiInstance = AirdropApi();
     RequestAirdropResponse? res = await apiInstance.requestAirdrop(airdropRequest);
     return res;
   }
 
   Future<Transaction?> makeTransferImpl(AppConfig? appConfig, KineticSdkConfig sdkConfig, SolanaClient solanaClient, bool senderCreate, MakeTransferOptions makeTransferOptions) async {
-
     checkDestination(appConfig, makeTransferOptions.destination.toBase58());
     String feePayer = getFeePayer(appConfig, makeTransferOptions.mint);
     int decimals = getDecimals(appConfig, makeTransferOptions.mint);

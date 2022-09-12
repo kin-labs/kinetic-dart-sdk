@@ -4,6 +4,7 @@ import 'package:logger/logger.dart';
 import 'package:solana/solana.dart' as solana;
 
 import 'commitment.dart';
+import 'generated/lib/api.dart';
 
 class KineticSdkConfig {
   late int index;
@@ -90,7 +91,8 @@ class RequestAirdropOptions {
   late solana.Ed25519HDPublicKey account;
   late solana.Ed25519HDPublicKey mint;
   late String amount;
-  late Commitment commitment;
+  // late Commitment commitment;
+  late RequestAirdropRequestCommitmentEnum commitment;
 }
 
 abstract class TransferDestination {
@@ -116,7 +118,7 @@ class MakeTransferOptions implements TransferDestination {
   @override
   solana.Ed25519HDPublicKey destination;
 
-  late Commitment commitment;
+  late MakeTransferRequestCommitmentEnum commitment;
   late String mint;
   late solana.Ed25519HDKeyPair owner;
   late String referenceId;

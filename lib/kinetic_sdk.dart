@@ -47,6 +47,10 @@ class KineticSdk {
     return initialized;
   }
 
+  checkInit() {
+    initialized == false ? throw KineticInitializationException() : null;
+  }
+
   Future<AppConfig?> getAppConfig() async {
     appConfig = await _internal.getAppConfigImpl(sdkConfig);
 
@@ -84,16 +88,9 @@ class KineticSdk {
     return res;
   }
 
-  checkInit() {
-    initialized == false ? throw KineticInitializationException() : null;
-  }
-
-  // Named to Transaction
   Future<Transaction?> makeTransfer({required MakeTransferOptions makeTransferOptions, required bool senderCreate}) async {
     checkInit();
-
     Transaction? appTransaction = await _internal.makeTransferImpl(appConfig, sdkConfig, solanaClient, senderCreate, makeTransferOptions);
-
     return appTransaction;
   }
 

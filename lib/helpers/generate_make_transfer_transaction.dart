@@ -108,7 +108,8 @@ Future<Transaction?> generateMakeTransferTransaction(SolanaClient solanaClient, 
   final apiInstance = TransactionApi();
 
   final makeTransferRequest = MakeTransferRequest(
-    commitment: MakeTransferRequestCommitmentEnum.confirmed,
+    // commitment: MakeTransferRequestCommitmentEnum.confirmed,
+    commitment: makeTransferOptions.commitment,
     lastValidBlockHeight: blockHeight,
     environment: sdkConfig.environment.name,
     index: sdkConfig.index,
