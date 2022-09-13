@@ -3,16 +3,17 @@ Kinetic dart is the [dart](https://dart.dev/) client based on the Kinetic [stand
 This client allows developers to rapidly integrate and communicate with the Kin ecosystem (and the underlying Solana network).
 
 ## Installation
-### 1. Install the Flutter SDK on your local machine by visiting the link below:
+#### 1. Install the Flutter SDK on your local machine by visiting the link below:
 `https://docs.flutter.dev/get-started/install`
 
-### 2. Install the OpenAPI Generator via NPM (For alternative installs visit: https://openapi-generator.tech)
+#### 2. Install the OpenAPI Generator via NPM (For alternative installs visit: https://openapi-generator.tech)
 `npm install @openapitools/openapi-generator-cli -g`
+or
 
-### 3. Fetch the Kinetic Dart repo
+#### 3. Fetch the Kinetic Dart repo
 `git clone https://github.com/kin-labs/kinetic-dart.git`
 
-### 4. Generate OpenAPI Dart client
+#### 4. Generate OpenAPI Dart client
 `cd kinetic-dart`
 
 `./setup.sh`
