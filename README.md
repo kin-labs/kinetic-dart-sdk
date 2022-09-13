@@ -4,19 +4,19 @@ This client allows developers to rapidly integrate and communicate with the Kin 
 
 ## Installation
 #### 1. Install the Flutter SDK on your local machine by visiting the link below:
-`https://docs.flutter.dev/get-started/install`
+[Install Flutter](https://docs.flutter.dev/get-started/install)
 
 #### 2. Install the OpenAPI Generator via NPM (For alternative installs visit: https://openapi-generator.tech)
-`npm install @openapitools/openapi-generator-cli -g`
-or
+`$ npm install @openapitools/openapi-generator-cli -g`
 
 #### 3. Fetch the Kinetic Dart repo
-`git clone https://github.com/kin-labs/kinetic-dart.git`
+`$ git clone https://github.com/kin-labs/kinetic-dart.git`
 
-#### 4. Generate OpenAPI Dart client
-`cd kinetic-dart`
+#### 4. Change into kinetic-dart working directory
+`$ cd kinetic-dart`
 
-`./setup.sh`
+#### 5. Generate OpenAPI Dart client
+`$ ./setup.sh`
 
 ## Directory labels
 - [generated](https://github.com/kin-labs/kinetic-dart/tree/main/lib/generated) Contains all the generated Dart client code based on the openapi spec.
