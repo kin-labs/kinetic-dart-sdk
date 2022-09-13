@@ -13,9 +13,9 @@ Name | Type | Description | Notes
 **preBalances** | **List<String>** |  | [default to const []]
 **postBalances** | **List<String>** |  | [default to const []]
 **logMessages** | **List<String>** |  | [optional] [default to const []]
-**preTokenBalances** | **List<String>** |  | [default to const []]
-**postTokenBalances** | **List<String>** |  | [default to const []]
-**err** | [**Object**](.md) |  | 
+**preTokenBalances** | **List<String>** |  | [optional] [default to const []]
+**postTokenBalances** | **List<String>** |  | [optional] [default to const []]
+**err** | [**Object**](.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

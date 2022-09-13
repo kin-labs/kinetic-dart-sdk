@@ -11,8 +11,7 @@
 part of openapi.api;
 
 class ApiClient {
-  // ApiClient({this.basePath = 'https://devnet.kinetic.kin.org', this.authentication});
-  ApiClient({this.basePath = 'https://sandbox.kinetic.host', this.authentication});
+  ApiClient({this.basePath = 'http://localhost:3000', this.authentication});
 
   final String basePath;
 
