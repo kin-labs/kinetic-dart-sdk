@@ -19,10 +19,10 @@ or
 `./setup.sh`
 
 ## Directory labels
-- lib/generated) Contains all the generated Dart client code based on the openapi spec.
-- lib/helpers) Contains helper functions that simply calling the createAccount and makeTranfer sdk functions
-- lib/identifiers) Simple directory with only one file that holds a reference to the client version being used. Please change according to your environment if different.
-- lib/interfaces) Here you can find all reference to classes to-be created and what they override.
+- [generated](https://github.com/kin-labs/kinetic-dart/tree/main/lib/generated) Contains all the generated Dart client code based on the openapi spec.
+- [helpers](https://github.com/kin-labs/kinetic-dart/tree/main/lib/helpers) Contains helper functions that simply calling the createAccount and makeTranfer sdk functions
+- [identifiers](https://github.com/kin-labs/kinetic-dart/tree/main/lib/identifiers) Simple directory with only one file that holds a reference to the client version being used. Please change according to your environment if different.
+- [interfaces](https://github.com/kin-labs/kinetic-dart/tree/main/lib/interfaces) Here you can find all reference to classes to-be created and what they override.
 
 ## Contributing
 To start contributing, take a look at the standard as this lays down the base for all clients.
