@@ -13,9 +13,8 @@ class KineticSdkConfig {
   late Map<String, String> headers;
   late Logger logger;
 
-  KineticSdkConfig({required this.index, required this.environment}) {
+  KineticSdkConfig({required this.index,required this.endpoint,required this.environment}) {
     logger = Logger();
-    endpoint = "sandbox.kinetic.host";
     solanaRpcEndpoint = environment == KineticSdkEnvironment.mainnet ? mainnetRpcEndpoint : devnetRpcEndpoint;
     solanaWssEndpoint = environment == KineticSdkEnvironment.mainnet ? mainnetWssEndpoint : devnetWssEndpoint;
 
@@ -24,6 +23,5 @@ class KineticSdkConfig {
       'kinetic-index': environment.index.toString(),
       'kinetic-user-agent': "DART@$version",
     };
-
   }
 }
