@@ -6,7 +6,7 @@ This client allows developers to rapidly integrate and communicate with the Kin 
 #### 1. Install the Flutter SDK on your local machine by visiting the link below:
 [Install Flutter](https://docs.flutter.dev/get-started/install)
 
-#### 2. Install the OpenAPI Generator via NPM (For alternative installs visit: https://openapi-generator.tech)
+#### 2. Install the OpenAPI Generator via NPM (for alternative installs visit: https://openapi-generator.tech)
 `$ npm install @openapitools/openapi-generator-cli -g`
 
 #### 3. Fetch the Kinetic Dart repo
