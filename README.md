@@ -14,6 +14,7 @@ This client allows developers to rapidly integrate and communicate with the Kin 
 
 ### 4. Generate OpenAPI Dart client
 `cd kinetic-dart`
+
 `./setup.sh`
 
 ## Directory labels
