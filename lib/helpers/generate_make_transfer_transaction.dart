@@ -92,8 +92,7 @@ Future<Transaction?> generateMakeTransferTransaction(TransactionApi transactionA
     instructions: instructions,
   );
 
-  TransactionApi _tApiInstance = TransactionApi();
-  LatestBlockhashResponse? latestBlockhashResponse = await _tApiInstance.getLatestBlockhash(sdkConfig.environment.name, sdkConfig.index);
+  LatestBlockhashResponse? latestBlockhashResponse = await transactionApi.getLatestBlockhash(sdkConfig.environment.name, sdkConfig.index);
 
   if (latestBlockhashResponse == null) {
     return null;
