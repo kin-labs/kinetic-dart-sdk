@@ -14,13 +14,16 @@ import 'package:kinetic/keypair.dart';
 import 'package:kinetic/kinetic_sdk.dart';
 import 'package:kinetic/tools.dart';
 
-void main() async {
+KineticSdkConfig defaultConfig = KineticSdkConfig(
+  index: 1,
+  endpoint: 'https://sandbox.kinetic.host',
+  environment: KineticSdkEnvironment.devnet,
+);
 
+void main() async {
   test('Get App Config', () async {
     final kinetic = KineticSdk();
-    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
-
-    bool ok = await kinetic.setup(sdkConfig: config);
+    bool ok = await kinetic.setup(sdkConfig: defaultConfig);
     if (ok) {
       safePrint(kinetic.appConfig.toString());
     }
@@ -29,11 +32,9 @@ void main() async {
 
   test('Get Balance', () async {
     final kinetic = KineticSdk();
-    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
 
-    bool ok = await kinetic.setup(sdkConfig: config);
+    bool ok = await kinetic.setup(sdkConfig: defaultConfig);
     if (ok) {
-
       GetBalanceOptions balanceOptions = GetBalanceOptions(account: Keypair().publicKeyFromString("DUXaDD5FZDa9yFf83tP8Abb6z66ECiawRShejSXRMN5F"));
       dynamic res = await kinetic.getBalance(balanceOptions: balanceOptions);
       safePrint(res);
@@ -43,9 +44,8 @@ void main() async {
 
   test('Get History', () async {
     final kinetic = KineticSdk();
-    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
 
-    bool ok = await kinetic.setup(sdkConfig: config);
+    bool ok = await kinetic.setup(sdkConfig: defaultConfig);
     if (ok) {
       GetHistoryOptions historyOptions = GetHistoryOptions(account: Keypair().publicKeyFromString("DUXaDD5FZDa9yFf83tP8Abb6z66ECiawRShejSXRMN5F"), mint: Keypair().publicKeyFromString("KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX"));
       dynamic res = await kinetic.getHistory(historyOptions: historyOptions);
@@ -55,10 +55,9 @@ void main() async {
   });
 
   test('Get Token Accounts', () async {
-      final kinetic = KineticSdk();
-      KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
+    final kinetic = KineticSdk();
 
-      bool ok = await kinetic.setup(sdkConfig: config);
+    bool ok = await kinetic.setup(sdkConfig: defaultConfig);
     if (ok) {
       GetTokenAccountsOptions accountOptions = GetTokenAccountsOptions(account: Keypair().publicKeyFromString("DUXaDD5FZDa9yFf83tP8Abb6z66ECiawRShejSXRMN5F"), mint: Keypair().publicKeyFromString("KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX"));
       dynamic res = await kinetic.getTokenAccounts(tokenAccountsOptions: accountOptions);
@@ -69,9 +68,8 @@ void main() async {
 
   test('Request Airdrop', () async {
     final kinetic = KineticSdk();
-    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
 
-    bool ok = await kinetic.setup(sdkConfig: config);
+    bool ok = await kinetic.setup(sdkConfig: defaultConfig);
     if (ok) {
       RequestAirdropRequest airdropRequest = RequestAirdropRequest(account: "DUXaDD5FZDa9yFf83tP8Abb6z66ECiawRShejSXRMN5F", mint: "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX", amount: "10", commitment: RequestAirdropRequestCommitmentEnum.finalized, index: kinetic.sdkConfig.index, environment: 'devnet');
       dynamic res = await kinetic.requestAirdrop(airdropRequest: airdropRequest);
@@ -82,9 +80,8 @@ void main() async {
 
   test('makeTransfer', () async {
     final kinetic = KineticSdk();
-    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
 
-    bool ok = await kinetic.setup(sdkConfig: config);
+    bool ok = await kinetic.setup(sdkConfig: defaultConfig);
     if (ok) {
       final from = await Keypair().fromByteArray([230, 245, 154, 108, 75, 133, 168, 61, 98, 99, 138, 19, 150, 122, 171, 162, 56, 101, 142, 67, 229, 255, 240, 158, 249, 113, 155, 58, 155, 128, 209, 10]);
       // final from = await Ed25519HDKeyPair.fromPrivateKeyBytes(
@@ -104,9 +101,8 @@ void main() async {
 
   test('createAccount', () async {
     final kinetic = KineticSdk();
-    KineticSdkConfig config = KineticSdkConfig(index: 1, environment: KineticSdkEnvironment.devnet);
 
-    bool ok = await kinetic.setup(sdkConfig: config);
+    bool ok = await kinetic.setup(sdkConfig: defaultConfig);
     if (ok) {
       Keypair keypair = Keypair();
       final from = await keypair.random();

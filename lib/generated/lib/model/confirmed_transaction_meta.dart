@@ -20,7 +20,7 @@ class ConfirmedTransactionMeta {
     this.logMessages = const [],
     this.preTokenBalances = const [],
     this.postTokenBalances = const [],
-    required this.err,
+    this.err,
   });
 
   ///
@@ -43,7 +43,13 @@ class ConfirmedTransactionMeta {
 
   List<String> postTokenBalances;
 
-  Object err;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  Object? err;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is ConfirmedTransactionMeta &&
@@ -66,7 +72,7 @@ class ConfirmedTransactionMeta {
     (logMessages.hashCode) +
     (preTokenBalances.hashCode) +
     (postTokenBalances.hashCode) +
-    (err.hashCode);
+    (err == null ? 0 : err!.hashCode);
 
   @override
   String toString() => 'ConfirmedTransactionMeta[fee=$fee, innerInstructions=$innerInstructions, preBalances=$preBalances, postBalances=$postBalances, logMessages=$logMessages, preTokenBalances=$preTokenBalances, postTokenBalances=$postTokenBalances, err=$err]';
@@ -84,7 +90,11 @@ class ConfirmedTransactionMeta {
       _json[r'logMessages'] = logMessages;
       _json[r'preTokenBalances'] = preTokenBalances;
       _json[r'postTokenBalances'] = postTokenBalances;
+    if (err != null) {
       _json[r'err'] = err;
+    } else {
+      _json[r'err'] = null;
+    }
     return _json;
   }
 
@@ -128,7 +138,7 @@ class ConfirmedTransactionMeta {
         postTokenBalances: json[r'postTokenBalances'] is List
             ? (json[r'postTokenBalances'] as List).cast<String>()
             : const [],
-        err: mapValueOfType<Object>(json, r'err')!,
+        err: mapValueOfType<Object>(json, r'err'),
       );
     }
     return null;
@@ -181,9 +191,6 @@ class ConfirmedTransactionMeta {
     'innerInstructions',
     'preBalances',
     'postBalances',
-    'preTokenBalances',
-    'postTokenBalances',
-    'err',
   };
 }
 

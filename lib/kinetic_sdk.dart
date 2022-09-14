@@ -1,11 +1,11 @@
 library kinetic;
 
+import 'package:kinetic/generated/lib/api.dart';
 import 'package:kinetic/identifiers/version.dart';
 import 'package:kinetic/kinetic_sdk_internal.dart';
 import 'package:logger/logger.dart';
 
 import 'exceptions.dart';
-import 'package:kinetic/generated/lib/api.dart';
 import 'interfaces/create_account_options.dart';
 import 'interfaces/get_balance_options.dart';
 import 'interfaces/get_history_options.dart';
@@ -14,7 +14,6 @@ import 'interfaces/kinetic_sdk_config.dart';
 import 'interfaces/make_transfer_options.dart';
 
 class KineticSdk {
-
   late KineticSdkConfig sdkConfig;
   late KineticSdkInternal _internal;
 
@@ -28,7 +27,7 @@ class KineticSdk {
 
   Future<bool> setup({required KineticSdkConfig sdkConfig}) async {
     this.sdkConfig = sdkConfig;
-    _internal = KineticSdkInternal();
+    _internal = KineticSdkInternal(sdkConfig);
     bool ok = await init();
     return ok;
   }

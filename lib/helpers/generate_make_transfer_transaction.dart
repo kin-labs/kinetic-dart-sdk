@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:kinetic/constants.dart';
 import 'package:kinetic/interfaces/kinetic_sdk_config.dart';
 import 'package:kinetic/interfaces/make_transfer_options.dart';
 import 'package:kinetic/tools.dart';
@@ -9,7 +8,7 @@ import 'package:solana/solana.dart';
 
 import 'package:kinetic/generated/lib/api.dart';
 
-Future<Transaction?> generateMakeTransferTransaction(KineticSdkConfig sdkConfig, MakeTransferOptions makeTransferOptions, String mint, int decimals, String feePayer, bool senderCreate, {List fk = const []}) async {
+Future<Transaction?> generateMakeTransferTransaction(TransactionApi transactionApi, AccountApi accountApi, KineticSdkConfig sdkConfig, MakeTransferOptions makeTransferOptions, String mint, int decimals, String feePayer, bool senderCreate, {List fk = const []}) async {
 
   final hopSignerPublicKey = Ed25519HDPublicKey.fromBase58(feePayer);
 
@@ -17,10 +16,8 @@ Future<Transaction?> generateMakeTransferTransaction(KineticSdkConfig sdkConfig,
   var ara = "";
 
   // SolanaClient solanaClient = SolanaClient(rpcUrl: Uri.parse(sdkConfig.solanaRpcEndpoint), websocketUrl: Uri.parse(sdkConfig.solanaWssEndpoint), timeout: timeoutDuration);
-
-  AccountApi _apiInstance = AccountApi();
-  List<String>? senderResult = await _apiInstance.getTokenAccounts(sdkConfig.environment.name, sdkConfig.index, makeTransferOptions.owner.publicKey.toBase58(), makeTransferOptions.mint);
-  List<String>? recipientResult = await _apiInstance.getTokenAccounts(sdkConfig.environment.name, sdkConfig.index, makeTransferOptions.destination.toBase58(), makeTransferOptions.mint);
+  List<String>? senderResult = await accountApi.getTokenAccounts(sdkConfig.environment.name, sdkConfig.index, makeTransferOptions.owner.publicKey.toBase58(), makeTransferOptions.mint);
+  List<String>? recipientResult = await accountApi.getTokenAccounts(sdkConfig.environment.name, sdkConfig.index, makeTransferOptions.destination.toBase58(), makeTransferOptions.mint);
 
   // var associatedSenderAccount = await solanaClient.getAssociatedTokenAccount(
   //   owner: makeTransferOptions.owner.publicKey,
@@ -95,8 +92,7 @@ Future<Transaction?> generateMakeTransferTransaction(KineticSdkConfig sdkConfig,
     instructions: instructions,
   );
 
-  TransactionApi _tApiInstance = TransactionApi();
-  LatestBlockhashResponse? latestBlockhashResponse = await _tApiInstance.getLatestBlockhash(sdkConfig.environment.name, sdkConfig.index);
+  LatestBlockhashResponse? latestBlockhashResponse = await transactionApi.getLatestBlockhash(sdkConfig.environment.name, sdkConfig.index);
 
   if (latestBlockhashResponse == null) {
     return null;
@@ -120,7 +116,6 @@ Future<Transaction?> generateMakeTransferTransaction(KineticSdkConfig sdkConfig,
 
   String _txe = tx.encode();
 
-  final apiInstance = TransactionApi();
 
   final makeTransferRequest = MakeTransferRequest(
     commitment: makeTransferOptions.commitment,
@@ -135,7 +130,7 @@ Future<Transaction?> generateMakeTransferTransaction(KineticSdkConfig sdkConfig,
 
   Transaction? transaction;
   try {
-    transaction = await apiInstance.makeTransfer(makeTransferRequest);
+    transaction = await transactionApi.makeTransfer(makeTransferRequest);
     safePrint(transaction);
   } catch (e) {
     safePrint('Exception when calling TransactionApi->makeTransfer: $e\n');

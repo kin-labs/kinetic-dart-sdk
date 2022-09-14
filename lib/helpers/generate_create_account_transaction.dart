@@ -9,7 +9,7 @@ import 'package:kinetic/tools.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 
-Future<Transaction?> generateCreateAccountTransaction(KineticSdkConfig sdkConfig, String mint, Ed25519HDKeyPair from, String feePayer, {List fk = const []}) async {
+Future<Transaction?> generateCreateAccountTransaction(TransactionApi transactionApi, AccountApi accountApi, KineticSdkConfig sdkConfig, String mint, Ed25519HDKeyPair from, String feePayer, {List fk = const []}) async {
 
   final hopSignerPublicKey = Ed25519HDPublicKey.fromBase58(feePayer);
 
@@ -45,8 +45,7 @@ Future<Transaction?> generateCreateAccountTransaction(KineticSdkConfig sdkConfig
     ],
   );
 
-  TransactionApi _apiInstance = TransactionApi();
-  LatestBlockhashResponse? latestBlockhashResponse = await _apiInstance.getLatestBlockhash(sdkConfig.environment.name, sdkConfig.index);
+  LatestBlockhashResponse? latestBlockhashResponse = await transactionApi.getLatestBlockhash(sdkConfig.environment.name, sdkConfig.index);
 
   if (latestBlockhashResponse == null) {
     return null;
@@ -71,7 +70,6 @@ Future<Transaction?> generateCreateAccountTransaction(KineticSdkConfig sdkConfig
 
   String _txe = tx.encode();
 
-  final apiInstance = AccountApi();
 
   final createAccountRequest = CreateAccountRequest(
     environment: sdkConfig.environment.name,
@@ -86,7 +84,7 @@ Future<Transaction?> generateCreateAccountTransaction(KineticSdkConfig sdkConfig
 
   Transaction? transaction;
   try {
-    transaction = await apiInstance.createAccount(createAccountRequest);
+    transaction = await accountApi.createAccount(createAccountRequest);
     safePrint(transaction);
   } catch (e) {
     safePrint('Exception when calling AccountApi->createAccount: $e\n');
