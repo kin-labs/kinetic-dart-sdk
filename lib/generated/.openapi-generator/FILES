@@ -5,9 +5,6 @@ README.md
 analysis_options.yaml
 doc/AccountApi.md
 doc/AirdropApi.md
-doc/AirdropStats.md
-doc/AirdropStatsCounts.md
-doc/AirdropStatsDate.md
 doc/AppApi.md
 doc/AppConfig.md
 doc/AppConfigApi.md
@@ -48,9 +45,6 @@ lib/auth/authentication.dart
 lib/auth/http_basic_auth.dart
 lib/auth/http_bearer_auth.dart
 lib/auth/oauth.dart
-lib/model/airdrop_stats.dart
-lib/model/airdrop_stats_counts.dart
-lib/model/airdrop_stats_date.dart
 lib/model/app_config.dart
 lib/model/app_config_api.dart
 lib/model/app_config_app.dart
@@ -78,9 +72,6 @@ lib/model/transaction_response.dart
 pubspec.yaml
 test/account_api_test.dart
 test/airdrop_api_test.dart
-test/airdrop_stats_counts_test.dart
-test/airdrop_stats_date_test.dart
-test/airdrop_stats_test.dart
 test/app_api_test.dart
 test/app_config_api_test.dart
 test/app_config_app_test.dart

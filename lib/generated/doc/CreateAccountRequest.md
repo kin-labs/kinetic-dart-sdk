@@ -13,8 +13,8 @@ Name | Type | Description | Notes
 **index** | **int** |  | 
 **lastValidBlockHeight** | **int** |  | 
 **mint** | **String** |  | 
-**referenceId** | **String** |  | 
-**referenceType** | **String** |  | 
+**referenceId** | **String** |  | [optional] 
+**referenceType** | **String** |  | [optional] 
 **tx** | **String** |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

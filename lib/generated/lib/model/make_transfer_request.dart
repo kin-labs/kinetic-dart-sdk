@@ -18,8 +18,8 @@ class MakeTransferRequest {
     required this.index,
     required this.mint,
     required this.lastValidBlockHeight,
-    required this.referenceId,
-    required this.referenceType,
+    this.referenceId,
+    this.referenceType,
     required this.tx,
   });
 
@@ -167,8 +167,6 @@ class MakeTransferRequest {
     'index',
     'mint',
     'lastValidBlockHeight',
-    'referenceId',
-    'referenceType',
     'tx',
   };
 }
