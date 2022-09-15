@@ -18,8 +18,8 @@ class CreateAccountRequest {
     required this.index,
     required this.lastValidBlockHeight,
     required this.mint,
-    required this.referenceId,
-    required this.referenceType,
+    this.referenceId,
+    this.referenceType,
     required this.tx,
   });
 
@@ -167,8 +167,6 @@ class CreateAccountRequest {
     'index',
     'lastValidBlockHeight',
     'mint',
-    'referenceId',
-    'referenceType',
     'tx',
   };
 }

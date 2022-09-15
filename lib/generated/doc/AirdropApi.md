@@ -9,46 +9,8 @@ All URIs are relative to *http://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**airdropStats**](AirdropApi.md#airdropstats) | **GET** /api/airdrop/stats | 
 [**requestAirdrop**](AirdropApi.md#requestairdrop) | **POST** /api/airdrop | 
 
-
-# **airdropStats**
-> AirdropStats airdropStats()
-
-
-
-### Example
-```dart
-import 'package:openapi/api.dart';
-
-final api_instance = AirdropApi();
-
-try {
-    final result = api_instance.airdropStats();
-    print(result);
-} catch (e) {
-    print('Exception when calling AirdropApi->airdropStats: $e\n');
-}
-```
-
-### Parameters
-This endpoint does not need any parameter.
-
-### Return type
-
-[**AirdropStats**](AirdropStats.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **requestAirdrop**
 > RequestAirdropResponse requestAirdrop(requestAirdropRequest)

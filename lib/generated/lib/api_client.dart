@@ -192,12 +192,6 @@ class ApiClient {
           return valueString == 'true' || valueString == '1';
         case 'DateTime':
           return value is DateTime ? value : DateTime.tryParse(value);
-        case 'AirdropStats':
-          return AirdropStats.fromJson(value);
-        case 'AirdropStatsCounts':
-          return AirdropStatsCounts.fromJson(value);
-        case 'AirdropStatsDate':
-          return AirdropStatsDate.fromJson(value);
         case 'AppConfig':
           return AppConfig.fromJson(value);
         case 'AppConfigApi':

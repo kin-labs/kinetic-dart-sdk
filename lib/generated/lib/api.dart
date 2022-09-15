@@ -32,9 +32,6 @@ part 'api/airdrop_api.dart';
 part 'api/app_api.dart';
 part 'api/transaction_api.dart';
 
-part 'model/airdrop_stats.dart';
-part 'model/airdrop_stats_counts.dart';
-part 'model/airdrop_stats_date.dart';
 part 'model/app_config.dart';
 part 'model/app_config_api.dart';
 part 'model/app_config_app.dart';

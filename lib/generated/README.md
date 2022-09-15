@@ -63,7 +63,6 @@ Class | Method | HTTP request | Description
 *AccountApi* | [**getBalance**](doc//AccountApi.md#getbalance) | **GET** /api/account/balance/{environment}/{index}/{accountId} | 
 *AccountApi* | [**getHistory**](doc//AccountApi.md#gethistory) | **GET** /api/account/history/{environment}/{index}/{accountId}/{mint} | 
 *AccountApi* | [**getTokenAccounts**](doc//AccountApi.md#gettokenaccounts) | **GET** /api/account/token-accounts/{environment}/{index}/{accountId}/{mint} | 
-*AirdropApi* | [**airdropStats**](doc//AirdropApi.md#airdropstats) | **GET** /api/airdrop/stats | 
 *AirdropApi* | [**requestAirdrop**](doc//AirdropApi.md#requestairdrop) | **POST** /api/airdrop | 
 *AppApi* | [**getAppConfig**](doc//AppApi.md#getappconfig) | **GET** /api/app/{environment}/{index}/config | 
 *AppApi* | [**getAppHealth**](doc//AppApi.md#getapphealth) | **GET** /api/app/{environment}/{index}/health | 
@@ -75,9 +74,6 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
- - [AirdropStats](doc//AirdropStats.md)
- - [AirdropStatsCounts](doc//AirdropStatsCounts.md)
- - [AirdropStatsDate](doc//AirdropStatsDate.md)
  - [AppConfig](doc//AppConfig.md)
  - [AppConfigApi](doc//AppConfigApi.md)
  - [AppConfigApp](doc//AppConfigApp.md)

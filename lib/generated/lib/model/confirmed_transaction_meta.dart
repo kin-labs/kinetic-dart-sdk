@@ -23,12 +23,6 @@ class ConfirmedTransactionMeta {
     this.err,
   });
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
   num? fee;
 
   List<String> innerInstructions;
@@ -37,18 +31,12 @@ class ConfirmedTransactionMeta {
 
   List<String> postBalances;
 
-  List<String> logMessages;
+  List<String>? logMessages;
 
-  List<String> preTokenBalances;
+  List<String>? preTokenBalances;
 
-  List<String> postTokenBalances;
+  List<String>? postTokenBalances;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
   Object? err;
 
   @override
@@ -69,9 +57,9 @@ class ConfirmedTransactionMeta {
     (innerInstructions.hashCode) +
     (preBalances.hashCode) +
     (postBalances.hashCode) +
-    (logMessages.hashCode) +
-    (preTokenBalances.hashCode) +
-    (postTokenBalances.hashCode) +
+    (logMessages == null ? 0 : logMessages!.hashCode) +
+    (preTokenBalances == null ? 0 : preTokenBalances!.hashCode) +
+    (postTokenBalances == null ? 0 : postTokenBalances!.hashCode) +
     (err == null ? 0 : err!.hashCode);
 
   @override
@@ -87,9 +75,21 @@ class ConfirmedTransactionMeta {
       _json[r'innerInstructions'] = innerInstructions;
       _json[r'preBalances'] = preBalances;
       _json[r'postBalances'] = postBalances;
+    if (logMessages != null) {
       _json[r'logMessages'] = logMessages;
+    } else {
+      _json[r'logMessages'] = null;
+    }
+    if (preTokenBalances != null) {
       _json[r'preTokenBalances'] = preTokenBalances;
+    } else {
+      _json[r'preTokenBalances'] = null;
+    }
+    if (postTokenBalances != null) {
       _json[r'postTokenBalances'] = postTokenBalances;
+    } else {
+      _json[r'postTokenBalances'] = null;
+    }
     if (err != null) {
       _json[r'err'] = err;
     } else {
