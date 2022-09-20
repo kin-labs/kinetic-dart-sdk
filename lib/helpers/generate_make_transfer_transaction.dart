@@ -6,11 +6,7 @@ import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 
 Future<String> generateMakeTransferTransaction(GenerateMakeTransferOptions options, {List fk = const []}) async {
-
   final hopSignerPublicKey = Ed25519HDPublicKey.fromBase58(options.mintFeePayer);
-
-  var asa = options.senderATA;
-  var ara = "";
 
   List<Ed25519HDPublicKey> signersPublic = [options.signer.publicKey, hopSignerPublicKey];
 
@@ -19,30 +15,31 @@ Future<String> generateMakeTransferTransaction(GenerateMakeTransferOptions optio
   var createATAInstruction;
 
   final derivedAddress = await findAssociatedTokenAddress(
-    owner: options.destination,
+    owner: Ed25519HDPublicKey.fromBase58(options.destination),
     mint: Ed25519HDPublicKey.fromBase58(options.mintPublicKey),
   );
 
-  ara = derivedAddress.toBase58();
+  var ara = derivedAddress.toBase58();
 
-  if (options.senderCreate) {
+  // Check if options.senderCreate is not null and true
+  if (options.senderCreate != null && options.senderCreate!) {
     createATAInstruction = AssociatedTokenAccountInstruction.createAccount(
       funder: hopSignerPublicKey,
       address: derivedAddress,
-      owner: options.destination,
+      owner: Ed25519HDPublicKey.fromBase58(options.destination),
       mint: Ed25519HDPublicKey.fromBase58(options.mintPublicKey),
     );
   }
 
   final transferInstruction = TokenInstruction.transfer(
-    source: Ed25519HDPublicKey.fromBase58(asa),
+    source: Ed25519HDPublicKey.fromBase58(options.ownerTokenAccount),
     destination: Ed25519HDPublicKey.fromBase58(ara),
     owner: options.signer.publicKey,
     amount: getRawQuantity(double.parse(options.amount), options.mintDecimals).toInt(),
     signers: signersPublic,
   );
 
-  if (options.senderCreate) {
+  if (options.senderCreate != null && options.senderCreate!) {
     instructions = [
       createATAInstruction,
       transferInstruction,
@@ -60,7 +57,7 @@ Future<String> generateMakeTransferTransaction(GenerateMakeTransferOptions optio
   );
 
   var recentBlockHash = options.latestBlockhash;
-  int blockHeight = options.lastValidBlockHeight;
+  int lastValidBlockHeight = options.lastValidBlockHeight;
 
   final CompiledMessage compiledMessage = message.compile(
     recentBlockhash: recentBlockHash,
@@ -78,24 +75,4 @@ Future<String> generateMakeTransferTransaction(GenerateMakeTransferOptions optio
   String _txe = tx.encode();
 
   return _txe;
-  // final makeTransferRequest = MakeTransferRequest(
-  //   commitment: options.c,
-  //   lastValidBlockHeight: blockHeight,
-  //   environment: sdkConfig.environment.name,
-  //   index: sdkConfig.index,
-  //   mint: mint,
-  //   referenceId: makeTransferOptions.referenceId,
-  //   referenceType: makeTransferOptions.referenceType,
-  //   tx: _txe,
-  // );
-  //
-  // Transaction? transaction;
-  // try {
-  //   transaction = await transactionApi.makeTransfer(makeTransferRequest);
-  //   safePrint(transaction);
-  // } catch (e) {
-  //   safePrint('Exception when calling TransactionApi->makeTransfer: $e\n');
-  // }
-  //
-  // return transaction;
 }

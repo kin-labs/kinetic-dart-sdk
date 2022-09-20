@@ -2,7 +2,10 @@ import 'package:kinetic/generated/lib/api.dart';
 import 'package:kinetic/helpers/generate_create_account_transaction.dart';
 import 'package:kinetic/interfaces/create_account_options.dart';
 import 'package:kinetic/interfaces/generate_make_transfer_options.dart';
+import 'package:kinetic/interfaces/get_history_options.dart';
 import 'package:kinetic/interfaces/get_token_accounts_options.dart';
+import 'package:kinetic/interfaces/request_airdrop_options.dart';
+import 'package:kinetic/interfaces/transaction_type.dart';
 import 'package:kinetic/tools.dart';
 import 'package:solana/solana.dart';
 
@@ -33,71 +36,110 @@ class KineticSdkInternal {
     transactionApi = TransactionApi(apiConfig);
   }
 
-  Future<AppConfig?> getAppConfig(KineticSdkConfig sdkConfig) async {
-    AppConfig? config = await appApi.getAppConfig(sdkConfig.environment.environment, sdkConfig.index);
-    if ( config != null) {
-      appConfig = config;
+  Future<AppConfig?> getAppConfig(String environment, int index) async {
+    appConfig = await appApi.getAppConfig(environment, index);
+    if (appConfig == null) {
+      throw Exception("Unable to get app config");
     }
-    return config;
+    return appConfig;
   }
 
-  Future<BalanceResponse?> getBalance(KineticSdkConfig sdkConfig, String accountId) async {
+  Future<BalanceResponse?> getBalance(String accountId) async {
     if (appConfig == null) {
       throw KineticInitializationException();
     }
 
-    BalanceResponse? res = await accountApi.getBalance(sdkConfig.environment.environment, sdkConfig.index, accountId);
-    return res;
+    return accountApi.getBalance(sdkConfig.environment, sdkConfig.index, accountId);
   }
 
-  Future<List<HistoryResponse>?> getHistory(KineticSdkConfig sdkConfig, String accountId, String mint) async {
+  Future<List<HistoryResponse>?> getHistory(GetHistoryOptions options) async {
     if (appConfig == null) {
       throw KineticInitializationException();
     }
 
-    List<HistoryResponse>? res = await accountApi.getHistory(sdkConfig.environment.environment, sdkConfig.index, accountId, mint);
-    return res;
+    String? mint = _ensureMint(options.mint);
+
+    return accountApi.getHistory(sdkConfig.environment, sdkConfig.index, options.account, mint);
   }
 
-  Future<RequestAirdropResponse?> postRequestAirdrop(RequestAirdropRequest airdropRequest) async {
+  Future<RequestAirdropResponse?> requestAirdrop(RequestAirdropOptions options) async {
     if (appConfig == null) {
       throw KineticInitializationException();
     }
 
-    RequestAirdropResponse? res = await airdropApi.requestAirdrop(airdropRequest);
-    return res;
+    String? mint = _ensureMint(options.mint);
+
+    return airdropApi.requestAirdrop(RequestAirdropRequest(
+      account: options.account,
+      amount: options.amount,
+      commitment: options.commitment as RequestAirdropRequestCommitmentEnum,
+      environment: appConfig?.environment.name as String,
+      index: appConfig?.app.index as int,
+      mint: mint,
+    ));
   }
 
-  Future<Transaction?> makeTransfer(MakeTransferOptions makeTransferOptions) async {
+  Future<Transaction?> makeTransfer(MakeTransferOptions options) async {
     if (appConfig == null) {
       throw KineticInitializationException();
     }
 
-    Map<String, dynamic> res = await prepareTransaction(makeTransferOptions.mint);
-
-    List<String>? senderATA = await getTokenAccounts(GetTokenAccountsOptions(account: makeTransferOptions.owner.publicKey, mint: Ed25519HDPublicKey.fromBase58(makeTransferOptions.mint)));
-    List<String>? receiverATA = await getTokenAccounts(GetTokenAccountsOptions(account: makeTransferOptions.destination, mint: Ed25519HDPublicKey.fromBase58(makeTransferOptions.mint)));
-
-    if ((senderATA == null || senderATA.isEmpty)) {
-      throw NoAssociatedTokenAccountException(makeTransferOptions.owner.publicKey.toBase58(), makeTransferOptions.mint);
+    if (appConfig == null) {
+      throw KineticInitializationException();
     }
 
-    if ((receiverATA == null || receiverATA.isEmpty) && makeTransferOptions.senderCreate == false) {
-      throw NoAssociatedTokenAccountException(makeTransferOptions.destination.toBase58(), makeTransferOptions.mint);
+    String? mint = _ensureMint(options.mint);
+
+    PrepareTransactionResponse res = await prepareTransaction(mint: mint);
+
+    List<String>? accounts = await getTokenAccounts(GetTokenAccountsOptions(
+      account: options.destination,
+      mint: mint,
+    ));
+
+    // throw error of accounts length is smaller than one
+    if (accounts == null || accounts.isEmpty) {
+      throw NoAssociatedTokenAccountException(options.destination, mint);
     }
 
-    GenerateMakeTransferOptions options = GenerateMakeTransferOptions(addMemo: appConfig?.mint.addMemo ?? true, amount: makeTransferOptions.amount, appIndex: sdkConfig.index, destination: makeTransferOptions.destination, lastValidBlockHeight: res["lastValidBlockHeight"], latestBlockhash: res["latestBlockhash"], mintDecimals: res["mintDecimals"], mintFeePayer: res["mintFeePayer"], mintPublicKey: res["mintPublicKey"], signer: makeTransferOptions.owner, senderATA: senderATA[0], senderCreate: (receiverATA == null || receiverATA.isEmpty) && makeTransferOptions.senderCreate, type: makeTransferOptions.type);
+    List<String>? ownerTokenAccount =
+        await getTokenAccounts(GetTokenAccountsOptions(account: options.owner.publicKey.toString(), mint: mint));
 
-    String tx = await generateMakeTransferTransaction(options);
+    if ((ownerTokenAccount == null || ownerTokenAccount.isEmpty)) {
+      throw NoAssociatedTokenAccountException(options.owner.publicKey.toBase58(), mint);
+    }
+
+    // List<String>? receiverATA = await getTokenAccounts(GetTokenAccountsOptions(account: options.destination, mint: mint));
+    // if ((receiverATA == null || receiverATA.isEmpty) && options.senderCreate == false) {
+    //   throw NoAssociatedTokenAccountException(options.destination, mint);
+    // }
+
+    GenerateMakeTransferOptions req = GenerateMakeTransferOptions(
+      addMemo: appConfig?.mint.addMemo ?? true,
+      amount: options.amount,
+      appIndex: sdkConfig.index,
+      destination: options.destination,
+      lastValidBlockHeight: res.lastValidBlockHeight,
+      latestBlockhash: res.latestBlockhash,
+      mintDecimals: res.mintDecimals,
+      mintFeePayer: res.mintFeePayer,
+      mintPublicKey: res.mintPublicKey,
+      ownerTokenAccount: ownerTokenAccount.first,
+      signer: options.owner,
+      senderCreate: options.senderCreate,
+      type: options.type as TransactionType,
+    );
+
+    String tx = await generateMakeTransferTransaction(req);
 
     final makeTransferRequest = MakeTransferRequest(
-      commitment: makeTransferOptions.commitment,
-      lastValidBlockHeight: options.lastValidBlockHeight,
-      environment: sdkConfig.environment.environment,
-      index: options.appIndex,
-      mint: makeTransferOptions.mint,
-      referenceId: makeTransferOptions.referenceId,
-      referenceType: makeTransferOptions.referenceType,
+      commitment: options.commitment as MakeTransferRequestCommitmentEnum,
+      environment: sdkConfig.environment,
+      index: appConfig?.app.index as int,
+      lastValidBlockHeight: res.lastValidBlockHeight,
+      mint: mint,
+      referenceId: options.referenceId,
+      referenceType: options.referenceType,
       tx: tx,
     );
 
@@ -117,28 +159,37 @@ class KineticSdkInternal {
       throw KineticInitializationException();
     }
 
-    List<String>? result = await accountApi.getTokenAccounts(sdkConfig.environment.environment, sdkConfig.index, options.account.toBase58(), options.mint.toBase58());
+    List<String>? result = await accountApi.getTokenAccounts(
+      sdkConfig.environment,
+      sdkConfig.index,
+      options.account,
+      options.mint,
+    );
 
     return result;
   }
 
-  Future<Transaction?> createAccount(CreateAccountOptions createAccountOptions) async {
+  Future<Transaction?> createAccount(CreateAccountOptions options) async {
     if (appConfig == null) {
       throw KineticInitializationException();
     }
 
-    Map<String, dynamic> res = await prepareTransaction(createAccountOptions.mint);
-    String tx = await generateCreateAccountTransaction(sdkConfig.index, res["latestBlockhash"], res["mintPublicKey"], createAccountOptions.owner, res["mintFeePayer"]);
+    String? mint = _ensureMint(options.mint);
+
+    PrepareTransactionResponse res = await prepareTransaction(mint: mint);
+
+    String tx = await generateCreateAccountTransaction(
+        sdkConfig.index, res.latestBlockhash, res.mintPublicKey, options.owner, res.mintFeePayer);
 
     final createAccountRequest = CreateAccountRequest(
-      environment: sdkConfig.environment.environment,
+      environment: sdkConfig.environment,
       index: sdkConfig.index,
-      mint: createAccountOptions.mint,
-      referenceId: createAccountOptions.referenceId,
-      referenceType: createAccountOptions.referenceType,
+      mint: mint,
+      referenceId: options.referenceId,
+      referenceType: options.referenceType,
       tx: tx,
-      commitment: createAccountOptions.commitment,
-      lastValidBlockHeight: res["lastValidBlockHeight"],
+      commitment: options.commitment?.toString() as CreateAccountRequestCommitmentEnum,
+      lastValidBlockHeight: res.lastValidBlockHeight,
     );
 
     Transaction? transaction;
@@ -152,7 +203,7 @@ class KineticSdkInternal {
     return transaction;
   }
 
-  Future<Map<String, dynamic>> prepareTransaction(String mint) async {
+  Future<PrepareTransactionResponse> prepareTransaction({required String mint}) async {
     if (appConfig == null) {
       throw KineticInitializationException();
     }
@@ -161,19 +212,40 @@ class KineticSdkInternal {
     String mintFeePayer = getFeePayer(appConfig, mint);
     int mintDecimals = getDecimals(appConfig, mint);
 
-    LatestBlockhashResponse? latestBlockhashResponse = await transactionApi.getLatestBlockhash(sdkConfig.environment.environment, sdkConfig.index);
+    LatestBlockhashResponse? latestBlockhashResponse =
+        await transactionApi.getLatestBlockhash(sdkConfig.environment, sdkConfig.index);
 
     String latestBlockhash = latestBlockhashResponse?.blockhash ?? "";
     int lastValidBlockHeight = latestBlockhashResponse?.lastValidBlockHeight ?? 0;
 
-    return {
-      "mintFeePayer":mintFeePayer,
-      "mintDecimals":mintDecimals,
-      "mintPublicKey":mint,
-      "latestBlockhash":latestBlockhash,
-      "lastValidBlockHeight":lastValidBlockHeight,
-    };
+    return PrepareTransactionResponse(
+      mintFeePayer: mintFeePayer,
+      mintDecimals: mintDecimals,
+      mintPublicKey: mint,
+      latestBlockhash: latestBlockhash,
+      lastValidBlockHeight: lastValidBlockHeight,
+    );
   }
 
+  String _ensureMint(String? mint) {
+    mint = mint ?? appConfig?.mint.publicKey;
+    if (mint == null) {
+      throw KineticMissingMintsException();
+    }
+    return mint;
+  }
 }
 
+class PrepareTransactionResponse {
+  final String mintFeePayer;
+  final int mintDecimals;
+  final String mintPublicKey;
+  final String latestBlockhash;
+  final int lastValidBlockHeight;
+  PrepareTransactionResponse(
+      {required this.mintFeePayer,
+      required this.mintDecimals,
+      required this.mintPublicKey,
+      required this.latestBlockhash,
+      required this.lastValidBlockHeight});
+}
