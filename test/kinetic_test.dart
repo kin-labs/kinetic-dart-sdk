@@ -91,8 +91,8 @@ void main() async {
       safePrint("From: ${from.publicKey.toBase58()}");
       safePrint("To: AVGAggsdHmubCZLmJ94dRp98kGJu1ZsFENPTNSe3Nhfw");
 
-      MakeTransferOptions makeTransferOptions = MakeTransferOptions(amount: "1.0", destination: Keypair().publicKeyFromString("AVGAggsdHmubCZLmJ94dRp98kGJu1ZsFENPTNSe3Nhfw"), commitment: MakeTransferRequestCommitmentEnum.finalized, mint: "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX", owner: from, referenceId: "p2p", referenceType: "tx", type: TransactionType.p2p);
-      Transaction? transaction = await kinetic.makeTransfer(makeTransferOptions: makeTransferOptions, senderCreate: true);
+      MakeTransferOptions makeTransferOptions = MakeTransferOptions(amount: "1.0", destination: Keypair().publicKeyFromString("AVGAggsdHmubCZLmJ94dRp98kGJu1ZsFENPTNSe3Nhfw"), commitment: MakeTransferRequestCommitmentEnum.finalized, mint: "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX", owner: from, referenceId: "p2p", referenceType: "tx", type: TransactionType.p2p, senderCreate: true);
+      Transaction? transaction = await kinetic.makeTransfer(makeTransferOptions: makeTransferOptions);
 
       safePrint(transaction?.toJson());
     }
@@ -107,7 +107,7 @@ void main() async {
       Keypair keypair = Keypair();
       final from = await keypair.random();
 
-      CreateAccountOptions createAccountOptions = CreateAccountOptions(owner: from, mint: "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX", commitment: Commitment.Finalized);
+      CreateAccountOptions createAccountOptions = CreateAccountOptions(owner: from, mint: "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX", commitment: CreateAccountRequestCommitmentEnum.finalized, referenceId: 'dart', referenceType: 'test');
       Transaction? transaction = await kinetic.createAccount(createAccountOptions: createAccountOptions);
 
       safePrint(transaction?.toJson());

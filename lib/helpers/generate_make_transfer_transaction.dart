@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:kinetic/interfaces/generate_make_transfer_options.dart';
 import 'package:kinetic/interfaces/kinetic_sdk_config.dart';
 import 'package:kinetic/interfaces/make_transfer_options.dart';
 import 'package:kinetic/tools.dart';
@@ -8,74 +9,44 @@ import 'package:solana/solana.dart';
 
 import 'package:kinetic/generated/lib/api.dart';
 
-Future<Transaction?> generateMakeTransferTransaction(TransactionApi transactionApi, AccountApi accountApi, KineticSdkConfig sdkConfig, MakeTransferOptions makeTransferOptions, String mint, int decimals, String feePayer, bool senderCreate, {List fk = const []}) async {
+Future<String> generateMakeTransferTransaction(GenerateMakeTransferOptions options, {List fk = const []}) async {
 
-  final hopSignerPublicKey = Ed25519HDPublicKey.fromBase58(feePayer);
+  final hopSignerPublicKey = Ed25519HDPublicKey.fromBase58(options.mintFeePayer);
 
-  var asa = "";
+  var asa = options.senderATA;
   var ara = "";
 
-  // SolanaClient solanaClient = SolanaClient(rpcUrl: Uri.parse(sdkConfig.solanaRpcEndpoint), websocketUrl: Uri.parse(sdkConfig.solanaWssEndpoint), timeout: timeoutDuration);
-  List<String>? senderResult = await accountApi.getTokenAccounts(sdkConfig.environment.name, sdkConfig.index, makeTransferOptions.owner.publicKey.toBase58(), makeTransferOptions.mint);
-  List<String>? recipientResult = await accountApi.getTokenAccounts(sdkConfig.environment.name, sdkConfig.index, makeTransferOptions.destination.toBase58(), makeTransferOptions.mint);
-
-  // var associatedSenderAccount = await solanaClient.getAssociatedTokenAccount(
-  //   owner: makeTransferOptions.owner.publicKey,
-  //   mint: Ed25519HDPublicKey.fromBase58(makeTransferOptions.mint),
-  //   // commitment: Commitment.confirmed,
-  // );
-  //
-  // var associatedRecipientAccount = await solanaClient.getAssociatedTokenAccount(
-  //   owner: makeTransferOptions.destination,
-  //   mint: Ed25519HDPublicKey.fromBase58(makeTransferOptions.mint),
-  //   // commitment: Commitment.confirmed,
-  // );
-
-  if (senderResult == null || senderResult.isEmpty) {
-    throw NoAssociatedTokenAccountException(makeTransferOptions.owner.address, makeTransferOptions.mint);
-  } else {
-    asa = senderResult[0];
-  }
-
-  List<Ed25519HDPublicKey> signersPublic = [makeTransferOptions.owner.publicKey, hopSignerPublicKey];
+  List<Ed25519HDPublicKey> signersPublic = [options.signer.publicKey, hopSignerPublicKey];
 
   List<Instruction> instructions;
 
   var createATAInstruction;
 
-  if (recipientResult == null || recipientResult.isEmpty) {
-    if (senderCreate == false) {
-      throw NoAssociatedTokenAccountException(makeTransferOptions.destination.toBase58(), makeTransferOptions.mint,);
-    } else {
+  if (options.senderCreate) {
+    final derivedAddress = await findAssociatedTokenAddress(
+      owner: options.destination,
+      mint: Ed25519HDPublicKey.fromBase58(options.mintPublicKey),
+    );
 
-      final derivedAddress = await findAssociatedTokenAddress(
-        owner: makeTransferOptions.destination,
-        mint: Ed25519HDPublicKey.fromBase58(makeTransferOptions.mint),
-      );
+    ara = derivedAddress.toBase58();
 
-      ara = derivedAddress.toBase58();
-
-      createATAInstruction = AssociatedTokenAccountInstruction.createAccount(
-        funder: hopSignerPublicKey,
-        address: derivedAddress,
-        owner: makeTransferOptions.destination,
-        mint: Ed25519HDPublicKey.fromBase58(makeTransferOptions.mint),
-      );
-
-    }
-  } else {
-    ara = recipientResult[0];
+    createATAInstruction = AssociatedTokenAccountInstruction.createAccount(
+      funder: hopSignerPublicKey,
+      address: derivedAddress,
+      owner: options.destination,
+      mint: Ed25519HDPublicKey.fromBase58(options.mintPublicKey),
+    );
   }
 
   final transferInstruction = TokenInstruction.transfer(
     source: Ed25519HDPublicKey.fromBase58(asa),
     destination: Ed25519HDPublicKey.fromBase58(ara),
-    owner: makeTransferOptions.owner.publicKey,
-    amount: getRawQuantity(double.parse(makeTransferOptions.amount), decimals).toInt(),
+    owner: options.signer.publicKey,
+    amount: getRawQuantity(double.parse(options.amount), options.mintDecimals).toInt(),
     signers: signersPublic,
   );
 
-  if (recipientResult == null || recipientResult.isEmpty) {
+  if (options.senderCreate) {
     instructions = [
       createATAInstruction,
       transferInstruction,
@@ -84,7 +55,7 @@ Future<Transaction?> generateMakeTransferTransaction(TransactionApi transactionA
     instructions = [transferInstruction];
   }
 
-  var b = createKinMemoInstruction(makeTransferOptions.type, sdkConfig.index, fk: fk);
+  var b = createKinMemoInstruction(options.type, options.appIndex, fk: fk);
 
   instructions.insert(0, MemoInstruction(signers: [], memo: base64Encode(b)));
 
@@ -92,14 +63,8 @@ Future<Transaction?> generateMakeTransferTransaction(TransactionApi transactionA
     instructions: instructions,
   );
 
-  LatestBlockhashResponse? latestBlockhashResponse = await transactionApi.getLatestBlockhash(sdkConfig.environment.name, sdkConfig.index);
-
-  if (latestBlockhashResponse == null) {
-    return null;
-  }
-
-  var recentBlockHash = latestBlockhashResponse.blockhash;
-  int blockHeight = latestBlockhashResponse.lastValidBlockHeight;
+  var recentBlockHash = options.latestBlockhash;
+  int blockHeight = options.lastValidBlockHeight;
 
   final CompiledMessage compiledMessage = message.compile(
     recentBlockhash: recentBlockHash,
@@ -110,31 +75,31 @@ Future<Transaction?> generateMakeTransferTransaction(TransactionApi transactionA
     messageBytes: compiledMessage.data,
     signatures: [
       Signature(List.filled(64, 0), publicKey: hopSignerPublicKey),
-      await makeTransferOptions.owner.sign(compiledMessage.data),
+      await options.signer.sign(compiledMessage.data),
     ],
   );
 
   String _txe = tx.encode();
 
-
-  final makeTransferRequest = MakeTransferRequest(
-    commitment: makeTransferOptions.commitment,
-    lastValidBlockHeight: blockHeight,
-    environment: sdkConfig.environment.name,
-    index: sdkConfig.index,
-    mint: mint,
-    referenceId: makeTransferOptions.referenceId,
-    referenceType: makeTransferOptions.referenceType,
-    tx: _txe,
-  );
-
-  Transaction? transaction;
-  try {
-    transaction = await transactionApi.makeTransfer(makeTransferRequest);
-    safePrint(transaction);
-  } catch (e) {
-    safePrint('Exception when calling TransactionApi->makeTransfer: $e\n');
-  }
-
-  return transaction;
+  return _txe;
+  // final makeTransferRequest = MakeTransferRequest(
+  //   commitment: options.c,
+  //   lastValidBlockHeight: blockHeight,
+  //   environment: sdkConfig.environment.name,
+  //   index: sdkConfig.index,
+  //   mint: mint,
+  //   referenceId: makeTransferOptions.referenceId,
+  //   referenceType: makeTransferOptions.referenceType,
+  //   tx: _txe,
+  // );
+  //
+  // Transaction? transaction;
+  // try {
+  //   transaction = await transactionApi.makeTransfer(makeTransferRequest);
+  //   safePrint(transaction);
+  // } catch (e) {
+  //   safePrint('Exception when calling TransactionApi->makeTransfer: $e\n');
+  // }
+  //
+  // return transaction;
 }

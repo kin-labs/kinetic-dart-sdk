@@ -9,6 +9,7 @@
 .history
 .svn/
 open-api-generated/
+TODO.md
 
 # IntelliJ related
 *.iml

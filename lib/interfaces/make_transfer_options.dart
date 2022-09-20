@@ -12,6 +12,7 @@ class MakeTransferOptions implements TransferDestination {
     required this.owner,
     required this.referenceId,
     required this.referenceType,
+    required this.senderCreate,
     required this.type
   });
 
@@ -26,6 +27,7 @@ class MakeTransferOptions implements TransferDestination {
   late solana.Ed25519HDKeyPair owner;
   late String referenceId;
   late String referenceType;
+  late bool senderCreate;
   late TransactionType type;
 
 }

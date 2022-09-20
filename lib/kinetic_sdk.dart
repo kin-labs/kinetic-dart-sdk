@@ -49,7 +49,7 @@ class KineticSdk {
   }
 
   Future<AppConfig?> getAppConfig() async {
-    appConfig = await _internal.getAppConfigImpl(sdkConfig);
+    appConfig = await _internal.getAppConfig(sdkConfig);
 
     return appConfig;
   }
@@ -63,37 +63,37 @@ class KineticSdk {
 
   Future<BalanceResponse?> getBalance({required GetBalanceOptions balanceOptions}) async {
     checkInit();
-    BalanceResponse? res = await _internal.getBalanceImpl(sdkConfig, balanceOptions.account.toBase58());
+    BalanceResponse? res = await _internal.getBalance(sdkConfig, balanceOptions.account.toBase58());
     return res;
   }
 
   Future<List<HistoryResponse>?> getHistory({required GetHistoryOptions historyOptions}) async {
     checkInit();
-    List<HistoryResponse>? res = await _internal.getHistoryImpl(sdkConfig, historyOptions.account.toBase58(), historyOptions.mint.toBase58());
+    List<HistoryResponse>? res = await _internal.getHistory(sdkConfig, historyOptions.account.toBase58(), historyOptions.mint.toBase58());
     return res;
   }
 
   Future<List<String>?> getTokenAccounts({required GetTokenAccountsOptions tokenAccountsOptions}) async {
     checkInit();
-    List<String>? res = await _internal.getTokenAccountsImpl(sdkConfig, tokenAccountsOptions.account.toBase58(), tokenAccountsOptions.mint.toBase58());
+    List<String>? res = await _internal.getTokenAccounts(tokenAccountsOptions);
     return res;
   }
 
   Future<RequestAirdropResponse?> requestAirdrop({required RequestAirdropRequest airdropRequest}) async {
     checkInit();
-    RequestAirdropResponse? res = await _internal.postRequestAirdropImpl(airdropRequest);
+    RequestAirdropResponse? res = await _internal.postRequestAirdrop(airdropRequest);
     return res;
   }
 
-  Future<Transaction?> makeTransfer({required MakeTransferOptions makeTransferOptions, required bool senderCreate}) async {
+  Future<Transaction?> makeTransfer({required MakeTransferOptions makeTransferOptions}) async {
     checkInit();
-    Transaction? transaction = await _internal.makeTransferImpl(appConfig, sdkConfig, senderCreate, makeTransferOptions);
+    Transaction? transaction = await _internal.makeTransfer(makeTransferOptions);
     return transaction;
   }
 
   Future<Transaction?> createAccount({required CreateAccountOptions createAccountOptions}) async {
     checkInit();
-    Transaction? transaction = await _internal.createAccountImpl(appConfig, sdkConfig, createAccountOptions.mint, createAccountOptions.owner);
+    Transaction? transaction = await _internal.createAccount(createAccountOptions);
     return transaction;
   }
 
