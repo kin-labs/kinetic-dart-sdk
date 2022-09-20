@@ -16,7 +16,7 @@ import 'package:kinetic/tools.dart';
 KineticSdkConfig defaultConfig = KineticSdkConfig(
   index: 1,
   endpoint: 'https://sandbox.kinetic.host',
-  environment: KineticSdkEnvironment.devnet,
+  environment: KineticSdkEnvironment(endpoint: 'mainnet'),
 );
 
 void main() async {

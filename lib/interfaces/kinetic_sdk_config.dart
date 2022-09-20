@@ -15,12 +15,12 @@ class KineticSdkConfig {
 
   KineticSdkConfig({required this.index,required this.endpoint,required this.environment}) {
     logger = Logger();
-    solanaRpcEndpoint = environment == KineticSdkEnvironment.mainnet ? mainnetRpcEndpoint : devnetRpcEndpoint;
-    solanaWssEndpoint = environment == KineticSdkEnvironment.mainnet ? mainnetWssEndpoint : devnetWssEndpoint;
+    solanaRpcEndpoint = environment.endpoint == 'mainnet' ? mainnetRpcEndpoint : devnetRpcEndpoint;
+    solanaWssEndpoint = environment.endpoint == 'mainnet' ? mainnetWssEndpoint : devnetWssEndpoint;
 
     headers = {
-      'kinetic-environment': environment.name,
-      'kinetic-index': environment.index.toString(),
+      'kinetic-environment': environment.endpoint,
+      'kinetic-index': index.toString(),
       'kinetic-user-agent': "DART@$version",
     };
   }

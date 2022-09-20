@@ -34,7 +34,7 @@ class KineticSdkInternal {
   }
 
   Future<AppConfig?> getAppConfig(KineticSdkConfig sdkConfig) async {
-    AppConfig? config = await appApi.getAppConfig(sdkConfig.environment.name, sdkConfig.index);
+    AppConfig? config = await appApi.getAppConfig(sdkConfig.environment.endpoint, sdkConfig.index);
     if ( config != null) {
       appConfig = config;
     }
@@ -46,7 +46,7 @@ class KineticSdkInternal {
       throw KineticInitializationException();
     }
 
-    BalanceResponse? res = await accountApi.getBalance(sdkConfig.environment.name, sdkConfig.index, accountId);
+    BalanceResponse? res = await accountApi.getBalance(sdkConfig.environment.endpoint, sdkConfig.index, accountId);
     return res;
   }
 
@@ -55,7 +55,7 @@ class KineticSdkInternal {
       throw KineticInitializationException();
     }
 
-    List<HistoryResponse>? res = await accountApi.getHistory(sdkConfig.environment.name, sdkConfig.index, accountId, mint);
+    List<HistoryResponse>? res = await accountApi.getHistory(sdkConfig.environment.endpoint, sdkConfig.index, accountId, mint);
     return res;
   }
 
@@ -93,7 +93,7 @@ class KineticSdkInternal {
     final makeTransferRequest = MakeTransferRequest(
       commitment: makeTransferOptions.commitment,
       lastValidBlockHeight: options.lastValidBlockHeight,
-      environment: sdkConfig.environment.name,
+      environment: sdkConfig.environment.endpoint,
       index: options.appIndex,
       mint: makeTransferOptions.mint,
       referenceId: makeTransferOptions.referenceId,
@@ -117,7 +117,7 @@ class KineticSdkInternal {
       throw KineticInitializationException();
     }
 
-    List<String>? result = await accountApi.getTokenAccounts(sdkConfig.environment.name, sdkConfig.index, options.account.toBase58(), options.mint.toBase58());
+    List<String>? result = await accountApi.getTokenAccounts(sdkConfig.environment.endpoint, sdkConfig.index, options.account.toBase58(), options.mint.toBase58());
 
     return result;
   }
@@ -131,7 +131,7 @@ class KineticSdkInternal {
     String tx = await generateCreateAccountTransaction(sdkConfig.index, res["latestBlockhash"], res["mintPublicKey"], createAccountOptions.owner, res["mintFeePayer"]);
 
     final createAccountRequest = CreateAccountRequest(
-      environment: sdkConfig.environment.name,
+      environment: sdkConfig.environment.endpoint,
       index: sdkConfig.index,
       mint: createAccountOptions.mint,
       referenceId: createAccountOptions.referenceId,
@@ -161,7 +161,7 @@ class KineticSdkInternal {
     String mintFeePayer = getFeePayer(appConfig, mint);
     int mintDecimals = getDecimals(appConfig, mint);
 
-    LatestBlockhashResponse? latestBlockhashResponse = await transactionApi.getLatestBlockhash(sdkConfig.environment.name, sdkConfig.index);
+    LatestBlockhashResponse? latestBlockhashResponse = await transactionApi.getLatestBlockhash(sdkConfig.environment.endpoint, sdkConfig.index);
 
     String latestBlockhash = latestBlockhashResponse?.blockhash ?? "";
     int lastValidBlockHeight = latestBlockhashResponse?.lastValidBlockHeight ?? 0;
