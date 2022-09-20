@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kinetic/commitment.dart';
 import 'package:kinetic/generated/lib/api.dart';
 import 'package:kinetic/interfaces/create_account_options.dart';
 import 'package:kinetic/interfaces/get_balance_options.dart';

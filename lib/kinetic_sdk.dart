@@ -44,10 +44,6 @@ class KineticSdk {
     return initialized;
   }
 
-  checkInit() {
-    initialized == false ? throw KineticInitializationException() : null;
-  }
-
   Future<AppConfig?> getAppConfig() async {
     appConfig = await _internal.getAppConfig(sdkConfig);
 
@@ -55,44 +51,37 @@ class KineticSdk {
   }
 
   Future<String?> getExplorerUrl({required String path}) async {
-    checkInit();
     var rUrl = appConfig?.environment.explorer;
     var url = rUrl?.replaceAll("{path}", path);
     return url;
   }
 
   Future<BalanceResponse?> getBalance({required GetBalanceOptions balanceOptions}) async {
-    checkInit();
     BalanceResponse? res = await _internal.getBalance(sdkConfig, balanceOptions.account.toBase58());
     return res;
   }
 
   Future<List<HistoryResponse>?> getHistory({required GetHistoryOptions historyOptions}) async {
-    checkInit();
     List<HistoryResponse>? res = await _internal.getHistory(sdkConfig, historyOptions.account.toBase58(), historyOptions.mint.toBase58());
     return res;
   }
 
   Future<List<String>?> getTokenAccounts({required GetTokenAccountsOptions tokenAccountsOptions}) async {
-    checkInit();
     List<String>? res = await _internal.getTokenAccounts(tokenAccountsOptions);
     return res;
   }
 
   Future<RequestAirdropResponse?> requestAirdrop({required RequestAirdropRequest airdropRequest}) async {
-    checkInit();
     RequestAirdropResponse? res = await _internal.postRequestAirdrop(airdropRequest);
     return res;
   }
 
   Future<Transaction?> makeTransfer({required MakeTransferOptions makeTransferOptions}) async {
-    checkInit();
     Transaction? transaction = await _internal.makeTransfer(makeTransferOptions);
     return transaction;
   }
 
   Future<Transaction?> createAccount({required CreateAccountOptions createAccountOptions}) async {
-    checkInit();
     Transaction? transaction = await _internal.createAccount(createAccountOptions);
     return transaction;
   }
