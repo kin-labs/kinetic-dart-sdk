@@ -3,7 +3,9 @@ library kinetic;
 import 'package:kinetic/generated/lib/api.dart';
 import 'package:kinetic/identifiers/version.dart';
 import 'package:kinetic/kinetic_sdk_internal.dart';
+import 'package:kinetic/solana.dart';
 import 'package:logger/logger.dart';
+import 'package:solana/solana.dart';
 
 import 'exceptions.dart';
 import 'interfaces/create_account_options.dart';
@@ -25,28 +27,32 @@ class KineticSdk {
     return _kinetic;
   }
 
-  Future<bool> setup({required KineticSdkConfig sdkConfig}) async {
-    this.sdkConfig = sdkConfig;
-    _internal = KineticSdkInternal(sdkConfig);
-    bool ok = await init();
-    return ok;
+  // Future<bool> setup({required KineticSdkConfig sdkConfig}) async {
+  //   this.sdkConfig = sdkConfig;
+  //   _internal = KineticSdkInternal(sdkConfig);
+  //   bool ok = await init();
+  //   return ok;
+  // }
+
+  static Future<KineticSdk> setup({required KineticSdkConfig sdkConfig}) async {
+    _kinetic.sdkConfig = sdkConfig;
+    _kinetic._internal = KineticSdkInternal(sdkConfig);
+    await _kinetic.init();
+    return _kinetic;
   }
 
-  bool initialized = false;
   AppConfig? appConfig;
+  late Solana solana;
 
-  Future<bool> init() async {
-    var _ap = await getAppConfig();
+  Future<AppConfig?> init() async {
+    AppConfig? _ap = await getAppConfig();
     sdkConfig.logger.log(Level.info, "$name: initializing $name@$version");
-    if (appConfig?.app.index == sdkConfig.index) {
-      initialized = true;
-    }
-    return initialized;
+    solana = Solana(solanaRpcEndpoint: sdkConfig.solanaRpcEndpoint, solanaWssEndpoint: sdkConfig.solanaWssEndpoint, timeoutDuration: const Duration(seconds: 60));
+    return _ap;
   }
 
   Future<AppConfig?> getAppConfig() async {
     appConfig = await _internal.getAppConfig(sdkConfig);
-
     return appConfig;
   }
 
