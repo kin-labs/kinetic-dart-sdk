@@ -4,7 +4,7 @@
 // }
 
 class KineticSdkEnvironment {
-  late String endpoint;
+  late String environment;
 
-  KineticSdkEnvironment({required this.endpoint});
+  KineticSdkEnvironment({required this.environment});
 }

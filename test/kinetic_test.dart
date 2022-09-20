@@ -16,7 +16,7 @@ import 'package:kinetic/tools.dart';
 KineticSdkConfig defaultConfig = KineticSdkConfig(
   index: 1,
   endpoint: 'https://sandbox.kinetic.host',
-  environment: KineticSdkEnvironment(endpoint: 'mainnet'),
+  environment: KineticSdkEnvironment(environment: 'devnet'),
 );
 
 void main() async {
@@ -95,11 +95,11 @@ void main() async {
     safePrint("To: AVGAggsdHmubCZLmJ94dRp98kGJu1ZsFENPTNSe3Nhfw");
 
     MakeTransferOptions makeTransferOptions = MakeTransferOptions(amount: "1.0", destination: Keypair().publicKeyFromString("AVGAggsdHmubCZLmJ94dRp98kGJu1ZsFENPTNSe3Nhfw"), commitment: MakeTransferRequestCommitmentEnum.finalized, mint: "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX", owner: from, referenceId: "p2p", referenceType: "tx", type: TransactionType.p2p, senderCreate: true);
+
     Transaction? transaction = await KineticSdk().makeTransfer(makeTransferOptions: makeTransferOptions);
     if (transaction != null) {
       ok = true;
     }
-    safePrint(transaction?.toJson());
 
     expect(ok, true);
   }, timeout: const Timeout(Duration(minutes: 10)), );

@@ -1,13 +1,9 @@
 import 'dart:convert';
 
 import 'package:kinetic/interfaces/generate_make_transfer_options.dart';
-import 'package:kinetic/interfaces/kinetic_sdk_config.dart';
-import 'package:kinetic/interfaces/make_transfer_options.dart';
 import 'package:kinetic/tools.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
-
-import 'package:kinetic/generated/lib/api.dart';
 
 Future<String> generateMakeTransferTransaction(GenerateMakeTransferOptions options, {List fk = const []}) async {
 
@@ -22,14 +18,14 @@ Future<String> generateMakeTransferTransaction(GenerateMakeTransferOptions optio
 
   var createATAInstruction;
 
+  final derivedAddress = await findAssociatedTokenAddress(
+    owner: options.destination,
+    mint: Ed25519HDPublicKey.fromBase58(options.mintPublicKey),
+  );
+
+  ara = derivedAddress.toBase58();
+
   if (options.senderCreate) {
-    final derivedAddress = await findAssociatedTokenAddress(
-      owner: options.destination,
-      mint: Ed25519HDPublicKey.fromBase58(options.mintPublicKey),
-    );
-
-    ara = derivedAddress.toBase58();
-
     createATAInstruction = AssociatedTokenAccountInstruction.createAccount(
       funder: hopSignerPublicKey,
       address: derivedAddress,
