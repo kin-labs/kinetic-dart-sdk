@@ -17,7 +17,7 @@ import 'package:solana/solana.dart';
 
 import 'fixtures.dart';
 
-KineticSdkConfig defaultConfig = KineticSdkConfig(
+KineticSdkConfig sdkConfig = KineticSdkConfig(
   index: 1,
   // endpoint: 'http://localhost:3000',
   endpoint: 'https://sandbox.kinetic.host',
@@ -33,7 +33,7 @@ String mint = "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX";
 
 void main() async {
   test('Get App Config', () async {
-    KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig);
 
     if (sdk.config == null) {
       throw Exception('App config is null');
@@ -43,7 +43,7 @@ void main() async {
   });
 
   test('Get Balance', () async {
-    KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig);
 
     GetBalanceOptions options = GetBalanceOptions(account: accountAlice);
     BalanceResponse? res = await sdk.getBalance(options: options);
@@ -60,7 +60,7 @@ void main() async {
   });
 
   test('Get History', () async {
-    KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig);
 
     GetHistoryOptions options = GetHistoryOptions(account: accountAlice, mint: mint);
     List<HistoryResponse>? res = await sdk.getHistory(options: options);
@@ -77,7 +77,7 @@ void main() async {
   });
 
   test('Get Token Accounts', () async {
-    KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig);
 
     GetTokenAccountsOptions options = GetTokenAccountsOptions(account: accountAlice, mint: (mint));
     List<String>? res = await sdk.getTokenAccounts(options: options);
@@ -92,7 +92,7 @@ void main() async {
   });
 
   test('Request Airdrop', () async {
-    KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig);
 
     RequestAirdropOptions options = RequestAirdropOptions(
       account: accountAlice,
@@ -113,7 +113,7 @@ void main() async {
   test(
     'makeTransfer',
     () async {
-      KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+      KineticSdk sdk = await KineticSdk.setup(sdkConfig);
 
       Ed25519HDKeyPair owner = await getAliceKeypair();
 
@@ -150,7 +150,7 @@ void main() async {
   test(
     'createAccount',
     () async {
-      KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+      KineticSdk sdk = await KineticSdk.setup(sdkConfig);
 
       final owner = await Keypair.random();
 
@@ -179,7 +179,7 @@ void main() async {
   );
 
   test('getTransaction', () async {
-    KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig);
     Ed25519HDKeyPair owner = await getAliceKeypair();
 
     MakeTransferOptions options = MakeTransferOptions(

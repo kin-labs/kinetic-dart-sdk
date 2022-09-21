@@ -71,11 +71,7 @@ class KineticSdk {
 
       sdkConfig.solanaWssEndpoint = sdkConfig?.solanaRpcEndpoint?.replaceAll('http', 'ws') as String;
 
-      solana = Solana(
-        solanaRpcEndpoint: sdkConfig.solanaRpcEndpoint as String,
-        solanaWssEndpoint: sdkConfig.solanaWssEndpoint as String,
-        timeoutDuration: const Duration(seconds: 60),
-      );
+      solana = Solana(solanaRpcEndpoint: sdkConfig.solanaRpcEndpoint!);
 
       sdkConfig?.logger?.i(
           "$name: endpoint '${sdkConfig.endpoint}', environment '${sdkConfig.environment}', index: ${config?.app.index}");
@@ -86,7 +82,7 @@ class KineticSdk {
     }
   }
 
-  static Future<KineticSdk> setup({required KineticSdkConfig sdkConfig}) async {
+  static Future<KineticSdk> setup(KineticSdkConfig sdkConfig) async {
     var sdk = KineticSdk(sdkConfig);
     try {
       await sdk.init();
