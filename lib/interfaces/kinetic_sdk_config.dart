@@ -1,4 +1,4 @@
-import 'package:kinetic/identifiers/version.dart';
+import 'package:kinetic/version.dart';
 import 'package:logger/logger.dart';
 
 class KineticSdkConfig {
@@ -10,12 +10,11 @@ class KineticSdkConfig {
   String? solanaRpcEndpoint;
   String? solanaWssEndpoint;
 
-  KineticSdkConfig({required this.index, required this.endpoint, required this.environment}) {
-    // TODO: Make logger optional (passed in from the config)
-    logger = Logger();
-
+  KineticSdkConfig(
+      {required this.index, required this.endpoint, required this.environment, this.headers, this.logger}) {
     headers = {
-      // TODO: here we should accept/insert the headers passed in by the user
+      // TODO: make sure user headers are passed in
+      // ...headers,
       // The headers below here should always override what the user passes in.
       'kinetic-environment': environment,
       'kinetic-index': index.toString(),

@@ -8,7 +8,7 @@ class GenerateCreateAccountOptions {
     required this.lastValidBlockHeight,
     required this.mintFeePayer,
     required this.mintPublicKey,
-    required this.signer,
+    required this.owner,
   });
 
   late bool addMemo;
@@ -17,5 +17,5 @@ class GenerateCreateAccountOptions {
   late int lastValidBlockHeight;
   late String mintFeePayer;
   late String mintPublicKey;
-  late solana.Ed25519HDKeyPair signer;
+  late solana.Ed25519HDKeyPair owner;
 }

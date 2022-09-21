@@ -6,11 +6,13 @@ import 'package:kinetic/interfaces/create_account_options.dart';
 import 'package:kinetic/interfaces/get_balance_options.dart';
 import 'package:kinetic/interfaces/get_history_options.dart';
 import 'package:kinetic/interfaces/get_token_accounts_options.dart';
+import 'package:kinetic/interfaces/get_transaction_options.dart';
 import 'package:kinetic/interfaces/kinetic_sdk_config.dart';
 import 'package:kinetic/interfaces/make_transfer_options.dart';
 import 'package:kinetic/interfaces/request_airdrop_options.dart';
 import 'package:kinetic/kinetic_sdk_internal.dart';
 import 'package:kinetic/solana.dart';
+import 'package:kinetic/version.dart';
 
 class KineticSdk {
   late Solana solana;
@@ -31,7 +33,7 @@ class KineticSdk {
   }
 
   Future<BalanceResponse?> getBalance({required GetBalanceOptions options}) async {
-    return _internal.getBalance(options.account);
+    return _internal.getBalance(options);
   }
 
   Future<String?> getExplorerUrl(String path) async {
@@ -46,6 +48,10 @@ class KineticSdk {
     return _internal.getTokenAccounts(options);
   }
 
+  Future<GetTransactionResponse?> getTransaction({required GetTransactionOptions options}) async {
+    return _internal.getTransaction(options);
+  }
+
   Future<Transaction?> makeTransfer({required MakeTransferOptions options}) async {
     return _internal.makeTransfer(options);
   }
@@ -56,8 +62,7 @@ class KineticSdk {
 
   Future<AppConfig?> init() async {
     try {
-      sdkConfig?.logger?.i('KineticSdk: initializing KineticSdk');
-
+      sdkConfig?.logger?.i('$name: initializing KineticSdk');
       var config = await _internal.getAppConfig(sdkConfig.environment, sdkConfig.index);
 
       sdkConfig.solanaRpcEndpoint = sdkConfig?.solanaRpcEndpoint != null
@@ -73,7 +78,7 @@ class KineticSdk {
       );
 
       sdkConfig?.logger?.i(
-          "KineticSdk: endpoint '${sdkConfig.endpoint}', environment '${sdkConfig.environment}', index: ${config?.app.index}");
+          "$name: endpoint '${sdkConfig.endpoint}', environment '${sdkConfig.environment}', index: ${config?.app.index}");
       return config;
     } catch (e) {
       sdkConfig?.logger?.e('Error initializing Server. ${e.toString()}');
@@ -85,10 +90,10 @@ class KineticSdk {
     var sdk = KineticSdk(sdkConfig);
     try {
       await sdk.init();
-      sdkConfig?.logger?.i('Kinetic SDK Setup Done');
+      sdkConfig?.logger?.i('$name: Setup Done');
       return sdk;
     } catch (e) {
-      sdkConfig?.logger?.e('Error setting up SDK. ${e.toString()}');
+      sdkConfig?.logger?.e('$name: Error setting up SDK. ${e.toString()}');
       rethrow;
     }
   }

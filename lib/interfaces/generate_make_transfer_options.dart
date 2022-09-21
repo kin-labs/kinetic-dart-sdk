@@ -12,8 +12,7 @@ class GenerateMakeTransferOptions {
     required this.mintDecimals,
     required this.mintFeePayer,
     required this.mintPublicKey,
-    required this.ownerTokenAccount,
-    required this.signer,
+    required this.owner,
     required this.type,
     this.senderCreate,
   });
@@ -27,8 +26,7 @@ class GenerateMakeTransferOptions {
   late int mintDecimals;
   late String mintFeePayer;
   late String mintPublicKey;
-  late String ownerTokenAccount;
-  late solana.Ed25519HDKeyPair signer;
+  late solana.Ed25519HDKeyPair owner;
   late bool? senderCreate;
   late TransactionType type;
 }

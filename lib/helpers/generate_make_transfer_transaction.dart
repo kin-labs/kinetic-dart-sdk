@@ -9,8 +9,9 @@ Future<SignedTx> generateMakeTransferTransaction(GenerateMakeTransferOptions opt
   // Create objects from Response
   final feePayerKey = Ed25519HDPublicKey.fromBase58(options.mintFeePayer);
   final mintKey = Ed25519HDPublicKey.fromBase58(options.mintPublicKey);
-  final ownerPublicKey = options.signer.publicKey;
+
   final destinationPublicKey = Ed25519HDPublicKey.fromBase58(options.destination);
+  final ownerPublicKey = options.owner.publicKey;
 
   // Get TokenAccount from Owner and Destination
   final destinationTokenAccount = await findAssociatedTokenAddress(mint: mintKey, owner: destinationPublicKey);
@@ -33,14 +34,14 @@ Future<SignedTx> generateMakeTransferTransaction(GenerateMakeTransferOptions opt
     ));
   }
 
-  List<Ed25519HDPublicKey> signersPublic = [options.signer.publicKey, feePayerKey];
+  List<Ed25519HDPublicKey> signersPublic = [ownerPublicKey, feePayerKey];
 
   instructions.add(TokenInstruction.transferChecked(
     decimals: options.mintDecimals,
     mint: mintKey,
     source: ownerTokenAccount,
     destination: destinationTokenAccount,
-    owner: options.signer.publicKey,
+    owner: ownerPublicKey,
     amount: getRawQuantity(double.parse(options.amount), options.mintDecimals).toInt(),
     signers: signersPublic,
   ));
@@ -54,7 +55,7 @@ Future<SignedTx> generateMakeTransferTransaction(GenerateMakeTransferOptions opt
     messageBytes: message.data,
     signatures: [
       Signature(List.filled(64, 0), publicKey: feePayerKey),
-      await options.signer.sign(message.data),
+      await options.owner.sign(message.data),
     ],
   );
 }

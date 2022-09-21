@@ -4,6 +4,7 @@ import 'package:kinetic/interfaces/create_account_options.dart';
 import 'package:kinetic/interfaces/get_balance_options.dart';
 import 'package:kinetic/interfaces/get_history_options.dart';
 import 'package:kinetic/interfaces/get_token_accounts_options.dart';
+import 'package:kinetic/interfaces/get_transaction_options.dart';
 import 'package:kinetic/interfaces/kinetic_sdk_config.dart';
 import 'package:kinetic/interfaces/make_transfer_options.dart';
 import 'package:kinetic/interfaces/request_airdrop_options.dart';
@@ -11,6 +12,7 @@ import 'package:kinetic/interfaces/transaction_type.dart';
 import 'package:kinetic/keypair.dart';
 import 'package:kinetic/kinetic_sdk.dart';
 import 'package:kinetic/tools.dart';
+import 'package:logger/logger.dart';
 import 'package:solana/solana.dart';
 
 import 'fixtures.dart';
@@ -20,6 +22,7 @@ KineticSdkConfig defaultConfig = KineticSdkConfig(
   // endpoint: 'http://localhost:3000',
   endpoint: 'https://sandbox.kinetic.host',
   environment: 'devnet',
+  logger: Logger(),
 );
 
 String accountAlice = "ALisrzsaVqciCxy8r6g7MUrPoRo3CpGxPhwBbZzqZ9bA";
@@ -30,7 +33,7 @@ String mint = "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX";
 
 void main() async {
   test('Get App Config', () async {
-    var sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
 
     if (sdk.config == null) {
       throw Exception('App config is null');
@@ -40,7 +43,7 @@ void main() async {
   });
 
   test('Get Balance', () async {
-    var sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
 
     GetBalanceOptions options = GetBalanceOptions(account: accountAlice);
     BalanceResponse? res = await sdk.getBalance(options: options);
@@ -57,7 +60,7 @@ void main() async {
   });
 
   test('Get History', () async {
-    var sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
 
     GetHistoryOptions options = GetHistoryOptions(account: accountAlice, mint: mint);
     List<HistoryResponse>? res = await sdk.getHistory(options: options);
@@ -74,7 +77,7 @@ void main() async {
   });
 
   test('Get Token Accounts', () async {
-    var sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
 
     GetTokenAccountsOptions options = GetTokenAccountsOptions(account: accountAlice, mint: (mint));
     List<String>? res = await sdk.getTokenAccounts(options: options);
@@ -89,7 +92,7 @@ void main() async {
   });
 
   test('Request Airdrop', () async {
-    var sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
 
     RequestAirdropOptions options = RequestAirdropOptions(
       account: accountAlice,
@@ -110,7 +113,7 @@ void main() async {
   test(
     'makeTransfer',
     () async {
-      var sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+      KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
 
       Ed25519HDKeyPair owner = await getAliceKeypair();
 
@@ -138,6 +141,8 @@ void main() async {
 
       expect(transaction, const TypeMatcher<Transaction>());
       expect(transaction?.signature?.isNotEmpty, true);
+      expect(transaction?.amount, '100000');
+      expect(transaction?.decimals, 5);
     },
     timeout: const Timeout(Duration(minutes: 10)),
   );
@@ -145,7 +150,7 @@ void main() async {
   test(
     'createAccount',
     () async {
-      var sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+      KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
 
       final owner = await Keypair.random();
 
@@ -172,4 +177,33 @@ void main() async {
     },
     timeout: const Timeout(Duration(minutes: 10)),
   );
+
+  test('getTransaction', () async {
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+    Ed25519HDKeyPair owner = await getAliceKeypair();
+
+    MakeTransferOptions options = MakeTransferOptions(
+      amount: "1.0",
+      destination: accountBob,
+      commitment: MakeTransferRequestCommitmentEnum.finalized,
+      mint: mint,
+      owner: owner,
+    );
+
+    Transaction? transaction = await sdk.makeTransfer(options: options);
+    if (transaction == null) {
+      print("Error making transfer for getTransaction");
+      throw Exception("Error making transfer for getTransaction");
+    }
+
+    GetTransactionResponse? res =
+        await sdk.getTransaction(options: GetTransactionOptions(signature: transaction.signature!));
+
+    if (res == null) {
+      print("Error getting transaction");
+      throw Exception("Error getting transaction");
+    }
+    expect(res, const TypeMatcher<GetTransactionResponse>());
+    expect(res?.signature, transaction.signature);
+  });
 }
