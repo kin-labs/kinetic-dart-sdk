@@ -1,7 +1,7 @@
 import 'package:kinetic/generated/lib/api.dart';
 import 'package:kinetic/interfaces/transaction_type.dart';
 import 'package:kinetic/interfaces/transfer_destination.dart';
-import 'package:solana/solana.dart' as solana;
+import 'package:kinetic/keypair.dart';
 
 class MakeTransferOptions implements TransferDestination {
   MakeTransferOptions(
@@ -22,7 +22,7 @@ class MakeTransferOptions implements TransferDestination {
 
   late MakeTransferRequestCommitmentEnum? commitment;
   late String? mint;
-  late solana.Ed25519HDKeyPair owner;
+  late Keypair owner;
   late String? referenceId;
   late String? referenceType;
   late bool? senderCreate;

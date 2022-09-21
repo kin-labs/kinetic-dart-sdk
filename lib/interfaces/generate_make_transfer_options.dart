@@ -1,5 +1,5 @@
 import 'package:kinetic/interfaces/transaction_type.dart';
-import 'package:solana/solana.dart' as solana;
+import 'package:kinetic/keypair.dart';
 
 class GenerateMakeTransferOptions {
   GenerateMakeTransferOptions({
@@ -26,7 +26,7 @@ class GenerateMakeTransferOptions {
   late int mintDecimals;
   late String mintFeePayer;
   late String mintPublicKey;
-  late solana.Ed25519HDKeyPair owner;
+  late Keypair owner;
   late bool? senderCreate;
   late TransactionType type;
 }
