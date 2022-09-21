@@ -1,11 +1,10 @@
 import 'dart:typed_data';
 
+import 'package:bip39/bip39.dart' as bip39;
 import 'package:bs58/bs58.dart';
 import 'package:solana/solana.dart';
-import 'package:bip39/bip39.dart' as bip39;
 
 class Keypair {
-
   late Ed25519HDKeyPair _keypair;
 
   get keypair => _keypair;
@@ -17,14 +16,13 @@ class Keypair {
   }
 
   Future<String> get solanaSecretKey async {
-    var _p =  await _extractPkb();
+    var _p = await _extractPkb();
     var _u = Uint8List.fromList(_p);
     return base58.encode(_u);
   }
 
-  Future<Ed25519HDKeyPair> random() async {
-    _keypair = await Ed25519HDKeyPair.random();
-    return _keypair;
+  static Future<Ed25519HDKeyPair> random() async {
+    return await Ed25519HDKeyPair.random();
   }
 
   Future<List<int>> _extractPkb() async {
@@ -62,8 +60,7 @@ class Keypair {
   }
 
   Future<Ed25519HDKeyPair> fromByteArray(List<int> pkb) async {
-    _keypair = await Ed25519HDKeyPair.fromPrivateKeyBytes(privateKey: pkb);
+    _keypair = await Ed25519HDKeyPair.fromPrivateKeyBytes(privateKey: pkb.take(32).toList());
     return _keypair;
   }
-
 }

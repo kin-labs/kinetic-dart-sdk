@@ -1,26 +1,23 @@
-import 'package:kinetic/constants.dart';
-import 'package:kinetic/identifiers/version.dart';
+import 'package:kinetic/version.dart';
 import 'package:logger/logger.dart';
 
-import 'kinetic_sdk_environment.dart';
-
 class KineticSdkConfig {
-  late int index;
-  late KineticSdkEnvironment environment;
+  late String environment;
   late String endpoint;
-  late String solanaRpcEndpoint;
-  late String solanaWssEndpoint;
-  late Map<String, String> headers;
-  late Logger logger;
+  Map<String, String>? headers;
+  late int index;
+  Logger? logger;
+  String? solanaRpcEndpoint;
+  String? solanaWssEndpoint;
 
-  KineticSdkConfig({required this.index,required this.endpoint,required this.environment}) {
-    logger = Logger();
-    solanaRpcEndpoint = environment == KineticSdkEnvironment.mainnet ? mainnetRpcEndpoint : devnetRpcEndpoint;
-    solanaWssEndpoint = environment == KineticSdkEnvironment.mainnet ? mainnetWssEndpoint : devnetWssEndpoint;
-
+  KineticSdkConfig(
+      {required this.index, required this.endpoint, required this.environment, this.headers, this.logger}) {
     headers = {
-      'kinetic-environment': environment.name,
-      'kinetic-index': environment.index.toString(),
+      // TODO: make sure user headers are passed in
+      // ...headers,
+      // The headers below here should always override what the user passes in.
+      'kinetic-environment': environment,
+      'kinetic-index': index.toString(),
       'kinetic-user-agent': "DART@$version",
     };
   }

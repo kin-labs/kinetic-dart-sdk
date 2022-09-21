@@ -1,4 +1,0 @@
-enum KineticSdkEnvironment {
-  devnet,
-  mainnet
-}

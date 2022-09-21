@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 
-import 'package:kinetic/generated/lib/api.dart';
 import 'exceptions.dart';
 import 'interfaces/transaction_type.dart';
 
@@ -13,61 +12,7 @@ safePrint(dynamic msg) {
 }
 
 getRawQuantity(double quantity, int decimals) {
-  return quantity * pow(10,decimals);
-}
-
-getFeePayer(AppConfig? appConfig, String mint) {
-  String feePayer = "";
-
-  if (appConfig == null) {
-    throw KineticMissingMintsException();
-  }
-
-  for (var mintObject in appConfig.mints) {
-    if (mintObject.publicKey == mint) {
-      feePayer = mintObject.feePayer;
-    }
-  }
-
-  if (feePayer.isEmpty) {
-    throw KineticUnknownFeePayerException;
-  }
-
-  return feePayer;
-}
-
-
-getDecimals(AppConfig? appConfig, String mint) {
-
-  int decimals = -1;
-
-  if (appConfig == null) {
-    throw KineticMissingMintsException();
-  }
-
-  for (var mintObject in appConfig.mints) {
-    if (mintObject.publicKey == mint) {
-      decimals = mintObject.decimals;
-    }
-  }
-
-  if (decimals < 0) {
-    throw KineticUnknownDecimalsException();
-  }
-
-  return decimals;
-}
-
-checkDestination(AppConfig? appConfig, String dest) {
-  if (appConfig == null) {
-    throw KineticMissingMintsException();
-  }
-
-  for (var mintObject in appConfig.mints) {
-    if (mintObject.publicKey == dest) {
-      throw KineticInvalidDestinationException();
-    }
-  }
+  return quantity * pow(10, decimals);
 }
 
 createKinMemoInstruction(TransactionType type, int appIndex, {List fk = const []}) {

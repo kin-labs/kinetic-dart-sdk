@@ -1,94 +1,54 @@
 import 'dart:convert';
 
-import 'package:kinetic/commitment.dart';
-import 'package:kinetic/constants.dart';
-import 'package:kinetic/generated/lib/api.dart';
-import 'package:kinetic/interfaces/kinetic_sdk_config.dart';
 import 'package:kinetic/interfaces/transaction_type.dart';
 import 'package:kinetic/tools.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 
-Future<Transaction?> generateCreateAccountTransaction(TransactionApi transactionApi, AccountApi accountApi, KineticSdkConfig sdkConfig, String mint, Ed25519HDKeyPair from, String feePayer, {List fk = const []}) async {
+import '../interfaces/generate_create_account_options.dart';
 
-  final hopSignerPublicKey = Ed25519HDPublicKey.fromBase58(feePayer);
+Future<SignedTx> generateCreateAccountTransaction(GenerateCreateAccountOptions options, {List fk = const []}) async {
+  // Create objects from Response
+  final feePayerKey = Ed25519HDPublicKey.fromBase58(options.mintFeePayer);
+  final mintKey = Ed25519HDPublicKey.fromBase58(options.mintPublicKey);
+  final ownerPublicKey = options.owner.publicKey;
 
-  final derivedAddress = await findAssociatedTokenAddress(
-    owner: from.publicKey,
-    mint: Ed25519HDPublicKey.fromBase58(mint),
-  );
+  // Get TokenAccount from Owner and Destination
+  final ownerTokenAccount = await findAssociatedTokenAddress(mint: mintKey, owner: ownerPublicKey);
 
-  List<Ed25519HDPublicKey> signersPublic = [from.publicKey, hopSignerPublicKey];
+  // Create Instructions
+  List<Instruction> instructions = [];
 
-  final createATAInstruction = AssociatedTokenAccountInstruction.createAccount(
-    funder: hopSignerPublicKey,
-    address: derivedAddress,
-    owner: from.publicKey,
-    mint: Ed25519HDPublicKey.fromBase58(mint),
-  );
+  if (options.addMemo) {
+    var memo = createKinMemoInstruction(TransactionType.none, options.index);
+    instructions.add(MemoInstruction(signers: [], memo: base64Encode(memo)));
+  }
 
-  final authorityInstruction = TokenInstruction.setAuthority(
-    mintOrAccount: derivedAddress,
+  instructions.add(AssociatedTokenAccountInstruction.createAccount(
+    funder: feePayerKey,
+    address: ownerTokenAccount,
+    owner: ownerPublicKey,
+    mint: mintKey,
+  ));
+
+  instructions.add(TokenInstruction.setAuthority(
+    mintOrAccount: ownerTokenAccount,
     authorityType: AuthorityType.closeAccount,
-    currentAuthority: from.publicKey,
-    newAuthority: hopSignerPublicKey,
-    signers: signersPublic,
+    currentAuthority: ownerPublicKey,
+    newAuthority: feePayerKey,
+    signers: [ownerPublicKey, feePayerKey],
+  ));
+
+  final CompiledMessage message = Message(instructions: instructions).compile(
+    recentBlockhash: options.blockhash,
+    feePayer: feePayerKey,
   );
 
-  var b = createKinMemoInstruction(TransactionType.none, sdkConfig.index);
-
-  final message = Message(
-    instructions: [
-      MemoInstruction(signers: [], memo: base64Encode(b)),
-      createATAInstruction,
-      authorityInstruction,
-    ],
-  );
-
-  LatestBlockhashResponse? latestBlockhashResponse = await transactionApi.getLatestBlockhash(sdkConfig.environment.name, sdkConfig.index);
-
-  if (latestBlockhashResponse == null) {
-    return null;
-  }
-
-  // SolanaClient solanaClient = SolanaClient(rpcUrl: Uri.parse(sdkConfig.solanaRpcEndpoint), websocketUrl: Uri.parse(sdkConfig.solanaWssEndpoint), timeout: timeoutDuration);
-  // var recentBlockHash = await solanaClient.rpcClient.getRecentBlockhash();
-  // int blockHeight = await solanaClient.rpcClient.getBlockHeight();
-
-  final CompiledMessage compiledMessage = message.compile(
-    recentBlockhash: latestBlockhashResponse.blockhash,
-    feePayer: hopSignerPublicKey,
-  );
-
-  var tx = SignedTx(
-    messageBytes: compiledMessage.data,
+  return SignedTx(
+    messageBytes: message.data,
     signatures: [
-      Signature(List.filled(64, 0), publicKey: hopSignerPublicKey),
-      await from.sign(compiledMessage.data),
+      Signature(List.filled(64, 0), publicKey: feePayerKey),
+      await options.owner.sign(message.data),
     ],
   );
-
-  String _txe = tx.encode();
-
-
-  final createAccountRequest = CreateAccountRequest(
-    environment: sdkConfig.environment.name,
-    index: sdkConfig.index,
-    mint: mint,
-    referenceId: "DART",
-    referenceType: "createAccount",
-    tx: _txe,
-    commitment: CreateAccountRequestCommitmentEnum.finalized,
-    lastValidBlockHeight: latestBlockhashResponse.lastValidBlockHeight,
-  );
-
-  Transaction? transaction;
-  try {
-    transaction = await accountApi.createAccount(createAccountRequest);
-    safePrint(transaction);
-  } catch (e) {
-    safePrint('Exception when calling AccountApi->createAccount: $e\n');
-  }
-
-  return transaction;
 }

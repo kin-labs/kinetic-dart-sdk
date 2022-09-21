@@ -1,118 +1,209 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kinetic/commitment.dart';
 import 'package:kinetic/generated/lib/api.dart';
 import 'package:kinetic/interfaces/create_account_options.dart';
 import 'package:kinetic/interfaces/get_balance_options.dart';
 import 'package:kinetic/interfaces/get_history_options.dart';
 import 'package:kinetic/interfaces/get_token_accounts_options.dart';
+import 'package:kinetic/interfaces/get_transaction_options.dart';
 import 'package:kinetic/interfaces/kinetic_sdk_config.dart';
-import 'package:kinetic/interfaces/kinetic_sdk_environment.dart';
 import 'package:kinetic/interfaces/make_transfer_options.dart';
+import 'package:kinetic/interfaces/request_airdrop_options.dart';
 import 'package:kinetic/interfaces/transaction_type.dart';
 import 'package:kinetic/keypair.dart';
-
 import 'package:kinetic/kinetic_sdk.dart';
 import 'package:kinetic/tools.dart';
+import 'package:logger/logger.dart';
+import 'package:solana/solana.dart';
+
+import 'fixtures.dart';
 
 KineticSdkConfig defaultConfig = KineticSdkConfig(
   index: 1,
+  // endpoint: 'http://localhost:3000',
   endpoint: 'https://sandbox.kinetic.host',
-  environment: KineticSdkEnvironment.devnet,
+  environment: 'devnet',
+  logger: Logger(),
 );
+
+String accountAlice = "ALisrzsaVqciCxy8r6g7MUrPoRo3CpGxPhwBbZzqZ9bA";
+String tokenAccountAlice = "2buHAucDpb3gECUNZwZQpfAJ8hELsvaQrByYBekT7NKk";
+String accountBob = "BobQoPqWy5cpFioy1dMTYqNH9WpC39mkAEDJWXECoJ9y";
+// String mint = "MoGaMuJnB3k8zXjBYBnHxHG47vWcW3nyb7bFYvdVzek";
+String mint = "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX";
 
 void main() async {
   test('Get App Config', () async {
-    final kinetic = KineticSdk();
-    bool ok = await kinetic.setup(sdkConfig: defaultConfig);
-    if (ok) {
-      safePrint(kinetic.appConfig.toString());
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+
+    if (sdk.config == null) {
+      throw Exception('App config is null');
     }
-    expect(ok, true);
+    safePrint(sdk.config.toString());
+    expect(sdk.config, const TypeMatcher<AppConfig>());
   });
 
   test('Get Balance', () async {
-    final kinetic = KineticSdk();
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
 
-    bool ok = await kinetic.setup(sdkConfig: defaultConfig);
-    if (ok) {
-      GetBalanceOptions balanceOptions = GetBalanceOptions(account: Keypair().publicKeyFromString("DUXaDD5FZDa9yFf83tP8Abb6z66ECiawRShejSXRMN5F"));
-      dynamic res = await kinetic.getBalance(balanceOptions: balanceOptions);
-      safePrint(res);
+    GetBalanceOptions options = GetBalanceOptions(account: accountAlice);
+    BalanceResponse? res = await sdk.getBalance(options: options);
+    if (res == null) {
+      print("Error getting balance");
+      throw Exception("Error getting balance");
     }
-    expect(ok, true);
+    safePrint(res);
+    expect(res, const TypeMatcher<BalanceResponse>());
+    expect(int.parse(res.balance), greaterThan(50000));
+    expect(res.balance, const TypeMatcher<String>());
+    expect(res.tokens, const TypeMatcher<List<BalanceToken>>());
+    expect(res.mints, const TypeMatcher<Object>());
   });
 
   test('Get History', () async {
-    final kinetic = KineticSdk();
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
 
-    bool ok = await kinetic.setup(sdkConfig: defaultConfig);
-    if (ok) {
-      GetHistoryOptions historyOptions = GetHistoryOptions(account: Keypair().publicKeyFromString("DUXaDD5FZDa9yFf83tP8Abb6z66ECiawRShejSXRMN5F"), mint: Keypair().publicKeyFromString("KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX"));
-      dynamic res = await kinetic.getHistory(historyOptions: historyOptions);
-      safePrint(res);
+    GetHistoryOptions options = GetHistoryOptions(account: accountAlice, mint: mint);
+    List<HistoryResponse>? res = await sdk.getHistory(options: options);
+    if (res == null) {
+      print("Error getting history");
+      throw Exception("Error getting history");
     }
-    expect(ok, true);
+    safePrint(res);
+
+    expect(res, const TypeMatcher<List<HistoryResponse>>());
+    expect(res.length, greaterThan(0));
+    expect(res[0].history, const TypeMatcher<List<ConfirmedSignatureInfo>>());
+    expect(res[0].account, const TypeMatcher<String>());
   });
 
   test('Get Token Accounts', () async {
-    final kinetic = KineticSdk();
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
 
-    bool ok = await kinetic.setup(sdkConfig: defaultConfig);
-    if (ok) {
-      GetTokenAccountsOptions accountOptions = GetTokenAccountsOptions(account: Keypair().publicKeyFromString("DUXaDD5FZDa9yFf83tP8Abb6z66ECiawRShejSXRMN5F"), mint: Keypair().publicKeyFromString("KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX"));
-      dynamic res = await kinetic.getTokenAccounts(tokenAccountsOptions: accountOptions);
-      safePrint(res);
+    GetTokenAccountsOptions options = GetTokenAccountsOptions(account: accountAlice, mint: (mint));
+    List<String>? res = await sdk.getTokenAccounts(options: options);
+    if (res == null) {
+      print("Error requesting token accounts");
+      throw Exception("Error requesting token accounts");
     }
-    expect(ok, true);
+    safePrint(res);
+
+    expect(res, const TypeMatcher<List<String>>());
+    expect(res.length, greaterThan(0));
   });
 
   test('Request Airdrop', () async {
-    final kinetic = KineticSdk();
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
 
-    bool ok = await kinetic.setup(sdkConfig: defaultConfig);
-    if (ok) {
-      RequestAirdropRequest airdropRequest = RequestAirdropRequest(account: "DUXaDD5FZDa9yFf83tP8Abb6z66ECiawRShejSXRMN5F", mint: "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX", amount: "10", commitment: RequestAirdropRequestCommitmentEnum.finalized, index: kinetic.sdkConfig.index, environment: 'devnet');
-      dynamic res = await kinetic.requestAirdrop(airdropRequest: airdropRequest);
-      safePrint(res);
+    RequestAirdropOptions options = RequestAirdropOptions(
+      account: accountAlice,
+      mint: mint,
+      amount: "10",
+      commitment: RequestAirdropRequestCommitmentEnum.finalized,
+    );
+    RequestAirdropResponse? res = await sdk.requestAirdrop(options: options);
+    if (res == null) {
+      print("Error requesting airdrop");
+      throw Exception("Error requesting airdrop");
     }
-    expect(ok, true);
+    safePrint(res);
+
+    expect(res, const TypeMatcher<RequestAirdropResponse>());
   });
 
-  test('makeTransfer', () async {
-    final kinetic = KineticSdk();
+  test(
+    'makeTransfer',
+    () async {
+      KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
 
-    bool ok = await kinetic.setup(sdkConfig: defaultConfig);
-    if (ok) {
-      final from = await Keypair().fromByteArray([230, 245, 154, 108, 75, 133, 168, 61, 98, 99, 138, 19, 150, 122, 171, 162, 56, 101, 142, 67, 229, 255, 240, 158, 249, 113, 155, 58, 155, 128, 209, 10]);
-      // final from = await Ed25519HDKeyPair.fromPrivateKeyBytes(
-      //   privateKey: [230, 245, 154, 108, 75, 133, 168, 61, 98, 99, 138, 19, 150, 122, 171, 162, 56, 101, 142, 67, 229, 255, 240, 158, 249, 113, 155, 58, 155, 128, 209, 10],
-      // );
+      Ed25519HDKeyPair owner = await getAliceKeypair();
 
-      safePrint("From: ${from.publicKey.toBase58()}");
-      safePrint("To: AVGAggsdHmubCZLmJ94dRp98kGJu1ZsFENPTNSe3Nhfw");
+      safePrint("From: ${owner.publicKey}");
+      safePrint("To: $accountBob");
 
-      MakeTransferOptions makeTransferOptions = MakeTransferOptions(amount: "1.0", destination: Keypair().publicKeyFromString("AVGAggsdHmubCZLmJ94dRp98kGJu1ZsFENPTNSe3Nhfw"), commitment: MakeTransferRequestCommitmentEnum.finalized, mint: "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX", owner: from, referenceId: "p2p", referenceType: "tx", type: TransactionType.p2p);
-      Transaction? transaction = await kinetic.makeTransfer(makeTransferOptions: makeTransferOptions, senderCreate: true);
+      MakeTransferOptions options = MakeTransferOptions(
+        amount: "1.0",
+        destination: accountBob,
+        commitment: MakeTransferRequestCommitmentEnum.finalized,
+        mint: mint,
+        owner: owner,
+        referenceId: "our-ref-id",
+        referenceType: "some-tx",
+        type: TransactionType.p2p,
+        senderCreate: false,
+      );
+
+      Transaction? transaction = await sdk.makeTransfer(options: options);
+      if (transaction == null) {
+        print("Error making transfer");
+        throw Exception("Error making transfer");
+      }
+      safePrint(transaction);
+
+      expect(transaction, const TypeMatcher<Transaction>());
+      expect(transaction?.signature?.isNotEmpty, true);
+      expect(transaction?.amount, '100000');
+      expect(transaction?.decimals, 5);
+    },
+    timeout: const Timeout(Duration(minutes: 10)),
+  );
+
+  test(
+    'createAccount',
+    () async {
+      KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+
+      final owner = await Keypair.random();
+
+      CreateAccountOptions options = CreateAccountOptions(
+        owner: owner,
+        mint: mint,
+        commitment: CreateAccountRequestCommitmentEnum.finalized,
+        referenceId: 'dart',
+        referenceType: 'test',
+      );
+
+      Transaction? transaction = await sdk.createAccount(options: options);
+
+      if (transaction == null) {
+        print("Error creating account");
+        throw Exception("Error creating account");
+      }
 
       safePrint(transaction?.toJson());
+
+      expect(transaction, const TypeMatcher<Transaction>());
+      expect(transaction?.signature?.isNotEmpty, true);
+      expect(transaction?.source_, owner.publicKey.toString());
+    },
+    timeout: const Timeout(Duration(minutes: 10)),
+  );
+
+  test('getTransaction', () async {
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig: defaultConfig);
+    Ed25519HDKeyPair owner = await getAliceKeypair();
+
+    MakeTransferOptions options = MakeTransferOptions(
+      amount: "1.0",
+      destination: accountBob,
+      commitment: MakeTransferRequestCommitmentEnum.finalized,
+      mint: mint,
+      owner: owner,
+    );
+
+    Transaction? transaction = await sdk.makeTransfer(options: options);
+    if (transaction == null) {
+      print("Error making transfer for getTransaction");
+      throw Exception("Error making transfer for getTransaction");
     }
-    expect(ok, true);
-  }, timeout: const Timeout(Duration(minutes: 10)), );
 
-  test('createAccount', () async {
-    final kinetic = KineticSdk();
+    GetTransactionResponse? res =
+        await sdk.getTransaction(options: GetTransactionOptions(signature: transaction.signature!));
 
-    bool ok = await kinetic.setup(sdkConfig: defaultConfig);
-    if (ok) {
-      Keypair keypair = Keypair();
-      final from = await keypair.random();
-
-      CreateAccountOptions createAccountOptions = CreateAccountOptions(owner: from, mint: "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX", commitment: Commitment.Finalized);
-      Transaction? transaction = await kinetic.createAccount(createAccountOptions: createAccountOptions);
-
-      safePrint(transaction?.toJson());
+    if (res == null) {
+      print("Error getting transaction");
+      throw Exception("Error getting transaction");
     }
-    expect(ok, true);
-  }, timeout: const Timeout(Duration(minutes: 10)), );
-
+    expect(res, const TypeMatcher<GetTransactionResponse>());
+    expect(res?.signature, transaction.signature);
+  });
 }
