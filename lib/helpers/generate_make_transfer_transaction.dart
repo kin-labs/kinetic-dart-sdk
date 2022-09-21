@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:kinetic/helpers/get_public_key.dart';
 import 'package:kinetic/interfaces/generate_make_transfer_options.dart';
 import 'package:kinetic/tools.dart';
 import 'package:solana/encoder.dart';
@@ -7,10 +8,10 @@ import 'package:solana/solana.dart';
 
 Future<SignedTx> generateMakeTransferTransaction(GenerateMakeTransferOptions options, {List fk = const []}) async {
   // Create objects from Response
-  final feePayerKey = Ed25519HDPublicKey.fromBase58(options.mintFeePayer);
-  final mintKey = Ed25519HDPublicKey.fromBase58(options.mintPublicKey);
+  final feePayerKey = getPublicKey(options.mintFeePayer);
+  final mintKey = getPublicKey(options.mintPublicKey);
 
-  final destinationPublicKey = Ed25519HDPublicKey.fromBase58(options.destination);
+  final destinationPublicKey = getPublicKey(options.destination);
   final ownerPublicKey = options.owner.solanaPublicKey;
 
   // Get TokenAccount from Owner and Destination

@@ -1,16 +1,16 @@
 import 'dart:convert';
 
+import 'package:kinetic/helpers/get_public_key.dart';
+import 'package:kinetic/interfaces/generate_create_account_options.dart';
 import 'package:kinetic/interfaces/transaction_type.dart';
 import 'package:kinetic/tools.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 
-import '../interfaces/generate_create_account_options.dart';
-
 Future<SignedTx> generateCreateAccountTransaction(GenerateCreateAccountOptions options, {List fk = const []}) async {
   // Create objects from Response
-  final feePayerKey = Ed25519HDPublicKey.fromBase58(options.mintFeePayer);
-  final mintKey = Ed25519HDPublicKey.fromBase58(options.mintPublicKey);
+  final feePayerKey = getPublicKey(options.mintFeePayer);
+  final mintKey = getPublicKey(options.mintPublicKey);
   final ownerPublicKey = options.owner.solanaPublicKey;
 
   // Get TokenAccount from Owner and Destination
