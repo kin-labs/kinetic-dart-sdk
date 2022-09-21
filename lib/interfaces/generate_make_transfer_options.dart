@@ -5,10 +5,10 @@ class GenerateMakeTransferOptions {
   GenerateMakeTransferOptions({
     required this.addMemo,
     required this.amount,
-    required this.appIndex,
+    required this.blockhash,
     required this.destination,
+    required this.index,
     required this.lastValidBlockHeight,
-    required this.latestBlockhash,
     required this.mintDecimals,
     required this.mintFeePayer,
     required this.mintPublicKey,
@@ -20,10 +20,10 @@ class GenerateMakeTransferOptions {
 
   late bool addMemo;
   late String amount;
-  late int appIndex;
+  late String blockhash;
   late String destination;
+  late int index;
   late int lastValidBlockHeight;
-  late String latestBlockhash;
   late int mintDecimals;
   late String mintFeePayer;
   late String mintPublicKey;

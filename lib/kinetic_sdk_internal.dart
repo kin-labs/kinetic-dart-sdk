@@ -1,12 +1,14 @@
 import 'package:kinetic/generated/lib/api.dart';
 import 'package:kinetic/helpers/generate_create_account_transaction.dart';
 import 'package:kinetic/interfaces/create_account_options.dart';
+import 'package:kinetic/interfaces/generate_create_account_options.dart';
 import 'package:kinetic/interfaces/generate_make_transfer_options.dart';
 import 'package:kinetic/interfaces/get_history_options.dart';
 import 'package:kinetic/interfaces/get_token_accounts_options.dart';
 import 'package:kinetic/interfaces/request_airdrop_options.dart';
 import 'package:kinetic/interfaces/transaction_type.dart';
 import 'package:kinetic/tools.dart';
+import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 
 import 'exceptions.dart';
@@ -45,29 +47,19 @@ class KineticSdkInternal {
   }
 
   Future<BalanceResponse?> getBalance(String accountId) async {
-    if (appConfig == null) {
-      throw KineticInitializationException();
-    }
+    _ensureAppConfig();
 
     return accountApi.getBalance(sdkConfig.environment, sdkConfig.index, accountId);
   }
 
   Future<List<HistoryResponse>?> getHistory(GetHistoryOptions options) async {
-    if (appConfig == null) {
-      throw KineticInitializationException();
-    }
+    AppConfigMint? mint = _getAppMint(options.mint);
 
-    String? mint = _ensureMint(options.mint);
-
-    return accountApi.getHistory(sdkConfig.environment, sdkConfig.index, options.account, mint);
+    return accountApi.getHistory(sdkConfig.environment, sdkConfig.index, options.account, mint.publicKey);
   }
 
   Future<RequestAirdropResponse?> requestAirdrop(RequestAirdropOptions options) async {
-    if (appConfig == null) {
-      throw KineticInitializationException();
-    }
-
-    String? mint = _ensureMint(options.mint);
+    AppConfigMint? mint = _getAppMint(options.mint);
 
     return airdropApi.requestAirdrop(RequestAirdropRequest(
       account: options.account,
@@ -75,52 +67,39 @@ class KineticSdkInternal {
       commitment: options.commitment as RequestAirdropRequestCommitmentEnum,
       environment: appConfig?.environment.name as String,
       index: appConfig?.app.index as int,
-      mint: mint,
+      mint: mint.publicKey,
     ));
   }
 
   Future<Transaction?> makeTransfer(MakeTransferOptions options) async {
-    if (appConfig == null) {
-      throw KineticInitializationException();
-    }
+    AppConfigMint? mint = _getAppMint(options.mint);
 
-    if (appConfig == null) {
-      throw KineticInitializationException();
-    }
-
-    String? mint = _ensureMint(options.mint);
-
-    PrepareTransactionResponse res = await prepareTransaction(mint: mint);
+    PrepareTransactionResponse res = await prepareTransaction(mint: mint.publicKey);
 
     List<String>? accounts = await getTokenAccounts(GetTokenAccountsOptions(
       account: options.destination,
-      mint: mint,
+      mint: mint.publicKey,
     ));
 
     // throw error of accounts length is smaller than one
     if (accounts == null || accounts.isEmpty) {
-      throw NoAssociatedTokenAccountException(options.destination, mint);
+      throw NoAssociatedTokenAccountException(options.destination, mint.publicKey);
     }
 
-    List<String>? ownerTokenAccount =
-        await getTokenAccounts(GetTokenAccountsOptions(account: options.owner.publicKey.toString(), mint: mint));
+    List<String>? ownerTokenAccount = await getTokenAccounts(
+        GetTokenAccountsOptions(account: options.owner.publicKey.toString(), mint: mint.publicKey));
 
     if ((ownerTokenAccount == null || ownerTokenAccount.isEmpty)) {
-      throw NoAssociatedTokenAccountException(options.owner.publicKey.toBase58(), mint);
+      throw NoAssociatedTokenAccountException(options.owner.publicKey.toBase58(), mint.publicKey);
     }
 
-    // List<String>? receiverATA = await getTokenAccounts(GetTokenAccountsOptions(account: options.destination, mint: mint));
-    // if ((receiverATA == null || receiverATA.isEmpty) && options.senderCreate == false) {
-    //   throw NoAssociatedTokenAccountException(options.destination, mint);
-    // }
-
-    GenerateMakeTransferOptions req = GenerateMakeTransferOptions(
-      addMemo: appConfig?.mint.addMemo ?? true,
+    SignedTx tx = await generateMakeTransferTransaction(GenerateMakeTransferOptions(
+      addMemo: mint.addMemo,
       amount: options.amount,
-      appIndex: sdkConfig.index,
+      index: sdkConfig.index,
       destination: options.destination,
       lastValidBlockHeight: res.lastValidBlockHeight,
-      latestBlockhash: res.latestBlockhash,
+      blockhash: res.blockhash,
       mintDecimals: res.mintDecimals,
       mintFeePayer: res.mintFeePayer,
       mintPublicKey: res.mintPublicKey,
@@ -128,19 +107,17 @@ class KineticSdkInternal {
       signer: options.owner,
       senderCreate: options.senderCreate,
       type: options.type as TransactionType,
-    );
-
-    String tx = await generateMakeTransferTransaction(req);
+    ));
 
     final makeTransferRequest = MakeTransferRequest(
       commitment: options.commitment as MakeTransferRequestCommitmentEnum,
       environment: sdkConfig.environment,
       index: appConfig?.app.index as int,
       lastValidBlockHeight: res.lastValidBlockHeight,
-      mint: mint,
+      mint: mint.publicKey,
       referenceId: options.referenceId,
       referenceType: options.referenceType,
-      tx: tx,
+      tx: tx.encode(),
     );
 
     Transaction? transaction;
@@ -174,21 +151,30 @@ class KineticSdkInternal {
       throw KineticInitializationException();
     }
 
-    String? mint = _ensureMint(options.mint);
+    AppConfigMint? mint = _getAppMint(options.mint);
 
-    PrepareTransactionResponse res = await prepareTransaction(mint: mint);
+    String mintFeePayer = getFeePayer(appConfig, mint.publicKey);
 
-    String tx = await generateCreateAccountTransaction(
-        sdkConfig.index, res.latestBlockhash, res.mintPublicKey, options.owner, res.mintFeePayer);
+    PrepareTransactionResponse res = await prepareTransaction(mint: mint.publicKey);
+
+    SignedTx tx = await generateCreateAccountTransaction(GenerateCreateAccountOptions(
+      addMemo: mint.addMemo,
+      index: appConfig?.app?.index as int,
+      lastValidBlockHeight: res.lastValidBlockHeight,
+      blockhash: res.blockhash,
+      mintFeePayer: mintFeePayer,
+      mintPublicKey: mint.publicKey,
+      signer: options.owner,
+    ));
 
     final createAccountRequest = CreateAccountRequest(
       environment: sdkConfig.environment,
       index: sdkConfig.index,
-      mint: mint,
+      mint: mint.publicKey,
       referenceId: options.referenceId,
       referenceType: options.referenceType,
-      tx: tx,
-      commitment: options.commitment?.toString() as CreateAccountRequestCommitmentEnum,
+      tx: tx.encode(),
+      commitment: options.commitment ?? CreateAccountRequestCommitmentEnum.confirmed,
       lastValidBlockHeight: res.lastValidBlockHeight,
     );
 
@@ -215,37 +201,47 @@ class KineticSdkInternal {
     LatestBlockhashResponse? latestBlockhashResponse =
         await transactionApi.getLatestBlockhash(sdkConfig.environment, sdkConfig.index);
 
-    String latestBlockhash = latestBlockhashResponse?.blockhash ?? "";
+    String blockhash = latestBlockhashResponse?.blockhash ?? "";
     int lastValidBlockHeight = latestBlockhashResponse?.lastValidBlockHeight ?? 0;
 
     return PrepareTransactionResponse(
+      blockhash: blockhash,
       mintFeePayer: mintFeePayer,
       mintDecimals: mintDecimals,
       mintPublicKey: mint,
-      latestBlockhash: latestBlockhash,
       lastValidBlockHeight: lastValidBlockHeight,
     );
   }
 
-  String _ensureMint(String? mint) {
-    mint = mint ?? appConfig?.mint.publicKey;
-    if (mint == null) {
+  AppConfig _ensureAppConfig() {
+    if (appConfig == null) {
+      throw KineticInitializationException();
+    }
+
+    return appConfig!;
+  }
+
+  AppConfigMint _getAppMint(String? mint) {
+    _ensureAppConfig();
+    mint = mint ?? appConfig?.mint?.publicKey;
+    var found = appConfig?.mints?.firstWhere((element) => element.publicKey == mint);
+    if (found == null) {
       throw KineticMissingMintsException();
     }
-    return mint;
+    return found;
   }
 }
 
 class PrepareTransactionResponse {
+  final String blockhash;
   final String mintFeePayer;
   final int mintDecimals;
   final String mintPublicKey;
-  final String latestBlockhash;
   final int lastValidBlockHeight;
   PrepareTransactionResponse(
-      {required this.mintFeePayer,
+      {required this.blockhash,
+      required this.mintFeePayer,
       required this.mintDecimals,
       required this.mintPublicKey,
-      required this.latestBlockhash,
       required this.lastValidBlockHeight});
 }

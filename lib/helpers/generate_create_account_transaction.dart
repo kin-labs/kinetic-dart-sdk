@@ -1,84 +1,54 @@
 import 'dart:convert';
 
-import 'package:kinetic/generated/lib/api.dart';
 import 'package:kinetic/interfaces/transaction_type.dart';
 import 'package:kinetic/tools.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 
-Future<String> generateCreateAccountTransaction(int appIndex, String latestBlockhash, String mint, Ed25519HDKeyPair owner, String mintFeePayer, {List fk = const []}) async {
+import '../interfaces/generate_create_account_options.dart';
 
-  final hopSignerPublicKey = Ed25519HDPublicKey.fromBase58(mintFeePayer);
+Future<SignedTx> generateCreateAccountTransaction(GenerateCreateAccountOptions options, {List fk = const []}) async {
+  // Create objects from Response
+  final feePayerKey = Ed25519HDPublicKey.fromBase58(options.mintFeePayer);
+  final mintKey = Ed25519HDPublicKey.fromBase58(options.mintPublicKey);
+  final ownerPublicKey = options.signer.publicKey;
 
-  final derivedAddress = await findAssociatedTokenAddress(
-    owner: owner.publicKey,
-    mint: Ed25519HDPublicKey.fromBase58(mint),
-  );
+  // Get TokenAccount from Owner and Destination
+  final ownerTokenAccount = await findAssociatedTokenAddress(mint: mintKey, owner: ownerPublicKey);
 
-  List<Ed25519HDPublicKey> signersPublic = [owner.publicKey, hopSignerPublicKey];
+  // Create Instructions
+  List<Instruction> instructions = [];
 
-  final createATAInstruction = AssociatedTokenAccountInstruction.createAccount(
-    funder: hopSignerPublicKey,
-    address: derivedAddress,
-    owner: owner.publicKey,
-    mint: Ed25519HDPublicKey.fromBase58(mint),
-  );
+  if (options.addMemo) {
+    var memo = createKinMemoInstruction(TransactionType.none, options.index);
+    instructions.add(MemoInstruction(signers: [], memo: base64Encode(memo)));
+  }
 
-  final authorityInstruction = TokenInstruction.setAuthority(
-    mintOrAccount: derivedAddress,
+  instructions.add(AssociatedTokenAccountInstruction.createAccount(
+    funder: feePayerKey,
+    address: ownerTokenAccount,
+    owner: ownerPublicKey,
+    mint: mintKey,
+  ));
+
+  instructions.add(TokenInstruction.setAuthority(
+    mintOrAccount: ownerTokenAccount,
     authorityType: AuthorityType.closeAccount,
-    currentAuthority: owner.publicKey,
-    newAuthority: hopSignerPublicKey,
-    signers: signersPublic,
+    currentAuthority: ownerPublicKey,
+    newAuthority: feePayerKey,
+    signers: [ownerPublicKey, feePayerKey],
+  ));
+
+  final CompiledMessage message = Message(instructions: instructions).compile(
+    recentBlockhash: options.blockhash,
+    feePayer: feePayerKey,
   );
 
-  var b = createKinMemoInstruction(TransactionType.none, appIndex);
-
-  final message = Message(
-    instructions: [
-      MemoInstruction(signers: [], memo: base64Encode(b)),
-      createATAInstruction,
-      authorityInstruction,
-    ],
-  );
-
-  final CompiledMessage compiledMessage = message.compile(
-    recentBlockhash: latestBlockhash,
-    feePayer: hopSignerPublicKey,
-  );
-
-  var tx = SignedTx(
-    messageBytes: compiledMessage.data,
+  return SignedTx(
+    messageBytes: message.data,
     signatures: [
-      Signature(List.filled(64, 0), publicKey: hopSignerPublicKey),
-      await owner.sign(compiledMessage.data),
+      Signature(List.filled(64, 0), publicKey: feePayerKey),
+      await options.signer.sign(message.data),
     ],
   );
-
-  String _txe = tx.encode();
-
-  // Below should be moved back into createAccount()
-  //
-  // final createAccountRequest = CreateAccountRequest(
-  //   environment: sdkConfig.environment.name,
-  //   index: appIndex,
-  //   mint: mint,
-  //   referenceId: "DART",
-  //   referenceType: "createAccount",
-  //   tx: _txe,
-  //   commitment: CreateAccountRequestCommitmentEnum.finalized,
-  //   lastValidBlockHeight: latestBlockhashResponse.lastValidBlockHeight,
-  // );
-  //
-  // Transaction? transaction;
-  // try {
-  //   transaction = await accountApi.createAccount(createAccountRequest);
-  //   safePrint(transaction);
-  // } catch (e) {
-  //   safePrint('Exception when calling AccountApi->createAccount: $e\n');
-  // }
-  //
-  // return transaction;
-
-  return _txe;
 }

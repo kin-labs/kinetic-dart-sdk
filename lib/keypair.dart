@@ -21,9 +21,8 @@ class Keypair {
     return base58.encode(_u);
   }
 
-  Future<Ed25519HDKeyPair> random() async {
-    _keypair = await Ed25519HDKeyPair.random();
-    return _keypair;
+  static Future<Ed25519HDKeyPair> random() async {
+    return await Ed25519HDKeyPair.random();
   }
 
   Future<List<int>> _extractPkb() async {

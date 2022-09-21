@@ -5,74 +5,56 @@ import 'package:kinetic/tools.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 
-Future<String> generateMakeTransferTransaction(GenerateMakeTransferOptions options, {List fk = const []}) async {
-  final hopSignerPublicKey = Ed25519HDPublicKey.fromBase58(options.mintFeePayer);
+Future<SignedTx> generateMakeTransferTransaction(GenerateMakeTransferOptions options, {List fk = const []}) async {
+  // Create objects from Response
+  final feePayerKey = Ed25519HDPublicKey.fromBase58(options.mintFeePayer);
+  final mintKey = Ed25519HDPublicKey.fromBase58(options.mintPublicKey);
+  final ownerPublicKey = options.signer.publicKey;
+  final destinationPublicKey = Ed25519HDPublicKey.fromBase58(options.destination);
 
-  List<Ed25519HDPublicKey> signersPublic = [options.signer.publicKey, hopSignerPublicKey];
+  // Get TokenAccount from Owner and Destination
+  final destinationTokenAccount = await findAssociatedTokenAddress(mint: mintKey, owner: destinationPublicKey);
+  final ownerTokenAccount = await findAssociatedTokenAddress(mint: mintKey, owner: ownerPublicKey);
 
-  List<Instruction> instructions;
+  // Create Instructions
+  List<Instruction> instructions = [];
 
-  var createATAInstruction;
-
-  final derivedAddress = await findAssociatedTokenAddress(
-    owner: Ed25519HDPublicKey.fromBase58(options.destination),
-    mint: Ed25519HDPublicKey.fromBase58(options.mintPublicKey),
-  );
-
-  var ara = derivedAddress.toBase58();
-
-  // Check if options.senderCreate is not null and true
-  if (options.senderCreate != null && options.senderCreate!) {
-    createATAInstruction = AssociatedTokenAccountInstruction.createAccount(
-      funder: hopSignerPublicKey,
-      address: derivedAddress,
-      owner: Ed25519HDPublicKey.fromBase58(options.destination),
-      mint: Ed25519HDPublicKey.fromBase58(options.mintPublicKey),
-    );
+  if (options.addMemo) {
+    var memo = createKinMemoInstruction(options.type, options.index);
+    instructions.add(MemoInstruction(signers: [], memo: base64Encode(memo)));
   }
 
-  final transferInstruction = TokenInstruction.transfer(
-    source: Ed25519HDPublicKey.fromBase58(options.ownerTokenAccount),
-    destination: Ed25519HDPublicKey.fromBase58(ara),
+  if (options.senderCreate != null && options.senderCreate!) {
+    instructions.add(AssociatedTokenAccountInstruction.createAccount(
+      address: destinationTokenAccount,
+      funder: feePayerKey,
+      mint: mintKey,
+      owner: destinationPublicKey,
+    ));
+  }
+
+  List<Ed25519HDPublicKey> signersPublic = [options.signer.publicKey, feePayerKey];
+
+  instructions.add(TokenInstruction.transferChecked(
+    decimals: options.mintDecimals,
+    mint: mintKey,
+    source: ownerTokenAccount,
+    destination: destinationTokenAccount,
     owner: options.signer.publicKey,
     amount: getRawQuantity(double.parse(options.amount), options.mintDecimals).toInt(),
     signers: signersPublic,
+  ));
+
+  final CompiledMessage message = Message(instructions: instructions).compile(
+    recentBlockhash: options.blockhash,
+    feePayer: feePayerKey,
   );
 
-  if (options.senderCreate != null && options.senderCreate!) {
-    instructions = [
-      createATAInstruction,
-      transferInstruction,
-    ];
-  } else {
-    instructions = [transferInstruction];
-  }
-
-  var b = createKinMemoInstruction(options.type, options.appIndex, fk: fk);
-
-  instructions.insert(0, MemoInstruction(signers: [], memo: base64Encode(b)));
-
-  final message = Message(
-    instructions: instructions,
-  );
-
-  var recentBlockHash = options.latestBlockhash;
-  int lastValidBlockHeight = options.lastValidBlockHeight;
-
-  final CompiledMessage compiledMessage = message.compile(
-    recentBlockhash: recentBlockHash,
-    feePayer: hopSignerPublicKey,
-  );
-
-  var tx = SignedTx(
-    messageBytes: compiledMessage.data,
+  return SignedTx(
+    messageBytes: message.data,
     signatures: [
-      Signature(List.filled(64, 0), publicKey: hopSignerPublicKey),
-      await options.signer.sign(compiledMessage.data),
+      Signature(List.filled(64, 0), publicKey: feePayerKey),
+      await options.signer.sign(message.data),
     ],
   );
-
-  String _txe = tx.encode();
-
-  return _txe;
 }
