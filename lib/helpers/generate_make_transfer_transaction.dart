@@ -11,7 +11,7 @@ Future<SignedTx> generateMakeTransferTransaction(GenerateMakeTransferOptions opt
   final mintKey = Ed25519HDPublicKey.fromBase58(options.mintPublicKey);
 
   final destinationPublicKey = Ed25519HDPublicKey.fromBase58(options.destination);
-  final ownerPublicKey = options.owner.publicKey;
+  final ownerPublicKey = options.owner.solanaPublicKey;
 
   // Get TokenAccount from Owner and Destination
   final destinationTokenAccount = await findAssociatedTokenAddress(mint: mintKey, owner: destinationPublicKey);
@@ -55,7 +55,7 @@ Future<SignedTx> generateMakeTransferTransaction(GenerateMakeTransferOptions opt
     messageBytes: message.data,
     signatures: [
       Signature(List.filled(64, 0), publicKey: feePayerKey),
-      await options.owner.sign(message.data),
+      await options.owner.solana.sign(message.data),
     ],
   );
 }

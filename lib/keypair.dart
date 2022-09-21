@@ -5,62 +5,63 @@ import 'package:bs58/bs58.dart';
 import 'package:solana/solana.dart';
 
 class Keypair {
-  late Ed25519HDKeyPair _keypair;
+  final String secretKey;
+  late String publicKey;
+  final String? mnemonic;
 
-  get keypair => _keypair;
+  late Ed25519HDKeyPair _solanaKeypair;
 
-  Ed25519HDPublicKey get solanaPublicKey => _keypair.publicKey;
-
-  Future<List<int>> get solanaRawSecret async {
-    return await _extractPkb();
+  Keypair({required Ed25519HDKeyPair solanaKeypair, required this.secretKey, this.mnemonic}) {
+    _solanaKeypair = solanaKeypair;
+    publicKey = _solanaKeypair.publicKey.toString();
   }
 
-  Future<String> get solanaSecretKey async {
-    var _p = await _extractPkb();
-    var _u = Uint8List.fromList(_p);
-    return base58.encode(_u);
-  }
+  get solana => _solanaKeypair;
 
-  static Future<Ed25519HDKeyPair> random() async {
-    return await Ed25519HDKeyPair.random();
-  }
+  Ed25519HDPublicKey get solanaPublicKey => _solanaKeypair.publicKey;
 
-  Future<List<int>> _extractPkb() async {
-    final simpleKeyPairData = await _keypair.extract();
+  Future<List<int>> get solanaSecretKey async {
+    final simpleKeyPairData = await _solanaKeypair.extract();
     return simpleKeyPairData.bytes;
   }
 
-  Ed25519HDPublicKey publicKeyFromString(String base58String) {
-    return Ed25519HDPublicKey.fromBase58(base58String);
+  static Future<Keypair> derive(List<int> sd, String hdPath) async {
+    return _fromEd25519HDKeyPair(await Ed25519HDKeyPair.fromSeedWithHdPath(seed: sd, hdPath: hdPath));
   }
 
-  Future<Ed25519HDKeyPair> fromMnemonic(String mnemonic) async {
-    _keypair = await Ed25519HDKeyPair.fromMnemonic(mnemonic, account: 0);
-    return _keypair;
-  }
-
-  String generateMnemonic() {
+  static String generateMnemonic() {
     return bip39.generateMnemonic();
   }
 
-  Future<Ed25519HDKeyPair> derive(List<int> sd, String hdPath) async {
-    _keypair = await Ed25519HDKeyPair.fromSeedWithHdPath(seed: sd, hdPath: hdPath);
-    return _keypair;
+  static Future<Keypair> fromByteArray(List<int> pkb) async {
+    return _fromEd25519HDKeyPair(await Ed25519HDKeyPair.fromPrivateKeyBytes(privateKey: pkb.take(32).toList()));
   }
 
-  Future<Ed25519HDKeyPair> fromSeed(List<int> sd) async {
-    _keypair = await Ed25519HDKeyPair.fromSeedWithHdPath(seed: sd, hdPath: "m/44'/501'/0'/0'");
-    return _keypair;
+  static Future<Keypair> fromMnemonic(String mnemonic) async {
+    return _fromEd25519HDKeyPair(await Ed25519HDKeyPair.fromMnemonic(mnemonic, account: 0));
   }
 
-  Future<Ed25519HDKeyPair> fromSecretKey(String sk) async {
-    var _sb = base58.decode(sk);
-    _keypair = await Ed25519HDKeyPair.fromPrivateKeyBytes(privateKey: _sb);
-    return _keypair;
+  static Future<Keypair> fromSecretKey(String secretKey) async {
+    return Keypair._create(secretKey);
   }
 
-  Future<Ed25519HDKeyPair> fromByteArray(List<int> pkb) async {
-    _keypair = await Ed25519HDKeyPair.fromPrivateKeyBytes(privateKey: pkb.take(32).toList());
-    return _keypair;
+  static Future<Keypair> fromSeed(List<int> seed) async {
+    return _fromEd25519HDKeyPair(await Ed25519HDKeyPair.fromPrivateKeyBytes(privateKey: seed));
+  }
+
+  static Future<Keypair> random() async {
+    return _fromEd25519HDKeyPair(await Ed25519HDKeyPair.random());
+  }
+
+  static Future<Keypair> _create(String secretKey) async {
+    Ed25519HDKeyPair solanaKeypair = await Ed25519HDKeyPair.fromPrivateKeyBytes(privateKey: base58.decode(secretKey));
+
+    return Keypair(secretKey: secretKey, solanaKeypair: solanaKeypair);
+  }
+
+  static Future<Keypair> _fromEd25519HDKeyPair(Ed25519HDKeyPair kp) async {
+    var extracted = await kp.extract();
+    var secretKey = base58.encode(Uint8List.fromList(extracted.bytes));
+    return Keypair.fromSecretKey(secretKey);
   }
 }

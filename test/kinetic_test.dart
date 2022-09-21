@@ -13,7 +13,6 @@ import 'package:kinetic/keypair.dart';
 import 'package:kinetic/kinetic_sdk.dart';
 import 'package:kinetic/tools.dart';
 import 'package:logger/logger.dart';
-import 'package:solana/solana.dart';
 
 import 'fixtures.dart';
 
@@ -115,7 +114,7 @@ void main() async {
     () async {
       KineticSdk sdk = await KineticSdk.setup(sdkConfig);
 
-      Ed25519HDKeyPair owner = await getAliceKeypair();
+      Keypair owner = await getAliceKeypair();
 
       safePrint("From: ${owner.publicKey}");
       safePrint("To: $accountBob");
@@ -180,7 +179,7 @@ void main() async {
 
   test('getTransaction', () async {
     KineticSdk sdk = await KineticSdk.setup(sdkConfig);
-    Ed25519HDKeyPair owner = await getAliceKeypair();
+    Keypair owner = await getAliceKeypair();
 
     MakeTransferOptions options = MakeTransferOptions(
       amount: "1.0",

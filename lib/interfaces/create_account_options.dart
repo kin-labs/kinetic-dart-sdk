@@ -1,5 +1,5 @@
 import 'package:kinetic/generated/lib/api.dart';
-import 'package:solana/solana.dart' as solana;
+import 'package:kinetic/keypair.dart';
 
 class CreateAccountOptions {
   CreateAccountOptions({
@@ -12,7 +12,7 @@ class CreateAccountOptions {
 
   late CreateAccountRequestCommitmentEnum? commitment;
   late String? mint;
-  late solana.Ed25519HDKeyPair owner;
+  late Keypair owner;
   late String? referenceId;
   late String? referenceType;
 }

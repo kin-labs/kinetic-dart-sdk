@@ -11,7 +11,7 @@ Future<SignedTx> generateCreateAccountTransaction(GenerateCreateAccountOptions o
   // Create objects from Response
   final feePayerKey = Ed25519HDPublicKey.fromBase58(options.mintFeePayer);
   final mintKey = Ed25519HDPublicKey.fromBase58(options.mintPublicKey);
-  final ownerPublicKey = options.owner.publicKey;
+  final ownerPublicKey = options.owner.solanaPublicKey;
 
   // Get TokenAccount from Owner and Destination
   final ownerTokenAccount = await findAssociatedTokenAddress(mint: mintKey, owner: ownerPublicKey);
@@ -48,7 +48,7 @@ Future<SignedTx> generateCreateAccountTransaction(GenerateCreateAccountOptions o
     messageBytes: message.data,
     signatures: [
       Signature(List.filled(64, 0), publicKey: feePayerKey),
-      await options.owner.sign(message.data),
+      await options.owner.solana.sign(message.data),
     ],
   );
 }

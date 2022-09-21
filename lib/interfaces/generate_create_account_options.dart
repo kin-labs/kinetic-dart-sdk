@@ -1,4 +1,4 @@
-import 'package:solana/solana.dart' as solana;
+import 'package:kinetic/keypair.dart';
 
 class GenerateCreateAccountOptions {
   GenerateCreateAccountOptions({
@@ -17,5 +17,5 @@ class GenerateCreateAccountOptions {
   late int lastValidBlockHeight;
   late String mintFeePayer;
   late String mintPublicKey;
-  late solana.Ed25519HDKeyPair owner;
+  late Keypair owner;
 }
