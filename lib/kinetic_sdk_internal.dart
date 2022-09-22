@@ -29,8 +29,8 @@ class KineticSdkInternal {
 
   KineticSdkInternal(this.sdkConfig) {
     // Create the API Configuration
-    // TODO: Pass the headers in the ApiClient constructor
     apiConfig = ApiClient(basePath: sdkConfig.endpoint);
+    sdkConfig.headers?.forEach((key, value) => apiConfig.addDefaultHeader(key, value));
 
     // Configure the APIs
     accountApi = AccountApi(apiConfig);
