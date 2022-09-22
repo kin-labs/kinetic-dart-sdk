@@ -1,8 +1,21 @@
-## Kinetic Dart
-Kinetic dart is the [dart](https://dart.dev/) client based on the Kinetic [standard](https://github.com/kin-labs/kinetic/discussions/317) 
-This client allows developers to rapidly integrate and communicate with the Kin ecosystem (and the underlying Solana network).
+# Kinetic Dart SDK
 
-## Installation
+Kinetic Dart SDK is the official [dart](https://dart.dev/) SDK for [Kinetic](https://github.com/kin-labs/kinetic) based on the [Kinetic SDK Standard](https://github.com/kin-labs/kinetic/discussions/317).
+
+This SDK allows developers to rapidly integrate Kin and other SPL tokens in their app.
+
+## Usage
+
+In order to use this SDK, please head over to the [Kinetic Dart SDK](https://kinetic.kin.org/docs/sdk/dart) documentation.
+
+## Version
+
+This SDK is built to work with `@kinetic/api@v1.0.0-rc.1`. Using it with other versions may lead to issues.
+
+## Contributing
+
+If you want to contribute to this SDK, please follow the steps below to get it running locally:
+
 #### 1. Install the Flutter SDK on your local machine by visiting the link below:
 [Install Flutter](https://docs.flutter.dev/get-started/install)
 
