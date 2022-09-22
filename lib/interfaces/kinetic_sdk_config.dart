@@ -12,13 +12,11 @@ class KineticSdkConfig {
 
   KineticSdkConfig(
       {required this.index, required this.endpoint, required this.environment, this.headers, this.logger}) {
-    headers = {
-      // TODO: make sure user headers are passed in
-      // ...headers,
-      // The headers below here should always override what the user passes in.
+    Map<String, String>? defaultHeaders = {
       'kinetic-environment': environment,
       'kinetic-index': index.toString(),
-      'kinetic-user-agent': "DART@$version",
+      'kinetic-user-agent': "$name/$version",
     };
+    headers = headers != null ? {...headers!, ...defaultHeaders} : defaultHeaders;
   }
 }

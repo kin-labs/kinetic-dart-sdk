@@ -29,8 +29,8 @@ class KineticSdkInternal {
 
   KineticSdkInternal(this.sdkConfig) {
     // Create the API Configuration
-    // TODO: Pass the headers in the ApiClient constructor
     apiConfig = ApiClient(basePath: sdkConfig.endpoint);
+    sdkConfig.headers?.forEach((key, value) => apiConfig.addDefaultHeader(key, value));
 
     // Configure the APIs
     accountApi = AccountApi(apiConfig);
@@ -194,8 +194,8 @@ class KineticSdkInternal {
   }
 
   AppConfigMint _getAppMint(AppConfig appConfig, String? mint) {
-    mint = mint ?? appConfig?.mint?.publicKey;
-    var found = appConfig?.mints?.firstWhere((element) => element.publicKey == mint);
+    mint = mint ?? appConfig.mint.publicKey;
+    final AppConfigMint? found = appConfig.mints.firstWhere((element) => element.publicKey == mint);
     if (found == null) {
       throw KineticMissingMintsException();
     }

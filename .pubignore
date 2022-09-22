@@ -1,0 +1,5 @@
+openapitools.json
+Makefile
+.dart_tool/
+build/
+pubspec.lock

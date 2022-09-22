@@ -1,1 +1,0 @@
-rm -rf lib/generated/ ; npx openapi-generator-cli generate -i https://raw.githubusercontent.com/kin-labs/kinetic/dev/api-swagger.json -g dart -o lib/generated/ ; rm -rf lib/generated/test
