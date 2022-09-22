@@ -28,8 +28,14 @@ If you want to contribute to this SDK, please follow the steps below to get it r
 #### 4. Change into kinetic-dart working directory
 `$ cd kinetic-dart`
 
-#### 5. Generate OpenAPI Dart client
-`$ ./setup.sh`
+#### 5. Run the tests
+`$ flutter test`
+
+#### 6. Generate OpenAPI Dart client
+`$ make generate`
+
+#### 7. Format the code
+`$ make format`
 
 ## Directory labels
 - [generated](https://github.com/kin-labs/kinetic-dart/tree/main/lib/generated) Contains all the generated Dart client code based on the openapi spec.

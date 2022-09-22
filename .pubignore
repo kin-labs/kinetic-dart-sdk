@@ -1,5 +1,5 @@
 openapitools.json
-setup.sh
+Makefile
 .dart_tool/
 build/
 pubspec.lock
