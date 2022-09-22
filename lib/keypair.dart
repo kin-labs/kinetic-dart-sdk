@@ -75,7 +75,7 @@ class Keypair {
   }
 
   static Future<Keypair> fromSeed(List<int> seed) async {
-    return _fromEd25519HDKeyPair(await Ed25519HDKeyPair.fromPrivateKeyBytes(privateKey: seed));
+    return _fromEd25519HDKeyPair(await Ed25519HDKeyPair.fromSeedWithHdPath(seed: seed, hdPath: "m/44'/501'/0'/0'"));
   }
 
   static Future<Keypair> random() async {
