@@ -194,8 +194,8 @@ class KineticSdkInternal {
   }
 
   AppConfigMint _getAppMint(AppConfig appConfig, String? mint) {
-    mint = mint ?? appConfig?.mint?.publicKey;
-    var found = appConfig?.mints?.firstWhere((element) => element.publicKey == mint);
+    mint = mint ?? appConfig.mint.publicKey;
+    final AppConfigMint? found = appConfig.mints.firstWhere((element) => element.publicKey == mint);
     if (found == null) {
       throw KineticMissingMintsException();
     }

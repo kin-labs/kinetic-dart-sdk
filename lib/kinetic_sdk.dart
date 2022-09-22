@@ -26,7 +26,7 @@ class KineticSdk {
 
   AppConfig? get config => _internal.appConfig;
 
-  String? get endpoint => sdkConfig?.endpoint;
+  String? get endpoint => sdkConfig.endpoint;
 
   Future<Transaction?> createAccount({required CreateAccountOptions options}) async {
     return _internal.createAccount(options);
@@ -37,7 +37,7 @@ class KineticSdk {
   }
 
   Future<String?> getExplorerUrl(String path) async {
-    return _internal?.appConfig?.environment?.explorer.replaceAll("{path}", path);
+    return _internal.appConfig?.environment.explorer.replaceAll("{path}", path);
   }
 
   Future<List<HistoryResponse>?> getHistory({required GetHistoryOptions options}) async {
@@ -62,22 +62,22 @@ class KineticSdk {
 
   Future<AppConfig?> init() async {
     try {
-      sdkConfig?.logger?.i('$name: initializing KineticSdk');
+      sdkConfig.logger?.i('$name: initializing KineticSdk');
       var config = await _internal.getAppConfig(sdkConfig.environment, sdkConfig.index);
 
-      sdkConfig.solanaRpcEndpoint = sdkConfig?.solanaRpcEndpoint != null
-          ? getSolanaRpcEndpoint(sdkConfig?.solanaRpcEndpoint as String)
-          : getSolanaRpcEndpoint(config?.environment?.cluster?.endpoint as String);
+      sdkConfig.solanaRpcEndpoint = sdkConfig.solanaRpcEndpoint != null
+          ? getSolanaRpcEndpoint(sdkConfig.solanaRpcEndpoint as String)
+          : getSolanaRpcEndpoint(config?.environment.cluster.endpoint as String);
 
-      sdkConfig.solanaWssEndpoint = sdkConfig?.solanaRpcEndpoint?.replaceAll('http', 'ws') as String;
+      sdkConfig.solanaWssEndpoint = sdkConfig.solanaRpcEndpoint?.replaceAll('http', 'ws') as String;
 
       solana = Solana(solanaRpcEndpoint: sdkConfig.solanaRpcEndpoint!);
 
-      sdkConfig?.logger?.i(
+      sdkConfig.logger?.i(
           "$name: endpoint '${sdkConfig.endpoint}', environment '${sdkConfig.environment}', index: ${config?.app.index}");
       return config;
     } catch (e) {
-      sdkConfig?.logger?.e('Error initializing Server. ${e.toString()}');
+      sdkConfig.logger?.e('Error initializing Server. ${e.toString()}');
       rethrow;
     }
   }
@@ -86,10 +86,10 @@ class KineticSdk {
     var sdk = KineticSdk(sdkConfig);
     try {
       await sdk.init();
-      sdkConfig?.logger?.i('$name: Setup Done');
+      sdkConfig.logger?.i('$name: Setup Done');
       return sdk;
     } catch (e) {
-      sdkConfig?.logger?.e('$name: Error setting up SDK. ${e.toString()}');
+      sdkConfig.logger?.e('$name: Error setting up SDK. ${e.toString()}');
       rethrow;
     }
   }

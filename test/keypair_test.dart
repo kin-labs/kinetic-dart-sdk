@@ -25,7 +25,7 @@ void main() async {
   });
 
   test('should generate a Mnemonic phrase (12 chars)', () async {
-    String mnemonic = await Keypair.generateMnemonic(128);
+    String mnemonic = Keypair.generateMnemonic(128);
 
     expect(mnemonic.split(' ').length, 12);
   });

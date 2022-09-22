@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kinetic/generated/lib/api.dart';
 import 'package:kinetic/interfaces/create_account_options.dart';
@@ -139,9 +141,9 @@ void main() async {
       safePrint(transaction);
 
       expect(transaction, const TypeMatcher<Transaction>());
-      expect(transaction?.signature?.isNotEmpty, true);
-      expect(transaction?.amount, '100000');
-      expect(transaction?.decimals, 5);
+      expect(transaction.signature?.isNotEmpty, true);
+      expect(transaction.amount, '100000');
+      expect(transaction.decimals, 5);
     },
     timeout: const Timeout(Duration(minutes: 10)),
   );
@@ -168,11 +170,11 @@ void main() async {
         throw Exception("Error creating account");
       }
 
-      safePrint(transaction?.toJson());
+      safePrint(transaction.toJson());
 
       expect(transaction, const TypeMatcher<Transaction>());
-      expect(transaction?.signature?.isNotEmpty, true);
-      expect(transaction?.source_, owner.publicKey.toString());
+      expect(transaction.signature?.isNotEmpty, true);
+      expect(transaction.source_, owner.publicKey.toString());
     },
     timeout: const Timeout(Duration(minutes: 10)),
   );
@@ -203,6 +205,6 @@ void main() async {
       throw Exception("Error getting transaction");
     }
     expect(res, const TypeMatcher<GetTransactionResponse>());
-    expect(res?.signature, transaction.signature);
+    expect(res.signature, transaction.signature);
   });
 }
