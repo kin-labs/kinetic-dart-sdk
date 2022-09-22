@@ -17,6 +17,6 @@ class KineticSdkConfig {
       'kinetic-index': index.toString(),
       'kinetic-user-agent': "$name/$version",
     };
-    headers = headers != null ? {...defaultHeaders, ...headers!} : defaultHeaders;
+    headers = headers != null ? {...headers!, ...defaultHeaders} : defaultHeaders;
   }
 }
