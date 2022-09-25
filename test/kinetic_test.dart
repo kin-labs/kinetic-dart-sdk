@@ -47,7 +47,7 @@ void main() async {
     KineticSdk sdk = await KineticSdk.setup(sdkConfig);
 
     GetBalanceOptions options = GetBalanceOptions(account: accountAlice);
-    BalanceResponse? res = await sdk.getBalance(options: options);
+    BalanceResponse? res = await sdk.getBalance(options);
     if (res == null) {
       print("Error getting balance");
       throw Exception("Error getting balance");
@@ -64,7 +64,7 @@ void main() async {
     KineticSdk sdk = await KineticSdk.setup(sdkConfig);
 
     GetHistoryOptions options = GetHistoryOptions(account: accountAlice, mint: mint);
-    List<HistoryResponse>? res = await sdk.getHistory(options: options);
+    List<HistoryResponse>? res = await sdk.getHistory(options);
     if (res == null) {
       print("Error getting history");
       throw Exception("Error getting history");
@@ -81,7 +81,7 @@ void main() async {
     KineticSdk sdk = await KineticSdk.setup(sdkConfig);
 
     GetTokenAccountsOptions options = GetTokenAccountsOptions(account: accountAlice, mint: (mint));
-    List<String>? res = await sdk.getTokenAccounts(options: options);
+    List<String>? res = await sdk.getTokenAccounts(options);
     if (res == null) {
       print("Error requesting token accounts");
       throw Exception("Error requesting token accounts");
@@ -101,7 +101,7 @@ void main() async {
       amount: "10",
       commitment: RequestAirdropRequestCommitmentEnum.finalized,
     );
-    RequestAirdropResponse? res = await sdk.requestAirdrop(options: options);
+    RequestAirdropResponse? res = await sdk.requestAirdrop(options);
     if (res == null) {
       print("Error requesting airdrop");
       throw Exception("Error requesting airdrop");
@@ -133,7 +133,7 @@ void main() async {
         senderCreate: false,
       );
 
-      Transaction? transaction = await sdk.makeTransfer(options: options);
+      Transaction? transaction = await sdk.makeTransfer(options);
       if (transaction == null) {
         print("Error making transfer");
         throw Exception("Error making transfer");
@@ -163,7 +163,7 @@ void main() async {
         referenceType: 'test',
       );
 
-      Transaction? transaction = await sdk.createAccount(options: options);
+      Transaction? transaction = await sdk.createAccount(options);
 
       if (transaction == null) {
         print("Error creating account");
@@ -191,14 +191,13 @@ void main() async {
       owner: owner,
     );
 
-    Transaction? transaction = await sdk.makeTransfer(options: options);
+    Transaction? transaction = await sdk.makeTransfer(options);
     if (transaction == null) {
       print("Error making transfer for getTransaction");
       throw Exception("Error making transfer for getTransaction");
     }
 
-    GetTransactionResponse? res =
-        await sdk.getTransaction(options: GetTransactionOptions(signature: transaction.signature!));
+    GetTransactionResponse? res = await sdk.getTransaction(GetTransactionOptions(signature: transaction.signature!));
 
     if (res == null) {
       print("Error getting transaction");

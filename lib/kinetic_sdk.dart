@@ -28,11 +28,11 @@ class KineticSdk {
 
   String? get endpoint => sdkConfig.endpoint;
 
-  Future<Transaction?> createAccount({required CreateAccountOptions options}) async {
+  Future<Transaction?> createAccount(CreateAccountOptions options) async {
     return _internal.createAccount(options);
   }
 
-  Future<BalanceResponse?> getBalance({required GetBalanceOptions options}) async {
+  Future<BalanceResponse?> getBalance(GetBalanceOptions options) async {
     return _internal.getBalance(options);
   }
 
@@ -40,23 +40,23 @@ class KineticSdk {
     return _internal.appConfig?.environment.explorer.replaceAll("{path}", path);
   }
 
-  Future<List<HistoryResponse>?> getHistory({required GetHistoryOptions options}) async {
+  Future<List<HistoryResponse>?> getHistory(GetHistoryOptions options) async {
     return _internal.getHistory(options);
   }
 
-  Future<List<String>?> getTokenAccounts({required GetTokenAccountsOptions options}) async {
+  Future<List<String>?> getTokenAccounts(GetTokenAccountsOptions options) async {
     return _internal.getTokenAccounts(options);
   }
 
-  Future<GetTransactionResponse?> getTransaction({required GetTransactionOptions options}) async {
+  Future<GetTransactionResponse?> getTransaction(GetTransactionOptions options) async {
     return _internal.getTransaction(options);
   }
 
-  Future<Transaction?> makeTransfer({required MakeTransferOptions options}) async {
+  Future<Transaction?> makeTransfer(MakeTransferOptions options) async {
     return _internal.makeTransfer(options);
   }
 
-  Future<RequestAirdropResponse?> requestAirdrop({required RequestAirdropOptions options}) async {
+  Future<RequestAirdropResponse?> requestAirdrop(RequestAirdropOptions options) async {
     return _internal.requestAirdrop(options);
   }
 
