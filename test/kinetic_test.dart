@@ -20,17 +20,16 @@ import 'fixtures.dart';
 
 KineticSdkConfig sdkConfig = KineticSdkConfig(
   index: 1,
-  // endpoint: 'http://localhost:3000',
-  endpoint: 'https://sandbox.kinetic.host',
-  environment: 'devnet',
+  endpoint: 'http://localhost:3000',
+  environment: 'local',
   logger: Logger(),
 );
 
 String accountAlice = "ALisrzsaVqciCxy8r6g7MUrPoRo3CpGxPhwBbZzqZ9bA";
 String tokenAccountAlice = "2buHAucDpb3gECUNZwZQpfAJ8hELsvaQrByYBekT7NKk";
 String accountBob = "BobQoPqWy5cpFioy1dMTYqNH9WpC39mkAEDJWXECoJ9y";
-// String mint = "MoGaMuJnB3k8zXjBYBnHxHG47vWcW3nyb7bFYvdVzek";
-String mint = "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX";
+String mint = "MoGaMuJnB3k8zXjBYBnHxHG47vWcW3nyb7bFYvdVzek";
+// String mint = "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX";
 
 void main() async {
   test('Get App Config', () async {
@@ -54,7 +53,7 @@ void main() async {
     }
     safePrint(res);
     expect(res, const TypeMatcher<BalanceResponse>());
-    expect(int.parse(res.balance), greaterThan(50000));
+    expect(double.parse(res.balance), greaterThan(50000));
     expect(res.balance, const TypeMatcher<String>());
     expect(res.tokens, const TypeMatcher<List<BalanceToken>>());
     expect(res.mints, const TypeMatcher<Object>());
@@ -122,7 +121,7 @@ void main() async {
       safePrint("To: $accountBob");
 
       MakeTransferOptions options = MakeTransferOptions(
-        amount: "1.0",
+        amount: "1.00005",
         destination: accountBob,
         commitment: MakeTransferRequestCommitmentEnum.finalized,
         mint: mint,
@@ -142,7 +141,7 @@ void main() async {
 
       expect(transaction, const TypeMatcher<Transaction>());
       expect(transaction.signature?.isNotEmpty, true);
-      expect(transaction.amount, '100000');
+      expect(transaction.amount, '1.00005');
       expect(transaction.decimals, 5);
     },
     timeout: const Timeout(Duration(minutes: 10)),
