@@ -20,7 +20,7 @@ class MakeTransferOptions implements TransferDestination {
   @override
   late String destination;
 
-  late MakeTransferRequestCommitmentEnum? commitment;
+  late Commitment? commitment;
   late String? mint;
   late Keypair owner;
   late String? referenceId;

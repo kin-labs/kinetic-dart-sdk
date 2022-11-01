@@ -55,6 +55,18 @@ String parameterToString(dynamic value) {
   if (value is DateTime) {
     return value.toUtc().toIso8601String();
   }
+  if (value is ClusterType) {
+    return ClusterTypeTypeTransformer().encode(value).toString();
+  }
+  if (value is Commitment) {
+    return CommitmentTypeTransformer().encode(value).toString();
+  }
+  if (value is TransactionErrorType) {
+    return TransactionErrorTypeTypeTransformer().encode(value).toString();
+  }
+  if (value is TransactionStatus) {
+    return TransactionStatusTypeTransformer().encode(value).toString();
+  }
   return value.toString();
 }
 

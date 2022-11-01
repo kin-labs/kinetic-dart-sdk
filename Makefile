@@ -8,7 +8,7 @@ setup:
 	npm install @openapitools/openapi-generator-cli -g
 
 generate_api:
-	npx openapi-generator-cli generate -i https://raw.githubusercontent.com/kin-labs/kinetic/dev/api-swagger.json -g dart -o lib/generated
+	npx openapi-generator-cli generate -i https://raw.githubusercontent.com/kin-labs/kinetic/main/api-swagger.json -g dart -o lib/generated
 
 generate_pre:
 	rm -rf lib/generated

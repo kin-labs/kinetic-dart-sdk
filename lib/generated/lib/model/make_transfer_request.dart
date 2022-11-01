@@ -23,7 +23,7 @@ class MakeTransferRequest {
     required this.tx,
   });
 
-  MakeTransferRequestCommitmentEnum commitment;
+  Commitment commitment;
 
   String environment;
 
@@ -105,7 +105,7 @@ class MakeTransferRequest {
       }());
 
       return MakeTransferRequest(
-        commitment: MakeTransferRequestCommitmentEnum.fromJson(json[r'commitment'])!,
+        commitment: Commitment.fromJson(json[r'commitment'])!,
         environment: mapValueOfType<String>(json, r'environment')!,
         index: mapValueOfType<int>(json, r'index')!,
         mint: mapValueOfType<String>(json, r'mint')!,
@@ -170,81 +170,4 @@ class MakeTransferRequest {
     'tx',
   };
 }
-
-
-class MakeTransferRequestCommitmentEnum {
-  /// Instantiate a new enum with the provided [value].
-  const MakeTransferRequestCommitmentEnum._(this.value);
-
-  /// The underlying value of this enum member.
-  final String value;
-
-  @override
-  String toString() => value;
-
-  String toJson() => value;
-
-  static const confirmed = MakeTransferRequestCommitmentEnum._(r'Confirmed');
-  static const finalized = MakeTransferRequestCommitmentEnum._(r'Finalized');
-  static const processed = MakeTransferRequestCommitmentEnum._(r'Processed');
-
-  /// List of all possible values in this [enum][MakeTransferRequestCommitmentEnum].
-  static const values = <MakeTransferRequestCommitmentEnum>[
-    confirmed,
-    finalized,
-    processed,
-  ];
-
-  static MakeTransferRequestCommitmentEnum? fromJson(dynamic value) => MakeTransferRequestCommitmentEnumTypeTransformer().decode(value);
-
-  static List<MakeTransferRequestCommitmentEnum>? listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <MakeTransferRequestCommitmentEnum>[];
-    if (json is List && json.isNotEmpty) {
-      for (final row in json) {
-        final value = MakeTransferRequestCommitmentEnum.fromJson(row);
-        if (value != null) {
-          result.add(value);
-        }
-      }
-    }
-    return result.toList(growable: growable);
-  }
-}
-
-/// Transformation class that can [encode] an instance of [MakeTransferRequestCommitmentEnum] to String,
-/// and [decode] dynamic data back to [MakeTransferRequestCommitmentEnum].
-class MakeTransferRequestCommitmentEnumTypeTransformer {
-  factory MakeTransferRequestCommitmentEnumTypeTransformer() => _instance ??= const MakeTransferRequestCommitmentEnumTypeTransformer._();
-
-  const MakeTransferRequestCommitmentEnumTypeTransformer._();
-
-  String encode(MakeTransferRequestCommitmentEnum data) => data.value;
-
-  /// Decodes a [dynamic value][data] to a MakeTransferRequestCommitmentEnum.
-  ///
-  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
-  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
-  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
-  ///
-  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
-  /// and users are still using an old app with the old code.
-  MakeTransferRequestCommitmentEnum? decode(dynamic data, {bool allowNull = true}) {
-    if (data != null) {
-      switch (data.toString()) {
-        case r'Confirmed': return MakeTransferRequestCommitmentEnum.confirmed;
-        case r'Finalized': return MakeTransferRequestCommitmentEnum.finalized;
-        case r'Processed': return MakeTransferRequestCommitmentEnum.processed;
-        default:
-          if (!allowNull) {
-            throw ArgumentError('Unknown enum value to decode: $data');
-          }
-      }
-    }
-    return null;
-  }
-
-  /// Singleton [MakeTransferRequestCommitmentEnumTypeTransformer] instance.
-  static MakeTransferRequestCommitmentEnumTypeTransformer? _instance;
-}
-
 

@@ -25,7 +25,7 @@ class RequestAirdropRequest {
 
   String? amount;
 
-  RequestAirdropRequestCommitmentEnum commitment;
+  Commitment commitment;
 
   String environment;
 
@@ -91,7 +91,7 @@ class RequestAirdropRequest {
       return RequestAirdropRequest(
         account: mapValueOfType<String>(json, r'account')!,
         amount: mapValueOfType<String>(json, r'amount'),
-        commitment: RequestAirdropRequestCommitmentEnum.fromJson(json[r'commitment'])!,
+        commitment: Commitment.fromJson(json[r'commitment'])!,
         environment: mapValueOfType<String>(json, r'environment')!,
         index: mapValueOfType<int>(json, r'index')!,
         mint: mapValueOfType<String>(json, r'mint')!,
@@ -151,81 +151,4 @@ class RequestAirdropRequest {
     'mint',
   };
 }
-
-
-class RequestAirdropRequestCommitmentEnum {
-  /// Instantiate a new enum with the provided [value].
-  const RequestAirdropRequestCommitmentEnum._(this.value);
-
-  /// The underlying value of this enum member.
-  final String value;
-
-  @override
-  String toString() => value;
-
-  String toJson() => value;
-
-  static const confirmed = RequestAirdropRequestCommitmentEnum._(r'Confirmed');
-  static const finalized = RequestAirdropRequestCommitmentEnum._(r'Finalized');
-  static const processed = RequestAirdropRequestCommitmentEnum._(r'Processed');
-
-  /// List of all possible values in this [enum][RequestAirdropRequestCommitmentEnum].
-  static const values = <RequestAirdropRequestCommitmentEnum>[
-    confirmed,
-    finalized,
-    processed,
-  ];
-
-  static RequestAirdropRequestCommitmentEnum? fromJson(dynamic value) => RequestAirdropRequestCommitmentEnumTypeTransformer().decode(value);
-
-  static List<RequestAirdropRequestCommitmentEnum>? listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <RequestAirdropRequestCommitmentEnum>[];
-    if (json is List && json.isNotEmpty) {
-      for (final row in json) {
-        final value = RequestAirdropRequestCommitmentEnum.fromJson(row);
-        if (value != null) {
-          result.add(value);
-        }
-      }
-    }
-    return result.toList(growable: growable);
-  }
-}
-
-/// Transformation class that can [encode] an instance of [RequestAirdropRequestCommitmentEnum] to String,
-/// and [decode] dynamic data back to [RequestAirdropRequestCommitmentEnum].
-class RequestAirdropRequestCommitmentEnumTypeTransformer {
-  factory RequestAirdropRequestCommitmentEnumTypeTransformer() => _instance ??= const RequestAirdropRequestCommitmentEnumTypeTransformer._();
-
-  const RequestAirdropRequestCommitmentEnumTypeTransformer._();
-
-  String encode(RequestAirdropRequestCommitmentEnum data) => data.value;
-
-  /// Decodes a [dynamic value][data] to a RequestAirdropRequestCommitmentEnum.
-  ///
-  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
-  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
-  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
-  ///
-  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
-  /// and users are still using an old app with the old code.
-  RequestAirdropRequestCommitmentEnum? decode(dynamic data, {bool allowNull = true}) {
-    if (data != null) {
-      switch (data.toString()) {
-        case r'Confirmed': return RequestAirdropRequestCommitmentEnum.confirmed;
-        case r'Finalized': return RequestAirdropRequestCommitmentEnum.finalized;
-        case r'Processed': return RequestAirdropRequestCommitmentEnum.processed;
-        default:
-          if (!allowNull) {
-            throw ArgumentError('Unknown enum value to decode: $data');
-          }
-      }
-    }
-    return null;
-  }
-
-  /// Singleton [RequestAirdropRequestCommitmentEnumTypeTransformer] instance.
-  static RequestAirdropRequestCommitmentEnumTypeTransformer? _instance;
-}
-
 

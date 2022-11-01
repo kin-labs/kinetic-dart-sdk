@@ -37,6 +37,7 @@ class Transaction {
     this.source_,
     this.status,
     this.totalDuration,
+    this.tx,
     this.ua,
     this.webhookEventStart,
     this.webhookEventEnd,
@@ -90,9 +91,17 @@ class Transaction {
 
   String? source_;
 
-  TransactionStatusEnum? status;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  TransactionStatus? status;
 
   num? totalDuration;
+
+  String? tx;
 
   String? ua;
 
@@ -134,6 +143,7 @@ class Transaction {
      other.source_ == source_ &&
      other.status == status &&
      other.totalDuration == totalDuration &&
+     other.tx == tx &&
      other.ua == ua &&
      other.webhookEventStart == webhookEventStart &&
      other.webhookEventEnd == webhookEventEnd &&
@@ -169,6 +179,7 @@ class Transaction {
     (source_ == null ? 0 : source_!.hashCode) +
     (status == null ? 0 : status!.hashCode) +
     (totalDuration == null ? 0 : totalDuration!.hashCode) +
+    (tx == null ? 0 : tx!.hashCode) +
     (ua == null ? 0 : ua!.hashCode) +
     (webhookEventStart == null ? 0 : webhookEventStart!.hashCode) +
     (webhookEventEnd == null ? 0 : webhookEventEnd!.hashCode) +
@@ -178,7 +189,7 @@ class Transaction {
     (webhookVerifyDuration == null ? 0 : webhookVerifyDuration!.hashCode);
 
   @override
-  String toString() => 'Transaction[id=$id, createdAt=$createdAt, updatedAt=$updatedAt, amount=$amount, decimals=$decimals, destination=$destination, errors=$errors, explorerUrl=$explorerUrl, feePayer=$feePayer, ip=$ip, mint=$mint, processingDuration=$processingDuration, referenceId=$referenceId, referenceType=$referenceType, signature=$signature, solanaCommitted=$solanaCommitted, solanaCommittedDuration=$solanaCommittedDuration, solanaFinalized=$solanaFinalized, solanaFinalizedDuration=$solanaFinalizedDuration, solanaStart=$solanaStart, solanaTransaction=$solanaTransaction, source_=$source_, status=$status, totalDuration=$totalDuration, ua=$ua, webhookEventStart=$webhookEventStart, webhookEventEnd=$webhookEventEnd, webhookEventDuration=$webhookEventDuration, webhookVerifyStart=$webhookVerifyStart, webhookVerifyEnd=$webhookVerifyEnd, webhookVerifyDuration=$webhookVerifyDuration]';
+  String toString() => 'Transaction[id=$id, createdAt=$createdAt, updatedAt=$updatedAt, amount=$amount, decimals=$decimals, destination=$destination, errors=$errors, explorerUrl=$explorerUrl, feePayer=$feePayer, ip=$ip, mint=$mint, processingDuration=$processingDuration, referenceId=$referenceId, referenceType=$referenceType, signature=$signature, solanaCommitted=$solanaCommitted, solanaCommittedDuration=$solanaCommittedDuration, solanaFinalized=$solanaFinalized, solanaFinalizedDuration=$solanaFinalizedDuration, solanaStart=$solanaStart, solanaTransaction=$solanaTransaction, source_=$source_, status=$status, totalDuration=$totalDuration, tx=$tx, ua=$ua, webhookEventStart=$webhookEventStart, webhookEventEnd=$webhookEventEnd, webhookEventDuration=$webhookEventDuration, webhookVerifyStart=$webhookVerifyStart, webhookVerifyEnd=$webhookVerifyEnd, webhookVerifyDuration=$webhookVerifyDuration]';
 
   Map<String, dynamic> toJson() {
     final _json = <String, dynamic>{};
@@ -302,6 +313,11 @@ class Transaction {
     } else {
       _json[r'totalDuration'] = null;
     }
+    if (tx != null) {
+      _json[r'tx'] = tx;
+    } else {
+      _json[r'tx'] = null;
+    }
     if (ua != null) {
       _json[r'ua'] = ua;
     } else {
@@ -389,10 +405,11 @@ class Transaction {
         solanaStart: mapDateTime(json, r'solanaStart', ''),
         solanaTransaction: mapValueOfType<Object>(json, r'solanaTransaction'),
         source_: mapValueOfType<String>(json, r'source'),
-        status: TransactionStatusEnum.fromJson(json[r'status']),
+        status: TransactionStatus.fromJson(json[r'status']),
         totalDuration: json[r'totalDuration'] == null
             ? null
             : num.parse(json[r'totalDuration'].toString()),
+        tx: mapValueOfType<String>(json, r'tx'),
         ua: mapValueOfType<String>(json, r'ua'),
         webhookEventStart: mapDateTime(json, r'webhookEventStart', ''),
         webhookEventEnd: mapDateTime(json, r'webhookEventEnd', ''),
@@ -455,87 +472,4 @@ class Transaction {
   static const requiredKeys = <String>{
   };
 }
-
-
-class TransactionStatusEnum {
-  /// Instantiate a new enum with the provided [value].
-  const TransactionStatusEnum._(this.value);
-
-  /// The underlying value of this enum member.
-  final String value;
-
-  @override
-  String toString() => value;
-
-  String toJson() => value;
-
-  static const committed = TransactionStatusEnum._(r'Committed');
-  static const confirmed = TransactionStatusEnum._(r'Confirmed');
-  static const failed = TransactionStatusEnum._(r'Failed');
-  static const finalized = TransactionStatusEnum._(r'Finalized');
-  static const processing = TransactionStatusEnum._(r'Processing');
-
-  /// List of all possible values in this [enum][TransactionStatusEnum].
-  static const values = <TransactionStatusEnum>[
-    committed,
-    confirmed,
-    failed,
-    finalized,
-    processing,
-  ];
-
-  static TransactionStatusEnum? fromJson(dynamic value) => TransactionStatusEnumTypeTransformer().decode(value);
-
-  static List<TransactionStatusEnum>? listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <TransactionStatusEnum>[];
-    if (json is List && json.isNotEmpty) {
-      for (final row in json) {
-        final value = TransactionStatusEnum.fromJson(row);
-        if (value != null) {
-          result.add(value);
-        }
-      }
-    }
-    return result.toList(growable: growable);
-  }
-}
-
-/// Transformation class that can [encode] an instance of [TransactionStatusEnum] to String,
-/// and [decode] dynamic data back to [TransactionStatusEnum].
-class TransactionStatusEnumTypeTransformer {
-  factory TransactionStatusEnumTypeTransformer() => _instance ??= const TransactionStatusEnumTypeTransformer._();
-
-  const TransactionStatusEnumTypeTransformer._();
-
-  String encode(TransactionStatusEnum data) => data.value;
-
-  /// Decodes a [dynamic value][data] to a TransactionStatusEnum.
-  ///
-  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
-  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
-  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
-  ///
-  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
-  /// and users are still using an old app with the old code.
-  TransactionStatusEnum? decode(dynamic data, {bool allowNull = true}) {
-    if (data != null) {
-      switch (data.toString()) {
-        case r'Committed': return TransactionStatusEnum.committed;
-        case r'Confirmed': return TransactionStatusEnum.confirmed;
-        case r'Failed': return TransactionStatusEnum.failed;
-        case r'Finalized': return TransactionStatusEnum.finalized;
-        case r'Processing': return TransactionStatusEnum.processing;
-        default:
-          if (!allowNull) {
-            throw ArgumentError('Unknown enum value to decode: $data');
-          }
-      }
-    }
-    return null;
-  }
-
-  /// Singleton [TransactionStatusEnumTypeTransformer] instance.
-  static TransactionStatusEnumTypeTransformer? _instance;
-}
-
 

@@ -25,7 +25,7 @@ class AppConfigCluster {
 
   String name;
 
-  AppConfigClusterTypeEnum type;
+  ClusterType type;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is AppConfigCluster &&
@@ -76,7 +76,7 @@ class AppConfigCluster {
         endpoint: mapValueOfType<String>(json, r'endpoint')!,
         id: mapValueOfType<String>(json, r'id')!,
         name: mapValueOfType<String>(json, r'name')!,
-        type: AppConfigClusterTypeEnum.fromJson(json[r'type'])!,
+        type: ClusterType.fromJson(json[r'type'])!,
       );
     }
     return null;
@@ -132,84 +132,4 @@ class AppConfigCluster {
     'type',
   };
 }
-
-
-class AppConfigClusterTypeEnum {
-  /// Instantiate a new enum with the provided [value].
-  const AppConfigClusterTypeEnum._(this.value);
-
-  /// The underlying value of this enum member.
-  final String value;
-
-  @override
-  String toString() => value;
-
-  String toJson() => value;
-
-  static const custom = AppConfigClusterTypeEnum._(r'Custom');
-  static const solanaDevnet = AppConfigClusterTypeEnum._(r'SolanaDevnet');
-  static const solanaMainnet = AppConfigClusterTypeEnum._(r'SolanaMainnet');
-  static const solanaTestnet = AppConfigClusterTypeEnum._(r'SolanaTestnet');
-
-  /// List of all possible values in this [enum][AppConfigClusterTypeEnum].
-  static const values = <AppConfigClusterTypeEnum>[
-    custom,
-    solanaDevnet,
-    solanaMainnet,
-    solanaTestnet,
-  ];
-
-  static AppConfigClusterTypeEnum? fromJson(dynamic value) => AppConfigClusterTypeEnumTypeTransformer().decode(value);
-
-  static List<AppConfigClusterTypeEnum>? listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <AppConfigClusterTypeEnum>[];
-    if (json is List && json.isNotEmpty) {
-      for (final row in json) {
-        final value = AppConfigClusterTypeEnum.fromJson(row);
-        if (value != null) {
-          result.add(value);
-        }
-      }
-    }
-    return result.toList(growable: growable);
-  }
-}
-
-/// Transformation class that can [encode] an instance of [AppConfigClusterTypeEnum] to String,
-/// and [decode] dynamic data back to [AppConfigClusterTypeEnum].
-class AppConfigClusterTypeEnumTypeTransformer {
-  factory AppConfigClusterTypeEnumTypeTransformer() => _instance ??= const AppConfigClusterTypeEnumTypeTransformer._();
-
-  const AppConfigClusterTypeEnumTypeTransformer._();
-
-  String encode(AppConfigClusterTypeEnum data) => data.value;
-
-  /// Decodes a [dynamic value][data] to a AppConfigClusterTypeEnum.
-  ///
-  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
-  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
-  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
-  ///
-  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
-  /// and users are still using an old app with the old code.
-  AppConfigClusterTypeEnum? decode(dynamic data, {bool allowNull = true}) {
-    if (data != null) {
-      switch (data.toString()) {
-        case r'Custom': return AppConfigClusterTypeEnum.custom;
-        case r'SolanaDevnet': return AppConfigClusterTypeEnum.solanaDevnet;
-        case r'SolanaMainnet': return AppConfigClusterTypeEnum.solanaMainnet;
-        case r'SolanaTestnet': return AppConfigClusterTypeEnum.solanaTestnet;
-        default:
-          if (!allowNull) {
-            throw ArgumentError('Unknown enum value to decode: $data');
-          }
-      }
-    }
-    return null;
-  }
-
-  /// Singleton [AppConfigClusterTypeEnumTypeTransformer] instance.
-  static AppConfigClusterTypeEnumTypeTransformer? _instance;
-}
-
 

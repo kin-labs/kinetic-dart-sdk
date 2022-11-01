@@ -43,7 +43,7 @@ class KineticSdkInternal {
     var appConfig = _ensureAppConfig();
     AppConfigMint? mint = _getAppMint(appConfig, options.mint);
 
-    var commitment = options.commitment ?? CreateAccountRequestCommitmentEnum.confirmed;
+    var commitment = options.commitment ?? Commitment.confirmed;
 
     PrepareTransactionResponse blockhash = await _getBlockhash();
 
@@ -125,7 +125,7 @@ class KineticSdkInternal {
     var appConfig = _ensureAppConfig();
     AppConfigMint? mint = _getAppMint(appConfig, options.mint);
 
-    var commitment = options.commitment ?? MakeTransferRequestCommitmentEnum.confirmed;
+    var commitment = options.commitment ?? Commitment.confirmed;
     var destination = options.destination;
     var senderCreate = options.senderCreate ?? false;
 
@@ -178,7 +178,7 @@ class KineticSdkInternal {
     return airdropApi.requestAirdrop(RequestAirdropRequest(
       account: options.account,
       amount: options.amount,
-      commitment: options.commitment ?? RequestAirdropRequestCommitmentEnum.confirmed,
+      commitment: options.commitment ?? Commitment.confirmed,
       environment: sdkConfig.environment,
       index: sdkConfig.index,
       mint: mint.publicKey,

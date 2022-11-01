@@ -210,6 +210,10 @@ class ApiClient {
           return BalanceResponse.fromJson(value);
         case 'BalanceToken':
           return BalanceToken.fromJson(value);
+        case 'ClusterType':
+          return ClusterTypeTypeTransformer().decode(value);
+        case 'Commitment':
+          return CommitmentTypeTransformer().decode(value);
         case 'ConfirmedSignatureInfo':
           return ConfirmedSignatureInfo.fromJson(value);
         case 'ConfirmedTransactionMeta':
@@ -238,8 +242,12 @@ class ApiClient {
           return TransactionData.fromJson(value);
         case 'TransactionError':
           return TransactionError.fromJson(value);
+        case 'TransactionErrorType':
+          return TransactionErrorTypeTypeTransformer().decode(value);
         case 'TransactionResponse':
           return TransactionResponse.fromJson(value);
+        case 'TransactionStatus':
+          return TransactionStatusTypeTransformer().decode(value);
         default:
           dynamic match;
           if (value is List && (match = _regList.firstMatch(targetType)?.group(1)) != null) {

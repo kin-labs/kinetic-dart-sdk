@@ -98,7 +98,7 @@ void main() async {
       account: accountAlice,
       mint: mint,
       amount: "10",
-      commitment: RequestAirdropRequestCommitmentEnum.finalized,
+      commitment: Commitment.finalized,
     );
     RequestAirdropResponse? res = await sdk.requestAirdrop(options);
     if (res == null) {
@@ -123,7 +123,7 @@ void main() async {
       MakeTransferOptions options = MakeTransferOptions(
         amount: "1.00005",
         destination: accountBob,
-        commitment: MakeTransferRequestCommitmentEnum.finalized,
+        commitment: Commitment.finalized,
         mint: mint,
         owner: owner,
         referenceId: "our-ref-id",
@@ -157,7 +157,7 @@ void main() async {
       CreateAccountOptions options = CreateAccountOptions(
         owner: owner,
         mint: mint,
-        commitment: CreateAccountRequestCommitmentEnum.finalized,
+        commitment: Commitment.finalized,
         referenceId: 'dart',
         referenceType: 'test',
       );
@@ -185,7 +185,7 @@ void main() async {
     MakeTransferOptions options = MakeTransferOptions(
       amount: "1.0",
       destination: accountBob,
-      commitment: MakeTransferRequestCommitmentEnum.finalized,
+      commitment: Commitment.finalized,
       mint: mint,
       owner: owner,
     );

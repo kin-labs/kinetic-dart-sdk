@@ -41,6 +41,8 @@ part 'model/app_config_mint.dart';
 part 'model/app_health.dart';
 part 'model/balance_response.dart';
 part 'model/balance_token.dart';
+part 'model/cluster_type.dart';
+part 'model/commitment.dart';
 part 'model/confirmed_signature_info.dart';
 part 'model/confirmed_transaction_meta.dart';
 part 'model/create_account_request.dart';
@@ -55,7 +57,9 @@ part 'model/signature_status.dart';
 part 'model/transaction.dart';
 part 'model/transaction_data.dart';
 part 'model/transaction_error.dart';
+part 'model/transaction_error_type.dart';
 part 'model/transaction_response.dart';
+part 'model/transaction_status.dart';
 
 
 const _delimiters = {'csv': ',', 'ssv': ' ', 'tsv': '\t', 'pipes': '|'};

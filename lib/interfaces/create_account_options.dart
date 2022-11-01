@@ -10,7 +10,7 @@ class CreateAccountOptions {
     this.referenceType,
   });
 
-  late CreateAccountRequestCommitmentEnum? commitment;
+  late Commitment? commitment;
   late String? mint;
   late Keypair owner;
   late String? referenceId;

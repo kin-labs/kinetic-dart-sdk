@@ -23,7 +23,7 @@ class CreateAccountRequest {
     required this.tx,
   });
 
-  CreateAccountRequestCommitmentEnum commitment;
+  Commitment commitment;
 
   String environment;
 
@@ -105,7 +105,7 @@ class CreateAccountRequest {
       }());
 
       return CreateAccountRequest(
-        commitment: CreateAccountRequestCommitmentEnum.fromJson(json[r'commitment'])!,
+        commitment: Commitment.fromJson(json[r'commitment'])!,
         environment: mapValueOfType<String>(json, r'environment')!,
         index: mapValueOfType<int>(json, r'index')!,
         lastValidBlockHeight: mapValueOfType<int>(json, r'lastValidBlockHeight')!,
@@ -170,81 +170,4 @@ class CreateAccountRequest {
     'tx',
   };
 }
-
-
-class CreateAccountRequestCommitmentEnum {
-  /// Instantiate a new enum with the provided [value].
-  const CreateAccountRequestCommitmentEnum._(this.value);
-
-  /// The underlying value of this enum member.
-  final String value;
-
-  @override
-  String toString() => value;
-
-  String toJson() => value;
-
-  static const confirmed = CreateAccountRequestCommitmentEnum._(r'Confirmed');
-  static const finalized = CreateAccountRequestCommitmentEnum._(r'Finalized');
-  static const processed = CreateAccountRequestCommitmentEnum._(r'Processed');
-
-  /// List of all possible values in this [enum][CreateAccountRequestCommitmentEnum].
-  static const values = <CreateAccountRequestCommitmentEnum>[
-    confirmed,
-    finalized,
-    processed,
-  ];
-
-  static CreateAccountRequestCommitmentEnum? fromJson(dynamic value) => CreateAccountRequestCommitmentEnumTypeTransformer().decode(value);
-
-  static List<CreateAccountRequestCommitmentEnum>? listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <CreateAccountRequestCommitmentEnum>[];
-    if (json is List && json.isNotEmpty) {
-      for (final row in json) {
-        final value = CreateAccountRequestCommitmentEnum.fromJson(row);
-        if (value != null) {
-          result.add(value);
-        }
-      }
-    }
-    return result.toList(growable: growable);
-  }
-}
-
-/// Transformation class that can [encode] an instance of [CreateAccountRequestCommitmentEnum] to String,
-/// and [decode] dynamic data back to [CreateAccountRequestCommitmentEnum].
-class CreateAccountRequestCommitmentEnumTypeTransformer {
-  factory CreateAccountRequestCommitmentEnumTypeTransformer() => _instance ??= const CreateAccountRequestCommitmentEnumTypeTransformer._();
-
-  const CreateAccountRequestCommitmentEnumTypeTransformer._();
-
-  String encode(CreateAccountRequestCommitmentEnum data) => data.value;
-
-  /// Decodes a [dynamic value][data] to a CreateAccountRequestCommitmentEnum.
-  ///
-  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
-  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
-  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
-  ///
-  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
-  /// and users are still using an old app with the old code.
-  CreateAccountRequestCommitmentEnum? decode(dynamic data, {bool allowNull = true}) {
-    if (data != null) {
-      switch (data.toString()) {
-        case r'Confirmed': return CreateAccountRequestCommitmentEnum.confirmed;
-        case r'Finalized': return CreateAccountRequestCommitmentEnum.finalized;
-        case r'Processed': return CreateAccountRequestCommitmentEnum.processed;
-        default:
-          if (!allowNull) {
-            throw ArgumentError('Unknown enum value to decode: $data');
-          }
-      }
-    }
-    return null;
-  }
-
-  /// Singleton [CreateAccountRequestCommitmentEnumTypeTransformer] instance.
-  static CreateAccountRequestCommitmentEnumTypeTransformer? _instance;
-}
-
 

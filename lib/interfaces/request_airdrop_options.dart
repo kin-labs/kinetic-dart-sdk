@@ -10,6 +10,6 @@ class RequestAirdropOptions {
 
   late String account;
   late String amount;
-  late RequestAirdropRequestCommitmentEnum? commitment;
+  late Commitment? commitment;
   late String? mint;
 }

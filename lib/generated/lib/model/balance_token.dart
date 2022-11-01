@@ -15,6 +15,7 @@ class BalanceToken {
   BalanceToken({
     required this.account,
     required this.balance,
+    required this.decimals,
     required this.mint,
   });
 
@@ -22,12 +23,15 @@ class BalanceToken {
 
   String balance;
 
+  int decimals;
+
   String mint;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is BalanceToken &&
      other.account == account &&
      other.balance == balance &&
+     other.decimals == decimals &&
      other.mint == mint;
 
   @override
@@ -35,15 +39,17 @@ class BalanceToken {
     // ignore: unnecessary_parenthesis
     (account.hashCode) +
     (balance.hashCode) +
+    (decimals.hashCode) +
     (mint.hashCode);
 
   @override
-  String toString() => 'BalanceToken[account=$account, balance=$balance, mint=$mint]';
+  String toString() => 'BalanceToken[account=$account, balance=$balance, decimals=$decimals, mint=$mint]';
 
   Map<String, dynamic> toJson() {
     final _json = <String, dynamic>{};
       _json[r'account'] = account;
       _json[r'balance'] = balance;
+      _json[r'decimals'] = decimals;
       _json[r'mint'] = mint;
     return _json;
   }
@@ -69,6 +75,7 @@ class BalanceToken {
       return BalanceToken(
         account: mapValueOfType<String>(json, r'account')!,
         balance: mapValueOfType<String>(json, r'balance')!,
+        decimals: mapValueOfType<int>(json, r'decimals')!,
         mint: mapValueOfType<String>(json, r'mint')!,
       );
     }
@@ -121,6 +128,7 @@ class BalanceToken {
   static const requiredKeys = <String>{
     'account',
     'balance',
+    'decimals',
     'mint',
   };
 }
