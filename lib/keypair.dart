@@ -44,11 +44,6 @@ class Keypair {
     return _create(kp.secretKey, mnemonic);
   }
 
-  // TODO: Implement this according to the TypeScript version
-  // static Future<Keypair> fromMnemonicSeed(String mnemonic) async {
-  //   return fromMnemonic(mnemonic);
-  // }
-
   static Future<List<Keypair>> fromMnemonicSet(String mnemonic, [int? from = 0, to = 10]) async {
     // Always start with zero as minimum
     if (from == null || from < 0) {
