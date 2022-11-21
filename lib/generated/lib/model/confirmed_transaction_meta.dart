@@ -25,11 +25,11 @@ class ConfirmedTransactionMeta {
 
   num? fee;
 
-  List<String> innerInstructions;
+  List<String>? innerInstructions;
 
-  List<String> preBalances;
+  List<int>? preBalances;
 
-  List<String> postBalances;
+  List<int> postBalances;
 
   List<String>? logMessages;
 
@@ -54,8 +54,8 @@ class ConfirmedTransactionMeta {
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (fee == null ? 0 : fee!.hashCode) +
-    (innerInstructions.hashCode) +
-    (preBalances.hashCode) +
+    (innerInstructions == null ? 0 : innerInstructions!.hashCode) +
+    (preBalances == null ? 0 : preBalances!.hashCode) +
     (postBalances.hashCode) +
     (logMessages == null ? 0 : logMessages!.hashCode) +
     (preTokenBalances == null ? 0 : preTokenBalances!.hashCode) +
@@ -72,8 +72,16 @@ class ConfirmedTransactionMeta {
     } else {
       _json[r'fee'] = null;
     }
+    if (innerInstructions != null) {
       _json[r'innerInstructions'] = innerInstructions;
+    } else {
+      _json[r'innerInstructions'] = null;
+    }
+    if (preBalances != null) {
       _json[r'preBalances'] = preBalances;
+    } else {
+      _json[r'preBalances'] = null;
+    }
       _json[r'postBalances'] = postBalances;
     if (logMessages != null) {
       _json[r'logMessages'] = logMessages;
@@ -124,10 +132,10 @@ class ConfirmedTransactionMeta {
             ? (json[r'innerInstructions'] as List).cast<String>()
             : const [],
         preBalances: json[r'preBalances'] is List
-            ? (json[r'preBalances'] as List).cast<String>()
+            ? (json[r'preBalances'] as List).cast<int>()
             : const [],
         postBalances: json[r'postBalances'] is List
-            ? (json[r'postBalances'] as List).cast<String>()
+            ? (json[r'postBalances'] as List).cast<int>()
             : const [],
         logMessages: json[r'logMessages'] is List
             ? (json[r'logMessages'] as List).cast<String>()
@@ -188,8 +196,6 @@ class ConfirmedTransactionMeta {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
-    'innerInstructions',
-    'preBalances',
     'postBalances',
   };
 }
