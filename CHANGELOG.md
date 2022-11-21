@@ -1,3 +1,7 @@
+## 1.0.0-rc.8
+
+* chore: update Kinetic OpenAPI code to Kinetic 1.0.0-rc.8
+
 ## 1.0.0-rc.7
 
 * chore: update Kinetic OpenAPI code to Kinetic 1.0.0-rc.7
