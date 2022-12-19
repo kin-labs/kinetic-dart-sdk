@@ -3,6 +3,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kinetic/generated/lib/api.dart';
 import 'package:kinetic/interfaces/create_account_options.dart';
+import 'package:kinetic/interfaces/get_account_info_options.dart';
 import 'package:kinetic/interfaces/get_balance_options.dart';
 import 'package:kinetic/interfaces/get_history_options.dart';
 import 'package:kinetic/interfaces/get_token_accounts_options.dart';
@@ -26,10 +27,10 @@ KineticSdkConfig sdkConfig = KineticSdkConfig(
 );
 
 String accountAlice = "ALisrzsaVqciCxy8r6g7MUrPoRo3CpGxPhwBbZzqZ9bA";
-String tokenAccountAlice = "2buHAucDpb3gECUNZwZQpfAJ8hELsvaQrByYBekT7NKk";
+String aliceTokenAccount = "Ebq6K7xVh6PYQ8DrTQnD9fC91uQiyBMPGSV6JCG6GPdD";
 String accountBob = "BobQoPqWy5cpFioy1dMTYqNH9WpC39mkAEDJWXECoJ9y";
-String mint = "MoGaMuJnB3k8zXjBYBnHxHG47vWcW3nyb7bFYvdVzek";
-// String mint = "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX";
+String defaultMint = "MoGaMuJnB3k8zXjBYBnHxHG47vWcW3nyb7bFYvdVzek";
+// String defaultMint = "KinDesK3dYWo3R2wDk6Ucaf31tvQCCSYyL8Fuqp33GX";
 
 void main() async {
   test('Get App Config', () async {
@@ -62,7 +63,7 @@ void main() async {
   test('Get History', () async {
     KineticSdk sdk = await KineticSdk.setup(sdkConfig);
 
-    GetHistoryOptions options = GetHistoryOptions(account: accountAlice, mint: mint);
+    GetHistoryOptions options = GetHistoryOptions(account: accountAlice, mint: defaultMint);
     List<HistoryResponse>? res = await sdk.getHistory(options);
     if (res == null) {
       print("Error getting history");
@@ -79,7 +80,7 @@ void main() async {
   test('Get Token Accounts', () async {
     KineticSdk sdk = await KineticSdk.setup(sdkConfig);
 
-    GetTokenAccountsOptions options = GetTokenAccountsOptions(account: accountAlice, mint: (mint));
+    GetTokenAccountsOptions options = GetTokenAccountsOptions(account: accountAlice, mint: defaultMint);
     List<String>? res = await sdk.getTokenAccounts(options);
     if (res == null) {
       print("Error requesting token accounts");
@@ -96,7 +97,7 @@ void main() async {
 
     RequestAirdropOptions options = RequestAirdropOptions(
       account: accountAlice,
-      mint: mint,
+      mint: defaultMint,
       amount: "10",
       commitment: Commitment.finalized,
     );
@@ -124,7 +125,7 @@ void main() async {
         amount: "1.00005",
         destination: accountBob,
         commitment: Commitment.finalized,
-        mint: mint,
+        mint: defaultMint,
         owner: owner,
         referenceId: "our-ref-id",
         referenceType: "some-tx",
@@ -156,7 +157,7 @@ void main() async {
 
       CreateAccountOptions options = CreateAccountOptions(
         owner: owner,
-        mint: mint,
+        mint: defaultMint,
         commitment: Commitment.finalized,
         referenceId: 'dart',
         referenceType: 'test',
@@ -186,7 +187,7 @@ void main() async {
       amount: "1.0",
       destination: accountBob,
       commitment: Commitment.finalized,
-      mint: mint,
+      mint: defaultMint,
       owner: owner,
     );
 
@@ -205,4 +206,54 @@ void main() async {
     expect(res, const TypeMatcher<GetTransactionResponse>());
     expect(res.signature, transaction.signature);
   });
+
+  test('getAccountInfo: should get account info', () async {
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig);
+
+    AccountInfo? res = await sdk.getAccountInfo(GetAccountInfoOptions(account: accountAlice));
+
+    if (res == null) {
+      print("Error getting account info");
+      throw Exception("Error getting account info");
+    }
+
+    expect(res.account, accountAlice);
+    expect(res.isMint, false);
+    expect(res.isOwner, true);
+    expect(res.isTokenAccount, false);
+    expect(res.tokens?.length, 1);
+    expect(res.tokens?[0].account, aliceTokenAccount);
+    expect(res.tokens?[0].decimals, 5);
+    expect(res.tokens?[0].mint, defaultMint);
+    expect(res.tokens?[0].owner, accountAlice);
+  });
+
+  // test('closeAccount: should close an account', () async {
+  //   KineticSdk sdk = await KineticSdk.setup(sdkConfig);
+  //   final owner = await Keypair.random();
+  //
+  //   Transaction? createTx = await sdk.createAccount(CreateAccountOptions(
+  //     owner: owner,
+  //     commitment: Commitment.finalized,
+  //   ));
+  //
+  //   if (createTx == null) {
+  //     print("Error creating account");
+  //     throw Exception("Error creating account");
+  //   }
+  //   expect(createTx, const TypeMatcher<Transaction>());
+  //   expect(createTx.signature?.isNotEmpty, true);
+  //
+  //   Transaction? closeTx = await sdk.closeAccount(CloseAccountOptions(
+  //     account: owner.publicKey,
+  //     commitment: Commitment.finalized,
+  //   ));
+  //   if (closeTx == null) {
+  //     print("Error closing account");
+  //     throw Exception("Error closing account");
+  //   }
+  //   expect(closeTx, const TypeMatcher<Transaction>());
+  //   expect(closeTx.signature?.isNotEmpty, true);
+  //   expect(closeTx.errors, []);
+  // });
 }
