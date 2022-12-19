@@ -61,6 +61,9 @@ String parameterToString(dynamic value) {
   if (value is Commitment) {
     return CommitmentTypeTransformer().encode(value).toString();
   }
+  if (value is ConfirmationStatus) {
+    return ConfirmationStatusTypeTransformer().encode(value).toString();
+  }
   if (value is TransactionErrorType) {
     return TransactionErrorTypeTypeTransformer().encode(value).toString();
   }

@@ -19,13 +19,13 @@ class TransactionResponse {
     this.blockTime,
   });
 
-  num? slot;
+  int? slot;
 
   TransactionData transaction;
 
   ConfirmedTransactionMeta meta;
 
-  num? blockTime;
+  int? blockTime;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is TransactionResponse &&
@@ -81,14 +81,10 @@ class TransactionResponse {
       }());
 
       return TransactionResponse(
-        slot: json[r'slot'] == null
-            ? null
-            : num.parse(json[r'slot'].toString()),
+        slot: mapValueOfType<int>(json, r'slot'),
         transaction: TransactionData.fromJson(json[r'transaction'])!,
         meta: ConfirmedTransactionMeta.fromJson(json[r'meta'])!,
-        blockTime: json[r'blockTime'] == null
-            ? null
-            : num.parse(json[r'blockTime'].toString()),
+        blockTime: mapValueOfType<int>(json, r'blockTime'),
       );
     }
     return null;

@@ -149,7 +149,9 @@ class TransactionApi {
   /// * [int] index (required):
   ///
   /// * [String] signature (required):
-  Future<Response> getTransactionWithHttpInfo(String environment, int index, String signature,) async {
+  ///
+  /// * [Commitment] commitment (required):
+  Future<Response> getTransactionWithHttpInfo(String environment, int index, String signature, Commitment commitment,) async {
     // ignore: prefer_const_declarations
     final path = r'/api/transaction/transaction/{environment}/{index}/{signature}'
       .replaceAll('{environment}', environment)
@@ -162,6 +164,8 @@ class TransactionApi {
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
+
+      queryParams.addAll(_queryParams('', 'commitment', commitment));
 
     const contentTypes = <String>[];
 
@@ -186,8 +190,10 @@ class TransactionApi {
   /// * [int] index (required):
   ///
   /// * [String] signature (required):
-  Future<GetTransactionResponse?> getTransaction(String environment, int index, String signature,) async {
-    final response = await getTransactionWithHttpInfo(environment, index, signature,);
+  ///
+  /// * [Commitment] commitment (required):
+  Future<GetTransactionResponse?> getTransaction(String environment, int index, String signature, Commitment commitment,) async {
+    final response = await getTransactionWithHttpInfo(environment, index, signature, commitment,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

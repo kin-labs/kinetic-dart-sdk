@@ -20,7 +20,7 @@ class GetTransactionResponse {
 
   String signature;
 
-  SignatureStatus status;
+  RpcResponseAndContext status;
 
   TransactionResponse transaction;
 
@@ -68,7 +68,7 @@ class GetTransactionResponse {
 
       return GetTransactionResponse(
         signature: mapValueOfType<String>(json, r'signature')!,
-        status: SignatureStatus.fromJson(json[r'status'])!,
+        status: RpcResponseAndContext.fromJson(json[r'status'])!,
         transaction: TransactionResponse.fromJson(json[r'transaction'])!,
       );
     }

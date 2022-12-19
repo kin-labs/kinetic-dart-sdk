@@ -16,7 +16,7 @@ class MinimumRentExemptionBalanceResponse {
     required this.lamports,
   });
 
-  double lamports;
+  int lamports;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is MinimumRentExemptionBalanceResponse &&
@@ -55,7 +55,7 @@ class MinimumRentExemptionBalanceResponse {
       }());
 
       return MinimumRentExemptionBalanceResponse(
-        lamports: mapValueOfType<double>(json, r'lamports')!,
+        lamports: mapValueOfType<int>(json, r'lamports')!,
       );
     }
     return null;
