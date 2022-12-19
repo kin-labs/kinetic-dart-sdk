@@ -19,7 +19,7 @@ dependencies:
   intl: ^0.17.0
   logger: ^1.1.0
   meta: ^1.8.0
-  solana: ^0.26.0
+  solana: ^0.26.3
 
 dev_dependencies:
   flutter_test:

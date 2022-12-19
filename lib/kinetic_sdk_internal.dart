@@ -1,8 +1,10 @@
 import 'package:kinetic/generated/lib/api.dart';
 import 'package:kinetic/helpers/generate_create_account_transaction.dart';
+import 'package:kinetic/interfaces/close_account_options.dart';
 import 'package:kinetic/interfaces/create_account_options.dart';
 import 'package:kinetic/interfaces/generate_create_account_options.dart';
 import 'package:kinetic/interfaces/generate_make_transfer_options.dart';
+import 'package:kinetic/interfaces/get_account_info_options.dart';
 import 'package:kinetic/interfaces/get_balance_options.dart';
 import 'package:kinetic/interfaces/get_history_options.dart';
 import 'package:kinetic/interfaces/get_token_accounts_options.dart';
@@ -37,6 +39,24 @@ class KineticSdkInternal {
     airdropApi = AirdropApi(apiConfig);
     appApi = AppApi(apiConfig);
     transactionApi = TransactionApi(apiConfig);
+  }
+
+  Future<Transaction?> closeAccount(CloseAccountOptions options) async {
+    var appConfig = _ensureAppConfig();
+    Commitment commitment = _getCommitment(options.commitment);
+    AppConfigMint? mint = _getAppMint(appConfig, options.mint);
+
+    final request = CloseAccountRequest(
+      account: options.account,
+      commitment: commitment,
+      environment: sdkConfig.environment,
+      index: sdkConfig.index,
+      mint: mint.publicKey,
+      referenceId: options.referenceId,
+      referenceType: options.referenceType,
+    );
+
+    return accountApi.closeAccount(request);
   }
 
   Future<Transaction?> createAccount(CreateAccountOptions options) async {
@@ -76,6 +96,17 @@ class KineticSdkInternal {
       throw Exception("Unable to get app config");
     }
     return appConfig;
+  }
+
+  Future<AccountInfo?> getAccountInfo(GetAccountInfoOptions options) async {
+    Commitment commitment = _getCommitment(options.commitment);
+
+    return accountApi.getAccountInfo(
+      sdkConfig.environment,
+      sdkConfig.index,
+      options.account,
+      commitment,
+    );
   }
 
   Future<BalanceResponse?> getBalance(GetBalanceOptions options) async {

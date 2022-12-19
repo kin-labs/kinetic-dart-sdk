@@ -3,7 +3,9 @@ library kinetic;
 import 'package:kinetic/generated/lib/api.dart';
 import 'package:kinetic/helpers/get_solana_rpc_endpoint.dart';
 import 'package:kinetic/helpers/validate_kinetic_sdk_config.dart';
+import 'package:kinetic/interfaces/close_account_options.dart';
 import 'package:kinetic/interfaces/create_account_options.dart';
+import 'package:kinetic/interfaces/get_account_info_options.dart';
 import 'package:kinetic/interfaces/get_balance_options.dart';
 import 'package:kinetic/interfaces/get_history_options.dart';
 import 'package:kinetic/interfaces/get_token_accounts_options.dart';
@@ -29,8 +31,16 @@ class KineticSdk {
 
   String? get endpoint => sdkConfig.endpoint;
 
+  Future<Transaction?> closeAccount(CloseAccountOptions options) async {
+    return _internal.closeAccount(options);
+  }
+
   Future<Transaction?> createAccount(CreateAccountOptions options) async {
     return _internal.createAccount(options);
+  }
+
+  Future<AccountInfo?> getAccountInfo(GetAccountInfoOptions options) async {
+    return _internal.getAccountInfo(options);
   }
 
   Future<BalanceResponse?> getBalance(GetBalanceOptions options) async {
