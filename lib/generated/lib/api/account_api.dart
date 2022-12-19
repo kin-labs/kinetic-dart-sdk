@@ -22,6 +22,58 @@ class AccountApi {
   ///
   /// Parameters:
   ///
+  /// * [CloseAccountRequest] closeAccountRequest (required):
+  Future<Response> closeAccountWithHttpInfo(CloseAccountRequest closeAccountRequest,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/account/close';
+
+    // ignore: prefer_final_locals
+    Object? postBody = closeAccountRequest;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// 
+  ///
+  /// Parameters:
+  ///
+  /// * [CloseAccountRequest] closeAccountRequest (required):
+  Future<Transaction?> closeAccount(CloseAccountRequest closeAccountRequest,) async {
+    final response = await closeAccountWithHttpInfo(closeAccountRequest,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Transaction',) as Transaction;
+    
+    }
+    return null;
+  }
+
+  /// 
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
   /// * [CreateAccountRequest] createAccountRequest (required):
   Future<Response> createAccountWithHttpInfo(CreateAccountRequest createAccountRequest,) async {
     // ignore: prefer_const_declarations
@@ -79,7 +131,9 @@ class AccountApi {
   /// * [int] index (required):
   ///
   /// * [String] accountId (required):
-  Future<Response> getAccountInfoWithHttpInfo(String environment, int index, String accountId,) async {
+  ///
+  /// * [Commitment] commitment (required):
+  Future<Response> getAccountInfoWithHttpInfo(String environment, int index, String accountId, Commitment commitment,) async {
     // ignore: prefer_const_declarations
     final path = r'/api/account/info/{environment}/{index}/{accountId}'
       .replaceAll('{environment}', environment)
@@ -93,6 +147,8 @@ class AccountApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
+      queryParams.addAll(_queryParams('', 'commitment', commitment));
+
     const contentTypes = <String>[];
 
 
@@ -116,11 +172,21 @@ class AccountApi {
   /// * [int] index (required):
   ///
   /// * [String] accountId (required):
-  Future<void> getAccountInfo(String environment, int index, String accountId,) async {
-    final response = await getAccountInfoWithHttpInfo(environment, index, accountId,);
+  ///
+  /// * [Commitment] commitment (required):
+  Future<AccountInfo?> getAccountInfo(String environment, int index, String accountId, Commitment commitment,) async {
+    final response = await getAccountInfoWithHttpInfo(environment, index, accountId, commitment,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'AccountInfo',) as AccountInfo;
+    
+    }
+    return null;
   }
 
   /// 
@@ -134,7 +200,9 @@ class AccountApi {
   /// * [int] index (required):
   ///
   /// * [String] accountId (required):
-  Future<Response> getBalanceWithHttpInfo(String environment, int index, String accountId,) async {
+  ///
+  /// * [Commitment] commitment (required):
+  Future<Response> getBalanceWithHttpInfo(String environment, int index, String accountId, Commitment commitment,) async {
     // ignore: prefer_const_declarations
     final path = r'/api/account/balance/{environment}/{index}/{accountId}'
       .replaceAll('{environment}', environment)
@@ -147,6 +215,8 @@ class AccountApi {
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
+
+      queryParams.addAll(_queryParams('', 'commitment', commitment));
 
     const contentTypes = <String>[];
 
@@ -171,8 +241,10 @@ class AccountApi {
   /// * [int] index (required):
   ///
   /// * [String] accountId (required):
-  Future<BalanceResponse?> getBalance(String environment, int index, String accountId,) async {
-    final response = await getBalanceWithHttpInfo(environment, index, accountId,);
+  ///
+  /// * [Commitment] commitment (required):
+  Future<BalanceResponse?> getBalance(String environment, int index, String accountId, Commitment commitment,) async {
+    final response = await getBalanceWithHttpInfo(environment, index, accountId, commitment,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -199,7 +271,9 @@ class AccountApi {
   /// * [String] accountId (required):
   ///
   /// * [String] mint (required):
-  Future<Response> getHistoryWithHttpInfo(String environment, int index, String accountId, String mint,) async {
+  ///
+  /// * [Commitment] commitment (required):
+  Future<Response> getHistoryWithHttpInfo(String environment, int index, String accountId, String mint, Commitment commitment,) async {
     // ignore: prefer_const_declarations
     final path = r'/api/account/history/{environment}/{index}/{accountId}/{mint}'
       .replaceAll('{environment}', environment)
@@ -213,6 +287,8 @@ class AccountApi {
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
+
+      queryParams.addAll(_queryParams('', 'commitment', commitment));
 
     const contentTypes = <String>[];
 
@@ -239,8 +315,10 @@ class AccountApi {
   /// * [String] accountId (required):
   ///
   /// * [String] mint (required):
-  Future<List<HistoryResponse>?> getHistory(String environment, int index, String accountId, String mint,) async {
-    final response = await getHistoryWithHttpInfo(environment, index, accountId, mint,);
+  ///
+  /// * [Commitment] commitment (required):
+  Future<List<HistoryResponse>?> getHistory(String environment, int index, String accountId, String mint, Commitment commitment,) async {
+    final response = await getHistoryWithHttpInfo(environment, index, accountId, mint, commitment,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -270,7 +348,9 @@ class AccountApi {
   /// * [String] accountId (required):
   ///
   /// * [String] mint (required):
-  Future<Response> getTokenAccountsWithHttpInfo(String environment, int index, String accountId, String mint,) async {
+  ///
+  /// * [Commitment] commitment (required):
+  Future<Response> getTokenAccountsWithHttpInfo(String environment, int index, String accountId, String mint, Commitment commitment,) async {
     // ignore: prefer_const_declarations
     final path = r'/api/account/token-accounts/{environment}/{index}/{accountId}/{mint}'
       .replaceAll('{environment}', environment)
@@ -284,6 +364,8 @@ class AccountApi {
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
+
+      queryParams.addAll(_queryParams('', 'commitment', commitment));
 
     const contentTypes = <String>[];
 
@@ -310,8 +392,10 @@ class AccountApi {
   /// * [String] accountId (required):
   ///
   /// * [String] mint (required):
-  Future<List<String>?> getTokenAccounts(String environment, int index, String accountId, String mint,) async {
-    final response = await getTokenAccountsWithHttpInfo(environment, index, accountId, mint,);
+  ///
+  /// * [Commitment] commitment (required):
+  Future<List<String>?> getTokenAccounts(String environment, int index, String accountId, String mint, Commitment commitment,) async {
+    final response = await getTokenAccountsWithHttpInfo(environment, index, accountId, mint, commitment,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

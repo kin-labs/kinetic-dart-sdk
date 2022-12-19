@@ -22,13 +22,13 @@ class ConfirmedSignatureInfo {
 
   String signature;
 
-  num? slot;
+  int? slot;
 
   String? err;
 
   String? memo;
 
-  num? blockTime;
+  int? blockTime;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is ConfirmedSignatureInfo &&
@@ -96,14 +96,10 @@ class ConfirmedSignatureInfo {
 
       return ConfirmedSignatureInfo(
         signature: mapValueOfType<String>(json, r'signature')!,
-        slot: json[r'slot'] == null
-            ? null
-            : num.parse(json[r'slot'].toString()),
+        slot: mapValueOfType<int>(json, r'slot'),
         err: mapValueOfType<String>(json, r'err'),
         memo: mapValueOfType<String>(json, r'memo'),
-        blockTime: json[r'blockTime'] == null
-            ? null
-            : num.parse(json[r'blockTime'].toString()),
+        blockTime: mapValueOfType<int>(json, r'blockTime'),
       );
     }
     return null;

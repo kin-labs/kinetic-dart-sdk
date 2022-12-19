@@ -41,9 +41,8 @@ class KineticSdkInternal {
 
   Future<Transaction?> createAccount(CreateAccountOptions options) async {
     var appConfig = _ensureAppConfig();
+    Commitment commitment = _getCommitment(options.commitment);
     AppConfigMint? mint = _getAppMint(appConfig, options.mint);
-
-    var commitment = options.commitment ?? Commitment.confirmed;
 
     PrepareTransactionResponse blockhash = await _getBlockhash();
 
@@ -80,15 +79,19 @@ class KineticSdkInternal {
   }
 
   Future<BalanceResponse?> getBalance(GetBalanceOptions options) async {
+    Commitment commitment = _getCommitment(options.commitment);
+
     return accountApi.getBalance(
       sdkConfig.environment,
       sdkConfig.index,
       options.account,
+      commitment,
     );
   }
 
   Future<List<HistoryResponse>?> getHistory(GetHistoryOptions options) async {
     var appConfig = _ensureAppConfig();
+    Commitment commitment = _getCommitment(options.commitment);
     AppConfigMint? mint = _getAppMint(appConfig, options.mint);
 
     return accountApi.getHistory(
@@ -96,11 +99,13 @@ class KineticSdkInternal {
       sdkConfig.index,
       options.account,
       mint.publicKey,
+      commitment,
     );
   }
 
   Future<List<String>?> getTokenAccounts(GetTokenAccountsOptions options) async {
     var appConfig = _ensureAppConfig();
+    Commitment commitment = _getCommitment(options.commitment);
     AppConfigMint? mint = _getAppMint(appConfig, options.mint);
 
     List<String>? result = await accountApi.getTokenAccounts(
@@ -108,16 +113,20 @@ class KineticSdkInternal {
       sdkConfig.index,
       options.account,
       mint.publicKey,
+      commitment,
     );
 
     return result;
   }
 
   Future<GetTransactionResponse?> getTransaction(GetTransactionOptions options) {
+    Commitment commitment = _getCommitment(options.commitment);
+
     return transactionApi.getTransaction(
       sdkConfig.environment,
       sdkConfig.index,
       options.signature,
+      commitment,
     );
   }
 
@@ -200,6 +209,10 @@ class KineticSdkInternal {
       throw KineticMissingMintsException();
     }
     return found;
+  }
+
+  Commitment _getCommitment(Commitment? commitment) {
+    return commitment ?? sdkConfig.commitment ?? Commitment.confirmed;
   }
 
   Future<PrepareTransactionResponse> _getBlockhash() async {

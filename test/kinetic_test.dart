@@ -19,9 +19,9 @@ import 'package:logger/logger.dart';
 import 'fixtures.dart';
 
 KineticSdkConfig sdkConfig = KineticSdkConfig(
-  index: 1,
   endpoint: 'http://localhost:3000',
   environment: 'local',
+  index: 1,
   logger: Logger(),
 );
 

@@ -55,7 +55,7 @@ class Transaction {
 
   String? amount;
 
-  num? decimals;
+  int? decimals;
 
   String? destination;
 
@@ -69,7 +69,7 @@ class Transaction {
 
   String? mint;
 
-  num? processingDuration;
+  int? processingDuration;
 
   String? referenceId;
 
@@ -79,11 +79,11 @@ class Transaction {
 
   DateTime? solanaCommitted;
 
-  num? solanaCommittedDuration;
+  int? solanaCommittedDuration;
 
   DateTime? solanaFinalized;
 
-  num? solanaFinalizedDuration;
+  int? solanaFinalizedDuration;
 
   DateTime? solanaStart;
 
@@ -99,7 +99,7 @@ class Transaction {
   ///
   TransactionStatus? status;
 
-  num? totalDuration;
+  int? totalDuration;
 
   String? tx;
 
@@ -109,13 +109,13 @@ class Transaction {
 
   DateTime? webhookEventEnd;
 
-  num? webhookEventDuration;
+  int? webhookEventDuration;
 
   DateTime? webhookVerifyStart;
 
   DateTime? webhookVerifyEnd;
 
-  num? webhookVerifyDuration;
+  int? webhookVerifyDuration;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is Transaction &&
@@ -379,48 +379,34 @@ class Transaction {
         createdAt: mapDateTime(json, r'createdAt', ''),
         updatedAt: mapDateTime(json, r'updatedAt', ''),
         amount: mapValueOfType<String>(json, r'amount'),
-        decimals: json[r'decimals'] == null
-            ? null
-            : num.parse(json[r'decimals'].toString()),
+        decimals: mapValueOfType<int>(json, r'decimals'),
         destination: mapValueOfType<String>(json, r'destination'),
         errors: TransactionError.listFromJson(json[r'errors']) ?? const [],
         explorerUrl: mapValueOfType<String>(json, r'explorerUrl'),
         feePayer: mapValueOfType<String>(json, r'feePayer'),
         ip: mapValueOfType<String>(json, r'ip'),
         mint: mapValueOfType<String>(json, r'mint'),
-        processingDuration: json[r'processingDuration'] == null
-            ? null
-            : num.parse(json[r'processingDuration'].toString()),
+        processingDuration: mapValueOfType<int>(json, r'processingDuration'),
         referenceId: mapValueOfType<String>(json, r'referenceId'),
         referenceType: mapValueOfType<String>(json, r'referenceType'),
         signature: mapValueOfType<String>(json, r'signature'),
         solanaCommitted: mapDateTime(json, r'solanaCommitted', ''),
-        solanaCommittedDuration: json[r'solanaCommittedDuration'] == null
-            ? null
-            : num.parse(json[r'solanaCommittedDuration'].toString()),
+        solanaCommittedDuration: mapValueOfType<int>(json, r'solanaCommittedDuration'),
         solanaFinalized: mapDateTime(json, r'solanaFinalized', ''),
-        solanaFinalizedDuration: json[r'solanaFinalizedDuration'] == null
-            ? null
-            : num.parse(json[r'solanaFinalizedDuration'].toString()),
+        solanaFinalizedDuration: mapValueOfType<int>(json, r'solanaFinalizedDuration'),
         solanaStart: mapDateTime(json, r'solanaStart', ''),
         solanaTransaction: mapValueOfType<Object>(json, r'solanaTransaction'),
         source_: mapValueOfType<String>(json, r'source'),
         status: TransactionStatus.fromJson(json[r'status']),
-        totalDuration: json[r'totalDuration'] == null
-            ? null
-            : num.parse(json[r'totalDuration'].toString()),
+        totalDuration: mapValueOfType<int>(json, r'totalDuration'),
         tx: mapValueOfType<String>(json, r'tx'),
         ua: mapValueOfType<String>(json, r'ua'),
         webhookEventStart: mapDateTime(json, r'webhookEventStart', ''),
         webhookEventEnd: mapDateTime(json, r'webhookEventEnd', ''),
-        webhookEventDuration: json[r'webhookEventDuration'] == null
-            ? null
-            : num.parse(json[r'webhookEventDuration'].toString()),
+        webhookEventDuration: mapValueOfType<int>(json, r'webhookEventDuration'),
         webhookVerifyStart: mapDateTime(json, r'webhookVerifyStart', ''),
         webhookVerifyEnd: mapDateTime(json, r'webhookVerifyEnd', ''),
-        webhookVerifyDuration: json[r'webhookVerifyDuration'] == null
-            ? null
-            : num.parse(json[r'webhookVerifyDuration'].toString()),
+        webhookVerifyDuration: mapValueOfType<int>(json, r'webhookVerifyDuration'),
       );
     }
     return null;

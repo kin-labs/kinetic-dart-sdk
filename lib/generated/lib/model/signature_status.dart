@@ -19,13 +19,19 @@ class SignatureStatus {
     this.confirmationStatus,
   });
 
-  num? slot;
+  int? slot;
 
-  num? confirmations;
+  int? confirmations;
 
   Object? err;
 
-  SignatureStatusConfirmationStatusEnum? confirmationStatus;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  ConfirmationStatus? confirmationStatus;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is SignatureStatus &&
@@ -89,14 +95,10 @@ class SignatureStatus {
       }());
 
       return SignatureStatus(
-        slot: json[r'slot'] == null
-            ? null
-            : num.parse(json[r'slot'].toString()),
-        confirmations: json[r'confirmations'] == null
-            ? null
-            : num.parse(json[r'confirmations'].toString()),
+        slot: mapValueOfType<int>(json, r'slot'),
+        confirmations: mapValueOfType<int>(json, r'confirmations'),
         err: mapValueOfType<Object>(json, r'err'),
-        confirmationStatus: SignatureStatusConfirmationStatusEnum.fromJson(json[r'confirmationStatus']),
+        confirmationStatus: ConfirmationStatus.fromJson(json[r'confirmationStatus']),
       );
     }
     return null;
@@ -148,81 +150,4 @@ class SignatureStatus {
   static const requiredKeys = <String>{
   };
 }
-
-
-class SignatureStatusConfirmationStatusEnum {
-  /// Instantiate a new enum with the provided [value].
-  const SignatureStatusConfirmationStatusEnum._(this.value);
-
-  /// The underlying value of this enum member.
-  final String value;
-
-  @override
-  String toString() => value;
-
-  String toJson() => value;
-
-  static const processed = SignatureStatusConfirmationStatusEnum._(r'processed');
-  static const confirmed = SignatureStatusConfirmationStatusEnum._(r'confirmed');
-  static const finalized = SignatureStatusConfirmationStatusEnum._(r'finalized');
-
-  /// List of all possible values in this [enum][SignatureStatusConfirmationStatusEnum].
-  static const values = <SignatureStatusConfirmationStatusEnum>[
-    processed,
-    confirmed,
-    finalized,
-  ];
-
-  static SignatureStatusConfirmationStatusEnum? fromJson(dynamic value) => SignatureStatusConfirmationStatusEnumTypeTransformer().decode(value);
-
-  static List<SignatureStatusConfirmationStatusEnum>? listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <SignatureStatusConfirmationStatusEnum>[];
-    if (json is List && json.isNotEmpty) {
-      for (final row in json) {
-        final value = SignatureStatusConfirmationStatusEnum.fromJson(row);
-        if (value != null) {
-          result.add(value);
-        }
-      }
-    }
-    return result.toList(growable: growable);
-  }
-}
-
-/// Transformation class that can [encode] an instance of [SignatureStatusConfirmationStatusEnum] to String,
-/// and [decode] dynamic data back to [SignatureStatusConfirmationStatusEnum].
-class SignatureStatusConfirmationStatusEnumTypeTransformer {
-  factory SignatureStatusConfirmationStatusEnumTypeTransformer() => _instance ??= const SignatureStatusConfirmationStatusEnumTypeTransformer._();
-
-  const SignatureStatusConfirmationStatusEnumTypeTransformer._();
-
-  String encode(SignatureStatusConfirmationStatusEnum data) => data.value;
-
-  /// Decodes a [dynamic value][data] to a SignatureStatusConfirmationStatusEnum.
-  ///
-  /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
-  /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
-  /// cannot be decoded successfully, then an [UnimplementedError] is thrown.
-  ///
-  /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
-  /// and users are still using an old app with the old code.
-  SignatureStatusConfirmationStatusEnum? decode(dynamic data, {bool allowNull = true}) {
-    if (data != null) {
-      switch (data.toString()) {
-        case r'processed': return SignatureStatusConfirmationStatusEnum.processed;
-        case r'confirmed': return SignatureStatusConfirmationStatusEnum.confirmed;
-        case r'finalized': return SignatureStatusConfirmationStatusEnum.finalized;
-        default:
-          if (!allowNull) {
-            throw ArgumentError('Unknown enum value to decode: $data');
-          }
-      }
-    }
-    return null;
-  }
-
-  /// Singleton [SignatureStatusConfirmationStatusEnumTypeTransformer] instance.
-  static SignatureStatusConfirmationStatusEnumTypeTransformer? _instance;
-}
-
 

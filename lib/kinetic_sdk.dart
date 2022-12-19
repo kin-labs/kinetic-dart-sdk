@@ -2,6 +2,7 @@ library kinetic;
 
 import 'package:kinetic/generated/lib/api.dart';
 import 'package:kinetic/helpers/get_solana_rpc_endpoint.dart';
+import 'package:kinetic/helpers/validate_kinetic_sdk_config.dart';
 import 'package:kinetic/interfaces/create_account_options.dart';
 import 'package:kinetic/interfaces/get_balance_options.dart';
 import 'package:kinetic/interfaces/get_history_options.dart';
@@ -83,7 +84,7 @@ class KineticSdk {
   }
 
   static Future<KineticSdk> setup(KineticSdkConfig sdkConfig) async {
-    var sdk = KineticSdk(sdkConfig);
+    var sdk = KineticSdk(validateKineticSdkConfig(sdkConfig));
     try {
       await sdk.init();
       sdkConfig.logger?.i('$name: Setup Done');

@@ -192,6 +192,8 @@ class ApiClient {
           return valueString == 'true' || valueString == '1';
         case 'DateTime':
           return value is DateTime ? value : DateTime.tryParse(value);
+        case 'AccountInfo':
+          return AccountInfo.fromJson(value);
         case 'AppConfig':
           return AppConfig.fromJson(value);
         case 'AppConfigApi':
@@ -210,14 +212,24 @@ class ApiClient {
           return BalanceResponse.fromJson(value);
         case 'BalanceToken':
           return BalanceToken.fromJson(value);
+        case 'CloseAccountRequest':
+          return CloseAccountRequest.fromJson(value);
         case 'ClusterType':
           return ClusterTypeTypeTransformer().decode(value);
         case 'Commitment':
           return CommitmentTypeTransformer().decode(value);
+        case 'CompiledInnerInstruction':
+          return CompiledInnerInstruction.fromJson(value);
+        case 'CompiledInstruction':
+          return CompiledInstruction.fromJson(value);
+        case 'ConfirmationStatus':
+          return ConfirmationStatusTypeTransformer().decode(value);
         case 'ConfirmedSignatureInfo':
           return ConfirmedSignatureInfo.fromJson(value);
         case 'ConfirmedTransactionMeta':
           return ConfirmedTransactionMeta.fromJson(value);
+        case 'Context':
+          return Context.fromJson(value);
         case 'CreateAccountRequest':
           return CreateAccountRequest.fromJson(value);
         case 'GetTransactionResponse':
@@ -234,8 +246,16 @@ class ApiClient {
           return RequestAirdropRequest.fromJson(value);
         case 'RequestAirdropResponse':
           return RequestAirdropResponse.fromJson(value);
+        case 'RpcResponseAndContext':
+          return RpcResponseAndContext.fromJson(value);
         case 'SignatureStatus':
           return SignatureStatus.fromJson(value);
+        case 'TokenAmount':
+          return TokenAmount.fromJson(value);
+        case 'TokenBalance':
+          return TokenBalance.fromJson(value);
+        case 'TokenInfo':
+          return TokenInfo.fromJson(value);
         case 'Transaction':
           return Transaction.fromJson(value);
         case 'TransactionData':

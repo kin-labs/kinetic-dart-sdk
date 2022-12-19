@@ -23,9 +23,9 @@ class ConfirmedTransactionMeta {
     this.err,
   });
 
-  num? fee;
+  int? fee;
 
-  List<String>? innerInstructions;
+  List<CompiledInnerInstruction>? innerInstructions;
 
   List<int>? preBalances;
 
@@ -33,9 +33,9 @@ class ConfirmedTransactionMeta {
 
   List<String>? logMessages;
 
-  List<String>? preTokenBalances;
+  List<TokenBalance>? preTokenBalances;
 
-  List<String>? postTokenBalances;
+  List<TokenBalance>? postTokenBalances;
 
   Object? err;
 
@@ -125,12 +125,8 @@ class ConfirmedTransactionMeta {
       }());
 
       return ConfirmedTransactionMeta(
-        fee: json[r'fee'] == null
-            ? null
-            : num.parse(json[r'fee'].toString()),
-        innerInstructions: json[r'innerInstructions'] is List
-            ? (json[r'innerInstructions'] as List).cast<String>()
-            : const [],
+        fee: mapValueOfType<int>(json, r'fee'),
+        innerInstructions: CompiledInnerInstruction.listFromJson(json[r'innerInstructions']) ?? const [],
         preBalances: json[r'preBalances'] is List
             ? (json[r'preBalances'] as List).cast<int>()
             : const [],
@@ -140,12 +136,8 @@ class ConfirmedTransactionMeta {
         logMessages: json[r'logMessages'] is List
             ? (json[r'logMessages'] as List).cast<String>()
             : const [],
-        preTokenBalances: json[r'preTokenBalances'] is List
-            ? (json[r'preTokenBalances'] as List).cast<String>()
-            : const [],
-        postTokenBalances: json[r'postTokenBalances'] is List
-            ? (json[r'postTokenBalances'] as List).cast<String>()
-            : const [],
+        preTokenBalances: TokenBalance.listFromJson(json[r'preTokenBalances']) ?? const [],
+        postTokenBalances: TokenBalance.listFromJson(json[r'postTokenBalances']) ?? const [],
         err: mapValueOfType<Object>(json, r'err'),
       );
     }
