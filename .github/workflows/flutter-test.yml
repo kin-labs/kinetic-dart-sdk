@@ -30,6 +30,7 @@ jobs:
         image: ghcr.io/kin-labs/kinetic:1.0.0-rc.12
         ports:
           - 3000:3000
+        options: --health-cmd "wget localhost:3000/api/uptime -q -O - > /dev/null 2>&1" --health-interval 10s --health-timeout 5s --health-retries 5
         env:
           API_URL: 'http://localhost:3000'
           APP_1_FEE_PAYER_SECRET: 'UvfuF3FPqLyvS8xGjSu4AUfdsY5QvLdnin8SKBLAi3UqgbmEWCDshPY3UcxvBgRAqHLzh5Ni1eypLVZArsis6FF'
