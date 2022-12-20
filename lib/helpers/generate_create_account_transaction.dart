@@ -36,7 +36,6 @@ Future<SignedTx> generateCreateAccountTransaction(GenerateCreateAccountOptions o
     authorityType: AuthorityType.closeAccount,
     currentAuthority: ownerPublicKey,
     newAuthority: feePayerKey,
-    signers: [ownerPublicKey, feePayerKey],
   ));
 
   final CompiledMessage message = Message(instructions: instructions).compile(

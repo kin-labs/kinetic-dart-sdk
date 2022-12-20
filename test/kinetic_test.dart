@@ -2,6 +2,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kinetic/generated/lib/api.dart';
+import 'package:kinetic/interfaces/close_account_options.dart';
 import 'package:kinetic/interfaces/create_account_options.dart';
 import 'package:kinetic/interfaces/get_account_info_options.dart';
 import 'package:kinetic/interfaces/get_balance_options.dart';
@@ -228,32 +229,32 @@ void main() async {
     expect(res.tokens?[0].owner, accountAlice);
   });
 
-  // test('closeAccount: should close an account', () async {
-  //   KineticSdk sdk = await KineticSdk.setup(sdkConfig);
-  //   final owner = await Keypair.random();
-  //
-  //   Transaction? createTx = await sdk.createAccount(CreateAccountOptions(
-  //     owner: owner,
-  //     commitment: Commitment.finalized,
-  //   ));
-  //
-  //   if (createTx == null) {
-  //     print("Error creating account");
-  //     throw Exception("Error creating account");
-  //   }
-  //   expect(createTx, const TypeMatcher<Transaction>());
-  //   expect(createTx.signature?.isNotEmpty, true);
-  //
-  //   Transaction? closeTx = await sdk.closeAccount(CloseAccountOptions(
-  //     account: owner.publicKey,
-  //     commitment: Commitment.finalized,
-  //   ));
-  //   if (closeTx == null) {
-  //     print("Error closing account");
-  //     throw Exception("Error closing account");
-  //   }
-  //   expect(closeTx, const TypeMatcher<Transaction>());
-  //   expect(closeTx.signature?.isNotEmpty, true);
-  //   expect(closeTx.errors, []);
-  // });
+  test('closeAccount: should close an account', () async {
+    KineticSdk sdk = await KineticSdk.setup(sdkConfig);
+    final owner = await Keypair.random();
+
+    Transaction? createTx = await sdk.createAccount(CreateAccountOptions(
+      owner: owner,
+      commitment: Commitment.finalized,
+    ));
+
+    if (createTx == null) {
+      print("Error creating account");
+      throw Exception("Error creating account");
+    }
+    expect(createTx, const TypeMatcher<Transaction>());
+    expect(createTx.signature?.isNotEmpty, true);
+
+    Transaction? closeTx = await sdk.closeAccount(CloseAccountOptions(
+      account: owner.publicKey,
+      commitment: Commitment.finalized,
+    ));
+    if (closeTx == null) {
+      print("Error closing account");
+      throw Exception("Error closing account");
+    }
+    expect(closeTx, const TypeMatcher<Transaction>());
+    expect(closeTx.signature?.isNotEmpty, true);
+    expect(closeTx.errors, []);
+  }, timeout: const Timeout(Duration(minutes: 1)));
 }
