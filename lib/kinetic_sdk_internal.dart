@@ -99,12 +99,15 @@ class KineticSdkInternal {
   }
 
   Future<AccountInfo?> getAccountInfo(GetAccountInfoOptions options) async {
+    var appConfig = _ensureAppConfig();
     Commitment commitment = _getCommitment(options.commitment);
+    AppConfigMint? mint = _getAppMint(appConfig, options.mint);
 
     return accountApi.getAccountInfo(
       sdkConfig.environment,
       sdkConfig.index,
       options.account,
+      mint.publicKey,
       commitment,
     );
   }
