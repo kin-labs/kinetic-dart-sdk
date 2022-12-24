@@ -132,13 +132,16 @@ class AccountApi {
   ///
   /// * [String] accountId (required):
   ///
+  /// * [String] mint (required):
+  ///
   /// * [Commitment] commitment (required):
-  Future<Response> getAccountInfoWithHttpInfo(String environment, int index, String accountId, Commitment commitment,) async {
+  Future<Response> getAccountInfoWithHttpInfo(String environment, int index, String accountId, String mint, Commitment commitment,) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/account/info/{environment}/{index}/{accountId}'
+    final path = r'/api/account/info/{environment}/{index}/{accountId}/{mint}'
       .replaceAll('{environment}', environment)
       .replaceAll('{index}', index.toString())
-      .replaceAll('{accountId}', accountId);
+      .replaceAll('{accountId}', accountId)
+      .replaceAll('{mint}', mint);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -173,9 +176,11 @@ class AccountApi {
   ///
   /// * [String] accountId (required):
   ///
+  /// * [String] mint (required):
+  ///
   /// * [Commitment] commitment (required):
-  Future<AccountInfo?> getAccountInfo(String environment, int index, String accountId, Commitment commitment,) async {
-    final response = await getAccountInfoWithHttpInfo(environment, index, accountId, commitment,);
+  Future<AccountInfo?> getAccountInfo(String environment, int index, String accountId, String mint, Commitment commitment,) async {
+    final response = await getAccountInfoWithHttpInfo(environment, index, accountId, mint, commitment,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

@@ -27,7 +27,7 @@ jobs:
         image: ghcr.io/kin-labs/kinetic-solana-network:latest
         ports: [ '8899:8899', '8900:8900' ]
       kinetic:
-        image: ghcr.io/kin-labs/kinetic:1.0.0-rc.12
+        image: ghcr.io/kin-labs/kinetic:dev
         ports:
           - 3000:3000
         options: --health-cmd "wget localhost:3000/api/uptime -q -O - > /dev/null 2>&1" --health-interval 10s --health-timeout 5s --health-retries 5
